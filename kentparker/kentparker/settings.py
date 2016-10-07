@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'kentparker.urls'
+
+# Used by the authentication system for the grumblr application.
+# URL to use if the authentication system requires a user to log in.
+LOGIN_URL = '/login'
+
+# Default URL to redirect to after a user logs in.
+LOGIN_REDIRECT_URL = '/'
 
 TEMPLATES = [
     {
