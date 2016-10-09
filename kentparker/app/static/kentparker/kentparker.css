@@ -1,0 +1,8 @@
+.form-group, .form-title, .form-box{
+	text-align: center;
+}
+
+.form-control {
+	max-width: 250px;
+	margin: 0 auto;
+}
