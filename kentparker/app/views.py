@@ -16,20 +16,20 @@ def home(request):
 	return render(request,'kentparker/index.html')
 
 def login(request):
-	context={'register_form':RegisterModelForm(),'from_login':True}
+	context={'register_form':RegisterForm(),'from_login':True}
 	return django.contrib.auth.views.login(request,template_name='kentparker/login.html',extra_context=context)
 
 def register(request):
 	context={}
 	if request.method=='GET':
-		register_form=RegisterModelForm()
+		register_form=RegisterForm()
 	else:
-		register_form=RegisterModelForm(request.POST)
+		register_form=RegisterForm(request.POST)
 	context['register_form']=register_form
 	if not register_form.is_valid():
 		return django.contrib.auth.views.login(request,template_name='kentparker/login.html',extra_context=context)
-	new_user=User.objects.create_user(username=register_form.cleaned_data.get('username'),email=register_form.cleaned_data.get('email'),password=register_form.cleaned_data.get('password'),first_name=register_form.cleaned_data.get('first_name'),last_name=register_form.cleaned_data.get('last_name'))
+	new_user=User.objects.create_user(username=register_form.cleaned_data.get('r_username'),email=register_form.cleaned_data.get('r_email'),password=register_form.cleaned_data.get('r_password'),first_name=register_form.cleaned_data.get('r_first_name'),last_name=register_form.cleaned_data.get('r_last_name'))
 	new_user.save()
-	new_user=authenticate(username=register_form.cleaned_data.get('username'),password=register_form.cleaned_data.get('password'))
+	new_user=authenticate(username=register_form.cleaned_data.get('r_username'),password=register_form.cleaned_data.get('r_password'))
 	django.contrib.auth.login(request,new_user)
 	return redirect('/')
