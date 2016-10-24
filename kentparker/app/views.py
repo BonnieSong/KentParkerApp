@@ -19,6 +19,10 @@ def login(request):
 	context={'register_form':RegisterForm(),'from_login':True}
 	return django.contrib.auth.views.login(request,template_name='kentparker/login.html',extra_context=context)
 
+def login_google(request,email):
+	print(email)
+	return HttpResponse("")
+
 def register(request):
 	context={}
 	if request.method=='GET':
