@@ -22,6 +22,10 @@ def login(request):
 def login_google(request,email):
 	print(email)
 	return HttpResponse("")
+	
+def login_facebook(request,userid):
+	print("userid " + userid)
+	return HttpResponse("")
 
 def register(request):
 	context={}
