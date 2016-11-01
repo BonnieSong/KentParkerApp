@@ -7,54 +7,55 @@ class Tag(models.Model):
 	def __str__(self):
 		return self.name
 
-class BaseUser(AbstractUser):
+class MyUser(AbstractUser):
 	picture=models.ImageField(upload_to="profile_photos",null=True,blank=True)
 	email_verify=models.BooleanField(default=False)
-	tags=models.ForeignKey(Tag)
+	tags=models.ManyToManyField(Tag,null=True,blank=True)
 	location=models.CharField(max_length=50)
 	website=models.URLField(max_length=200)
-	contacts=models.ForeignKey('self')
+	contacts=models.ForeignKey('self',null=True,blank=True,related_name='contacts_f')
+	user_type=models.IntegerField()
+	# newsmaker 1
+	# journalist 2
+	# mediaoutlet 3
+	category=models.CharField(max_length=50)
+	bio=models.CharField(max_length=420, blank=True, default="")
+	organization=models.ForeignKey('self',null=True,blank=True,related_name='organization_f')
+
 
 	def __str__(self):
 		return self.username
 
-class NewsMaker(BaseUser):
-	category=models.CharField(max_length=50)
-
-class MediaOutlet(BaseUser):
-	category=models.CharField(max_length=50)
-
-class Journalist(BaseUser):
-	bio=models.CharField(max_length=420, blank=True, default="")
-	organization=models.ForeignKey(MediaOutlet)
 
 class Pitch(models.Model):
 	title=models.CharField(max_length=30)
 	content=models.TextField()
-	author=models.ForeignKey(NewsMaker)
-	tags=models.ForeignKey(Tag)
+	author=models.ForeignKey(MyUser,related_name='author_pr') # newsmaker
+	tags=models.ForeignKey(Tag,null=True,blank=True)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
 	attachment=models.URLField(max_length=200)
 	special=models.CharField(max_length=1)
 	location=models.CharField(max_length=50)
+	bookmarked=models.ForeignKey(MyUser,related_name='bookmarked_pr')
 
 	class Meta:
 		ordering=['-pub_time']
 
 class Embargo(Pitch):
 	embargo_date=models.DateTimeField()
-	selected_journalists=models.ForeignKey(Journalist)
+	selected_journalists=models.ForeignKey(MyUser,null=True,blank=True) # Journalist
 
 class Scoop(Pitch):
-	selected_journalist=models.ForeignKey(Journalist)
+	selected_journalist=models.ForeignKey(MyUser) # Journalist
 	status=models.BooleanField()	
 
 
 class Article(models.Model):
 	title=models.CharField(max_length=30)
 	content=models.TextField()
-	author=models.ForeignKey(Journalist)
+	author=models.ForeignKey(MyUser,related_name='author_ar') #Journalist
+	newsmaker=models.ManyToManyField(MyUser,related_name='newsmaker_am')
 	tags=models.ForeignKey(Tag)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
@@ -64,10 +65,9 @@ class Article(models.Model):
 	class Meta:
 		ordering=['-pub_time']
 
-
 class Message(models.Model):
-	sender=models.ForeignKey(BaseUser,related_name='sender')
-	receiver=models.ForeignKey(BaseUser,related_name='receiver')
+	sender=models.ForeignKey(MyUser,related_name='sender')
+	receiver=models.ForeignKey(MyUser,related_name='receiver')
 	content=models.TextField()
 	send_time=models.DateTimeField(auto_now_add=True)
 	attachment=models.URLField(max_length=200)

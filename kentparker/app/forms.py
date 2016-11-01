@@ -12,10 +12,20 @@ class RegisterForm(forms.Form):
 
 	def clean(self):
 		cleaned_data=super(RegisterForm,self).clean()
-		if User.objects.filter(username=cleaned_data.get('r_username')):
+		if MyUser.objects.filter(username=cleaned_data.get('r_username')):
 			raise forms.ValidationError('Username is already taken.')
-		if User.objects.filter(email=cleaned_data.get('r_email')):
+		if MyUser.objects.filter(email=cleaned_data.get('r_email')):
 			raise forms.ValidationError('Email is already taken.')
 		if cleaned_data.get('r_password')!=cleaned_data.get('r_confirm'):
 			raise forms.ValidationError('Passwords did not match')
 		return cleaned_data
+
+class PublishPitchForm(forms.ModelForm):
+	class Meta:
+		model=Pitch
+		fields=['title','content','location']
+
+	def clean(self):
+		cleaned_data=super(PublishPitchForm,self).clean()
+
+		
