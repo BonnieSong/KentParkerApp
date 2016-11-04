@@ -10,7 +10,7 @@ class Tag(models.Model):
 class MyUser(AbstractUser):
 	picture=models.ImageField(upload_to="profile_photos",null=True,blank=True)
 	email_verify=models.BooleanField(default=False)
-	tags=models.ManyToManyField(Tag,null=True,blank=True)
+	tags=models.ManyToManyField(Tag,blank=True)
 	location=models.CharField(max_length=50)
 	website=models.URLField(max_length=200)
 	contacts=models.ForeignKey('self',null=True,blank=True,related_name='contacts_f')
@@ -22,10 +22,8 @@ class MyUser(AbstractUser):
 	bio=models.CharField(max_length=420, blank=True, default="")
 	organization=models.ForeignKey('self',null=True,blank=True,related_name='organization_f')
 
-
 	def __str__(self):
 		return self.username
-
 
 class Pitch(models.Model):
 	title=models.CharField(max_length=30)
@@ -38,6 +36,7 @@ class Pitch(models.Model):
 	special=models.CharField(max_length=1)
 	location=models.CharField(max_length=50)
 	bookmarked=models.ForeignKey(MyUser,related_name='bookmarked_pr')
+	published=models.BooleanField(default=False)
 
 	class Meta:
 		ordering=['-pub_time']
@@ -49,7 +48,6 @@ class Embargo(Pitch):
 class Scoop(Pitch):
 	selected_journalist=models.ForeignKey(MyUser) # Journalist
 	status=models.BooleanField()	
-
 
 class Article(models.Model):
 	title=models.CharField(max_length=30)
@@ -78,12 +76,3 @@ class Message(models.Model):
 	# sort the message based on send time in reverse order
 	class Meta:
 		ordering=['-send_time']
-
-# we maintain a relation table which keeps tracking of the folower/followee relationship
-# between any two types of users
-# class Relation(models.Model):
-# 	follower=models.ForeignKey(BaseUser,related_name='follower')
-# 	followee=models.ForeignKey(BaseUser,related_name='followee')
-
-# 	def __str__(self):
-# 		return self.follower+" -> "+self.followee
