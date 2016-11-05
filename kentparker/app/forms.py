@@ -28,4 +28,38 @@ class PublishPitchForm(forms.ModelForm):
 	def clean(self):
 		cleaned_data=super(PublishPitchForm,self).clean()
 
-		
+class EditProfileModelForm(forms.ModelForm):
+	first_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
+	last_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
+	class Meta:
+		model=MyUser
+		fields=['first_name','last_name','bio','picture']
+		widgets={'picture':forms.FileInput(attrs={'class':'form-control'}),
+					'bio':forms.Textarea(attrs={'class':'form-control','placeholder':'Bio'})}
+
+class ChangePasswordModelForm(forms.ModelForm):
+	old_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Old Password'}))
+	new_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'New Password'}))
+	confirm=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm Password'}))
+	class Meta:
+		model=MyUser
+		fields=['old_password','new_password','confirm']
+
+	def clean(self):
+		cleaned_data=super(ChangePasswordModelForm,self).clean()
+		if cleaned_data.get('new_password')!=cleaned_data.get('confirm'):
+			raise forms.ValidationError('Passwords did not match')
+		return cleaned_data
+
+class RequestResetPasswordForm(forms.Form):
+	email=forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control','placeholder':'Email'}))
+
+class ResetPaswordForm(forms.Form):
+	password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'New password'}))
+	confirm=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm password'}))
+
+	def clean(self):
+		cleaned_data=super(ResetPaswordForm,self).clean()
+		if cleaned_data.get('password')!=cleaned_data.get('confirm'):
+			raise forms.ValidationError('Passwords did not match')
+		return cleaned_data
