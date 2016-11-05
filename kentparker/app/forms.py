@@ -27,6 +27,14 @@ class PublishPitchForm(forms.ModelForm):
 
 	def clean(self):
 		cleaned_data=super(PublishPitchForm,self).clean()
+		
+class DraftPitchForm(forms.ModelForm):
+	class Meta:
+		model=Pitch
+		fields=['title','content','location']
+
+	def clean(self):
+		cleaned_data=super(PublishPitchForm,self).clean()
 
 class EditProfileModelForm(forms.ModelForm):
 	first_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
