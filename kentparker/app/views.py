@@ -28,15 +28,21 @@ def home(request):
 		context={'pitches':my_pitches}
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
-		# journalist
+		#journalist
 		all_tags=request.user.tags
-		target_pitches=[]
+		target_pitches = set()
 		for tag in all_tags:
 			target_pitches.append(tag.pitch_set.all())
+		context = {'pitches':target_pitches}
 		return render(request,'kentparker/journalistDashBoard.html',context)
 	else:
 		# media outlet
-		return render(request,'kentparker/mediaOutletDashBoard.html',context) 
+		all_journalists = MyUser.objects.filter(organization=request.user)
+		published_articles = set()
+		for journalist in all_journalists:
+			published_articles.append(journalist.article_set.all())
+		context = {'journalists': all_journalists, 'articles': published_articles }
+		return render(request,'kentparker/mediaOutletDashBoard.html',context)
 
 @login_required
 def publish_pitch(request):
@@ -52,7 +58,7 @@ def publish_pitch(request):
 	new_pitch.save()
 	return redirect('/')
 
-@login_required	
+@login_required
 def draft_pitch(request, pitchid):
 	print ("userid : " + userid + ", pitchid : " + pitchid)
 	if request.method=='GET':
@@ -73,6 +79,8 @@ def draft_pitch(request, pitchid):
 @login_required
 def profile(request,name):
 	return HttpResponse("")
+
+
 
 @login_required
 def show_pitches(request):
@@ -228,17 +236,18 @@ def login_google(request,email):
 	newemail, newusername = info[0], info[1]
 	print (newemail)
 	print (newusername)
+
 	new_user = MyUser.objects.filter(email=newemail)
 	print(len(new_user))
 	if len(new_user) > 0:
 		django.contrib.auth.login(request, new_user[0])
-		return HttpResponse("")
-	return HttpResponse("")
+		return redirect('/')
+	return redirect('/')
 
 def login_facebook(request,userid):
 	print("userid " + userid)
 	return HttpResponse("")
-	
+
 
 
 def register(request):
@@ -255,7 +264,6 @@ def register(request):
 	new_user=MyUser.objects.create_user(username=register_form.cleaned_data.get('r_username'),email=register_form.cleaned_data.get('r_email'),password=register_form.cleaned_data.get('r_password'),first_name=register_form.cleaned_data.get('r_first_name'),last_name=register_form.cleaned_data.get('r_last_name'),user_type=1)
 	new_user.save()
 	new_user=authenticate(username=register_form.cleaned_data.get('r_username'),password=register_form.cleaned_data.get('r_password'))
-# 	print (new_user)
 	django.contrib.auth.login(request,new_user)
 	return redirect('/')
 
