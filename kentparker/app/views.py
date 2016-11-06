@@ -18,20 +18,14 @@ from django.urls import reverse
 
 @login_required
 def home(request):
-	print (" it is home ", "request user: ", request.user, " " , request.user.user_type)
-	print ("home request", request)
-	print ("home is_authenticated", request.user.is_authenticated())
 	if request.user.user_type==1:
 		# this is a newsmaker
 		# filter related articles about the current newsmaker
 		related_articles=Article.objects.filter(newsmaker=request.user)
 		context={'related_articles':related_articles}
-		print ("it is news maker")
 		# newsmaker
 		my_pitches=Pitch.objects.filter(author=request.user)
-		print ("my_pitches", my_pitches)
 		context={'pitches':my_pitches}
-		print (render(request,'kentparker/newsMakerDashBoard.html',context))
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
 		#journalist
@@ -81,6 +75,10 @@ def draft_pitch(request, pitchid):
 	# if the pitch is not in the database, create a new one for it
 	new_pitch.save()
 	return redirect('/')
+	
+@login_required
+def profile(request,name):
+	return HttpResponse("")
 
 
 
@@ -228,7 +226,6 @@ def publish_article(request):
 	return HttpResponse("")
 
 def login(request):
-	print ("login called")
 	context={'register_form':RegisterForm(),'from_login':True}
 	return django.contrib.auth.views.login(request,template_name='kentparker/login.html',extra_context=context)
 
@@ -239,28 +236,13 @@ def login_google(request,email):
 	newemail, newusername = info[0], info[1]
 	print (newemail)
 	print (newusername)
-	# new_user=MyUser.objects.create_user(username=newusername,email=newemail,password=newpassword,first_name='m',last_name='ary',user_type=1)
-# 	new_user.save()
-# 	new_user=authenticate(username=newusername,password=newpassword)
-# 	print ("new_user", new_user)
-# 	print ("new_user type", new_user.user_type)
+
 	new_user = MyUser.objects.filter(email=newemail)
+	print(len(new_user))
 	if len(new_user) > 0:
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
-
-	print(new_user[0])
-# 	print("login_google", new_user.username)
-	django.contrib.auth.login(request, new_user)
-	print ("request.user ", request.user)
-# 	print ("is_authenticated", request.user.is_authenticated())
-	# my_pitches=Pitch.objects.filter(author=request.user)
-# 	print ("my_pitches", my_pitches)
-# 	context={'pitches':my_pitches}
-# 	return render(request,'kentparker/newsMakerDashBoard.html',context)
 	return redirect('/')
-# 	return HttpResponse("")
-
 
 def login_facebook(request,userid):
 	print("userid " + userid)
@@ -282,7 +264,6 @@ def register(request):
 	new_user=MyUser.objects.create_user(username=register_form.cleaned_data.get('r_username'),email=register_form.cleaned_data.get('r_email'),password=register_form.cleaned_data.get('r_password'),first_name=register_form.cleaned_data.get('r_first_name'),last_name=register_form.cleaned_data.get('r_last_name'),user_type=1)
 	new_user.save()
 	new_user=authenticate(username=register_form.cleaned_data.get('r_username'),password=register_form.cleaned_data.get('r_password'))
-# 	print (new_user)
 	django.contrib.auth.login(request,new_user)
 	return redirect('/')
 
