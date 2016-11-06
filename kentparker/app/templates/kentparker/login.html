@@ -91,16 +91,29 @@
 
     <div class="form-box">
       <h3>...or login with:</h3>
-      <div id="google-signin" class="g-signin2" data-onsuccess="onGoogleSignIn"></div>
-      <a class="btn btn-primary" id="google-signout" onclick="GoogleSignOut();">Sign out</a>
+<!--       <a class="btn btn-primary" id="google-signout" onclick="GoogleSignOut();">Sign out</a> -->
       <div class="social-login">
-      <a class="btn btn-primary" href="#">Facebook</a>
+      <div class="row">
+      <div class="col-md-4 col-md-offset-2">
+      <a id="google-signin" class="g-signin2" data-onsuccess="onGoogleSignIn"></a>
+<!--       <button onclick="onGoogleSignIn()" class="btn btn-danger">Google Login</button> -->
+      </div>
+      <div class="col-md-4 col-md-offset-0.5">
+      <button onclick="onFBSignIn()" class="btn btn-primary">FB Login</button>
+      </div>
+      </div>
+      
+      <!-- 
+<a class="btn btn-primary" href="#">Facebook</a>
       <a class="btn btn-danger" href="#">Google</a>
+ -->
     </div>
     
   </div>
-  <button onclick="onFBSignIn()">FB Login bt</button>
+  <!-- 
+<button onclick="onFBSignIn()">FB Login bt</button>
   <button onclick="FBSignOut()">FB Logout</button>
+ -->
 
 </div>
 
