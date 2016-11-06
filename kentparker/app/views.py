@@ -34,21 +34,21 @@ def home(request):
 		print (render(request,'kentparker/newsMakerDashBoard.html',context))
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
-        #journalist
-        all_tags=request.user.tags
-        target_pitches = set()
-        for tag in all_tags:
-            target_pitches.append(tag.pitch_set.all())
-        context = {'pitches':target_pitches}
-        return render(request,'kentparker/journalistDashBoard.html',context)
-    else:
+		#journalist
+		all_tags=request.user.tags
+		target_pitches = set()
+		for tag in all_tags:
+			target_pitches.append(tag.pitch_set.all())
+		context = {'pitches':target_pitches}
+		return render(request,'kentparker/journalistDashBoard.html',context)
+	else:
 		# media outlet
-        all_journalists = MyUser.objects.filter(organization=request.user)
+		all_journalists = MyUser.objects.filter(organization=request.user)
 		published_articles = set()
-        for journalist in all_journalists:
-            published_articles.append(journalist.article_set.all())
-        context = {'journalists': all_journalists, 'articles': published_articles }
-        return render(request,'kentparker/mediaOutletDashBoard.html',context)
+		for journalist in all_journalists:
+			published_articles.append(journalist.article_set.all())
+		context = {'journalists': all_journalists, 'articles': published_articles }
+		return render(request,'kentparker/mediaOutletDashBoard.html',context)
 
 @login_required
 def publish_pitch(request):
