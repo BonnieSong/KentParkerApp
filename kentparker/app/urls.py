@@ -16,11 +16,11 @@ urlpatterns = [
     url(r'^get_photo/(?P<name>.*)$',views.get_photo,name='get_photo'),
     url(r'^edit_profile/(?P<name>.*)$', views.edit_profile, name='edit_profile'),
     url(r'^change_password/(?P<name>.*)$', views.change_password, name='change_password'),
-    url(r'^favorite/(?P<name>.*)$',views.follow, name='favorite'),
+    url(r'^favorite/(?P<name>.*)$',views.favorite, name='favorite'),
     url(r'^confirm_registration/(?P<name>.*)/(?P<token>.*)$',views.confirm_registration,name='confirm_registration'),
     url(r'^request_reset_password$',views.request_reset_password,name='request_reset_password'),
     url(r'^reset_password/(?P<name>.*)/(?P<token>.*)$',views.reset_password,name='reset_password'),
-    url(r'^show_drafts$',views.edit_draft,name='show_drafts'),
+    url(r'^show_drafts$',views.show_drafts,name='show_drafts'),
     url(r'^edit_pitch/(?P<pitch_id>.*)$', views.edit_pitch, name='edit_pitch'),
     url(r'^draft_pitch$', views.draft_pitch, name='draft_pitch'),
 ]
