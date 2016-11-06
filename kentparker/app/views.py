@@ -34,15 +34,21 @@ def home(request):
 		print (render(request,'kentparker/newsMakerDashBoard.html',context))
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
-		# journalist
-		all_tags=request.user.tags
-		target_pitches=[]
-		for tag in all_tags:
-			target_pitches.append(tag.pitch_set.all())
-		return render(request,'kentparker/journalistDashBoard.html',context)
-	else:
+        #journalist
+        all_tags=request.user.tags
+        target_pitches = set()
+        for tag in all_tags:
+            target_pitches.append(tag.pitch_set.all())
+        context = {'pitches':target_pitches}
+        return render(request,'kentparker/journalistDashBoard.html',context)
+    else:
 		# media outlet
-		return render(request,'kentparker/mediaOutletDashBoard.html',context) 
+        all_journalists = MyUser.objects.filter(organization=request.user)
+		published_articles = set()
+        for journalist in all_journalists:
+            published_articles.append(journalist.article_set.all())
+        context = {'journalists': all_journalists, 'articles': published_articles }
+        return render(request,'kentparker/mediaOutletDashBoard.html',context)
 
 @login_required
 def publish_pitch(request):
@@ -58,7 +64,7 @@ def publish_pitch(request):
 	new_pitch.save()
 	return redirect('/')
 
-@login_required	
+@login_required
 def draft_pitch(request, pitchid):
 	print ("userid : " + userid + ", pitchid : " + pitchid)
 	if request.method=='GET':
@@ -75,8 +81,8 @@ def draft_pitch(request, pitchid):
 	# if the pitch is not in the database, create a new one for it
 	new_pitch.save()
 	return redirect('/')
-	
-	
+
+
 
 @login_required
 def show_pitches(request):
@@ -233,7 +239,7 @@ def login_google(request,email):
 	newemail, newusername = info[0], info[1]
 	print (newemail)
 	print (newusername)
-	# new_user=MyUser.objects.create_user(username=newusername,email=newemail,password=newpassword,first_name='m',last_name='ary',user_type=1)	
+	# new_user=MyUser.objects.create_user(username=newusername,email=newemail,password=newpassword,first_name='m',last_name='ary',user_type=1)
 # 	new_user.save()
 # 	new_user=authenticate(username=newusername,password=newpassword)
 # 	print ("new_user", new_user)
@@ -242,7 +248,7 @@ def login_google(request,email):
 	if len(new_user) > 0:
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
-	
+
 	print(new_user[0])
 # 	print("login_google", new_user.username)
 	django.contrib.auth.login(request, new_user)
@@ -259,7 +265,7 @@ def login_google(request,email):
 def login_facebook(request,userid):
 	print("userid " + userid)
 	return HttpResponse("")
-	
+
 
 
 def register(request):
