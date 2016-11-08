@@ -130,6 +130,11 @@
 							<i class="glyphicon glyphicon-pencil"></i>
 							New Pitch </a>
 						</li>
+						<li>
+							<a href="{% url "new_draft_pitch" %}">
+							<i class="glyphicon glyphicon-pencil"></i>
+							New Draft </a>
+						</li>
 					</ul>
 				</div>
 				<!-- END MENU -->
@@ -139,13 +144,13 @@
             <div class="profile-content">
 			   	<div class="panel panel-primary">
       				<div class="panel-heading">Published Pitches</div>
-      				<div class="panel-body">
       				{%for pitch in pitches%}
+      				<div class="panel-body">
       					<p>{{pitch.title}}</p>
       					<p>{{pitch.content}}</p>
       					<p>{{pitch.pub_time}}</p>
-      				{% endfor %}
       				</div>
+      				{% endfor %}
    				 </div>
             </div>
 		</div>

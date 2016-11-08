@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^login_google/(?P<email>.*)$', views.login_google, name='login_google'),
     url(r'^login_facebook/(?P<userid>.*)$', views.login_facebook, name='login_facebook'),
     url(r'^publish_pitch$', views.publish_pitch, name='publish_pitch'),
+    url(r'^new_draft_pitch$', views.new_draft_pitch, name='new_draft_pitch'),
     url(r'^profile/(?P<name>.*)$', views.profile),
     url(r'^get_photo/(?P<name>.*)$',views.get_photo,name='get_photo'),
     url(r'^edit_profile/(?P<name>.*)$', views.edit_profile, name='edit_profile'),
