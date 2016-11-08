@@ -57,6 +57,20 @@ def publish_pitch(request):
 	new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
 	new_pitch.save()
 	return redirect('/')
+	
+@login_required
+def new_draft_pitch(request):
+	if request.method=='GET':
+		publish_pitch_form=PublishPitchForm()
+		context={'publish_pitch_form':publish_pitch_form}
+		return render(request,'kentparker/draftNewPitch.html',context)
+	publish_pitch_form=PublishPitchForm(request.POST)
+	context={'publish_pitch_form':publish_pitch_form}
+	if not publish_pitch_form.is_valid():
+		return render(request,'kentparker/draftNewPitch.html',context)
+	new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
+	new_pitch.save()
+	return redirect('/')
 
 @login_required
 def draft_pitch(request, pitchid):
@@ -91,8 +105,8 @@ def show_pitches(request):
 
 @login_required
 def show_drafts(request):
-	draft_pitches=Pitch.objects.filter(author=request.user,published=False)
-	context={'draft_pitches':draft_pitches}
+	pitches=Pitch.objects.filter(author=request.user,published=False)
+	context={'pitches':pitches}
 	return render(request,'kentparker/draftPitches.html',context)
 
 @login_required
