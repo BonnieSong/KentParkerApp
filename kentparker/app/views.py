@@ -85,6 +85,7 @@ def profile(request,name):
 @login_required
 def show_pitches(request):
 	my_pitches=Pitch.objects.filter(author=request.user)
+	print('test my pitches',len(my_pitches))
 	context={'pitches':my_pitches}
 	return render(request,'kentparker/manageMyPitches.html',context)
 
@@ -265,8 +266,6 @@ def login_facebook(request,userid):
 	django.contrib.auth.login(request,new_user)
 	return redirect('/')
 
-
-
 def register(request):
 	context={}
 	if request.method=='GET':
@@ -282,6 +281,18 @@ def register(request):
 	new_user.save()
 	new_user=authenticate(username=register_form.cleaned_data.get('r_username'),password=register_form.cleaned_data.get('r_password'))
 	django.contrib.auth.login(request,new_user)
+
+	token=default_token_generator.make_token(new_user)
+	email_body="""
+	Please click the link below to confirm your email address:
+	http://%s%s
+	""" % ('localhost:8000', reverse('confirm_registration',args=(new_user.username,token)))
+
+	send_mail(subject="Confirm your email address",
+			  message=email_body,
+			  from_email='yujiel1@andrew.cmu.edu',
+			  recipient_list=[new_user.email])
+
 	return redirect('/')
 
 def confirm_registration(request,name,token):
@@ -290,5 +301,5 @@ def confirm_registration(request,name,token):
 	if token==confirm_token:
 		target_user.email_verify=True
 		target_user.save()
-		login(request,target_user)
+		django.contrib.auth.login(request,target_user)
 	return redirect('/')

@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 ROOT_URLCONF = 'kentparker.urls'
 
 # Used by the authentication system for the grumblr application.
