@@ -21,12 +21,12 @@ class RegisterForm(forms.Form):
 		return cleaned_data
 
 class PublishPitchForm(forms.ModelForm):
+	title=forms.CharField(max_length=30,widget=forms.TextInput(attrs={'class':'text-line'}))
 	class Meta:
 		model=Pitch
-		fields=['title','content','location']
-
-	def clean(self):
-		cleaned_data=super(PublishPitchForm,self).clean()
+		fields=['title','content']
+		widget={ 'title':forms.TextInput(attrs={'class':'text-line'}),
+		'content':forms.Textarea(attrs={'class':'form-control'})}
 		
 class DraftPitchForm(forms.ModelForm):
 	class Meta:

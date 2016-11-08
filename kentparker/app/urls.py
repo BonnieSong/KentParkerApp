@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^show_drafts$',views.show_drafts,name='show_drafts'),
     url(r'^edit_pitch/(?P<pitch_id>.*)$', views.edit_pitch, name='edit_pitch'),
     url(r'^draft_pitch$', views.draft_pitch, name='draft_pitch'),
+    url(r'^show_pitches$', views.show_pitches, name='show_pitches'),
 ]

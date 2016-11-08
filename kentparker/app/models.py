@@ -34,8 +34,8 @@ class Pitch(models.Model):
 	last_modified_time=models.DateTimeField(auto_now=True)
 	attachment=models.URLField(max_length=200)
 	special=models.CharField(max_length=1)
-	location=models.CharField(max_length=50)
-	bookmarked=models.ForeignKey(MyUser,related_name='bookmarked_pr')
+	location=models.CharField(max_length=50,default="")
+	bookmarked=models.ForeignKey(MyUser,related_name='bookmarked_pr',null=True,blank=True)
 	published=models.BooleanField(default=False)
 
 	class Meta:

@@ -137,4 +137,40 @@ body {
   padding: 20px;
   background: #fff;
   min-height: 460px;
+  overflow-y: scroll;
+  height: 700px;
+}
+
+.text-line {
+    background-color: transparent;
+    outline: none;
+    outline-style: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: solid #eeeeee 1px;
+    padding: 3px 10px;
+    width: 80%;
+}
+
+.text-area {
+    background-color: transparent;
+    outline: none;
+    outline-style: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: solid #eeeeee 1px;
+    padding: 3px 10px;
+    height: 30%;
+    width: 80%;
+    font-family: 'Shrikhand', cursive;
+}
+.dropdown-menu {
+  overflow-y: scroll;
+  height: 100px;
+}
+.center {
+  margin: auto;
+    width: 35%;
 }
