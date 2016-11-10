@@ -11,8 +11,6 @@ urlpatterns = [
     url(r'^register$', views.register, name='register'),
     url(r'^login_google/(?P<email>.*)$', views.login_google, name='login_google'),
     url(r'^login_facebook/(?P<userid>.*)$', views.login_facebook, name='login_facebook'),
-    url(r'^publish_pitch$', views.publish_pitch, name='publish_pitch'),
-    url(r'^new_draft_pitch$', views.new_draft_pitch, name='new_draft_pitch'),
     url(r'^profile/(?P<name>.*)$', views.profile),
     url(r'^get_photo/(?P<name>.*)$',views.get_photo,name='get_photo'),
     url(r'^edit_profile/(?P<name>.*)$', views.edit_profile, name='edit_profile'),
@@ -21,8 +19,7 @@ urlpatterns = [
     url(r'^confirm_registration/(?P<name>.*)/(?P<token>.*)$',views.confirm_registration,name='confirm_registration'),
     url(r'^request_reset_password$',views.request_reset_password,name='request_reset_password'),
     url(r'^reset_password/(?P<name>.*)/(?P<token>.*)$',views.reset_password,name='reset_password'),
-    url(r'^show_drafts$',views.show_drafts,name='show_drafts'),
-    url(r'^edit_pitch/(?P<pitch_id>.*)$', views.edit_pitch, name='edit_pitch'),
-    url(r'^draft_pitch$', views.draft_pitch, name='draft_pitch'),
-    url(r'^show_pitches$', views.show_pitches, name='show_pitches'),
+    # newsmaker
+    url(r'^create_pitch$', views.create_pitch, name='create_pitch'),
+    url(r'^manage_pitch$', views.manage_pitch, name='manage_pitch'),
 ]
