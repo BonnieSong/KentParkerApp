@@ -30,84 +30,54 @@ def home(request):
 	elif request.user.user_type==2:
 		#journalist
 		all_tags=request.user.tags
-		target_pitches = set()
-		for tag in all_tags:
-			target_pitches.append(tag.pitch_set.all())
-		context = {'pitches':target_pitches}
-		return render(request,'kentparker/journalistDashBoard.html',context)
-	else:
+		pitches=Pitch.objects.filter(tags__in=all_tags)
+		context = {'pitches':pitches}
+		return render(request,'kentparker/journalist_dashboard.html',context)
+	elif request.user.user_type==3:
 		# media outlet
 		all_journalists = MyUser.objects.filter(organization=request.user)
 		published_articles = set()
 		for journalist in all_journalists:
 			published_articles.append(journalist.article_set.all())
 		context = {'journalists': all_journalists, 'articles': published_articles }
-		return render(request,'kentparker/mediaOutletDashBoard.html',context)
+		return render(request,'kentparker/mediaoutlet_dashboard.html',context)
 
 @login_required
-def publish_pitch(request):
+def create_pitch(request):
+	all_tags=Tag.objects.all()
+	context={'tags':all_tags}
 	if request.method=='GET':
-		publish_pitch_form=PublishPitchForm()
-		context={'publish_pitch_form':publish_pitch_form}
-		return render(request,'kentparker/publishNewPitch.html',context)
+		return render(request,'kentparker/create_pitch.html',context)
+	if 'cancel_btn' in request.POST:
+		return redirect('/')
+	# use the form to do validation
 	publish_pitch_form=PublishPitchForm(request.POST)
-	context={'publish_pitch_form':publish_pitch_form}
 	if not publish_pitch_form.is_valid():
-		return render(request,'kentparker/publishNewPitch.html',context)
-	new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
-	new_pitch.save()
+		return render(request,'kentparker/create_pitch.html',context)
+
+	if 'publish_btn' in request.POST:
+		# publish the pitch
+		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
+		# new_pitch.save()
+	if 'save_btn' in request.POST:
+		# save the pitch as a draft
+		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
+		# new_pitch.save()
+
+	print('ready to output tags-list:  ',request.POST["tags-list"])
+	
 	return redirect('/')
 	
 @login_required
-def new_draft_pitch(request):
-	if request.method=='GET':
-		publish_pitch_form=PublishPitchForm()
-		context={'publish_pitch_form':publish_pitch_form}
-		return render(request,'kentparker/draftNewPitch.html',context)
-	publish_pitch_form=PublishPitchForm(request.POST)
-	context={'publish_pitch_form':publish_pitch_form}
-	if not publish_pitch_form.is_valid():
-		return render(request,'kentparker/draftNewPitch.html',context)
-	new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
-	new_pitch.save()
-	return redirect('/')
+def manage_pitch(request):
+	# show all my pitches including published and drafts
+	pitches=Pitch.objects.filter(author=request.user)
+	context={'pitches':pitches}
+	return render(request,'kentparker/manage_pitch.html',context)
 
-@login_required
-def draft_pitch(request, pitchid):
-	print ("userid : " + userid + ", pitchid : " + pitchid)
-	if request.method=='GET':
-		draft_pitch_form=DraftPitchForm()
-		context={'publish_pitch_form':draft_pitch_form}
-		return render(request,'kentparker/draftPitch.html',context)
-	draft_pitch_form=DraftPitchForm(request.POST)
-	context={'draft_pitch_form':draft_pitch_form}
-	if not draft_pitch_form.is_valid():
-		return render(request,'kentparker/draftPitch.html',context)
-	# find whether the pitch is already in the database
-	# if the pitch is already in the database
-	new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user)
-	# if the pitch is not in the database, create a new one for it
-	new_pitch.save()
-	return redirect('/')
-	
 @login_required
 def profile(request,name):
 	return HttpResponse("")
-
-
-
-@login_required
-def show_pitches(request):
-	my_pitches=Pitch.objects.filter(author=request.user)
-	print('test my pitches',len(my_pitches))
-	context={'pitches':my_pitches}
-	return render(request,'kentparker/manageMyPitches.html',context)
-
-@login_required
-def show_drafts(request):
-	pitches=Pitch.objects.filter(author=request.user,published=False)
-	context={'pitches':pitches}
-	return render(request,'kentparker/draftPitches.html',context)
 
 @login_required
 def edit_pitch(request,pitch_id):
@@ -125,6 +95,7 @@ def edit_pitch(request,pitch_id):
 		return render(request,'kentparker/edit_pitch.html',context)
 	edit_pitch_form.save()
 	return redirect('/show_drafts')
+
 
 # add the target user to contacts by favoriting it
 @login_required
@@ -289,13 +260,11 @@ def register(request):
 	context['register_form']=register_form
 	if not register_form.is_valid():
 		return django.contrib.auth.views.login(request,template_name='kentparker/login.html',extra_context=context)
-	new_tag=Tag.objects.create(name='test')
-	new_tag.save()
-	new_user=MyUser.objects.create_user(username=register_form.cleaned_data.get('r_username'),email=register_form.cleaned_data.get('r_email'),password=register_form.cleaned_data.get('r_password'),first_name=register_form.cleaned_data.get('r_first_name'),last_name=register_form.cleaned_data.get('r_last_name'),user_type=1)
+
+	new_user=MyUser.objects.create_user(username=register_form.cleaned_data.get('r_username'),email=register_form.cleaned_data.get('r_email'),password=register_form.cleaned_data.get('r_password'),first_name=register_form.cleaned_data.get('r_first_name'),last_name=register_form.cleaned_data.get('r_last_name'),user_type=register_form.cleaned_data.get('r_type'))
 	new_user.save()
 	new_user=authenticate(username=register_form.cleaned_data.get('r_username'),password=register_form.cleaned_data.get('r_password'))
 	django.contrib.auth.login(request,new_user)
-
 	token=default_token_generator.make_token(new_user)
 	email_body="""
 	Please click the link below to confirm your email address:

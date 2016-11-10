@@ -9,7 +9,7 @@ class RegisterForm(forms.Form):
 	r_confirm=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm Password'}))
 	r_first_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
 	r_last_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
-
+	r_type=forms.ChoiceField(choices=((1,'News Maker'),(2,'Journalist'),(3,'Media Outlet')),widget=forms.Select(attrs={'class':'form-control'}))
 	def clean(self):
 		cleaned_data=super(RegisterForm,self).clean()
 		if MyUser.objects.filter(username=cleaned_data.get('r_username')):
@@ -21,29 +21,22 @@ class RegisterForm(forms.Form):
 		return cleaned_data
 
 class PublishPitchForm(forms.ModelForm):
-	title=forms.CharField(max_length=30,widget=forms.TextInput(attrs={'class':'text-line'}))
 	class Meta:
 		model=Pitch
 		fields=['title','content']
-		widget={ 'title':forms.TextInput(attrs={'class':'text-line'}),
-		'content':forms.Textarea(attrs={'class':'form-control'})}
 		
 class DraftPitchForm(forms.ModelForm):
 	class Meta:
 		model=Pitch
-		fields=['title','content','location']
+		fields=['title','content']
 
 	def clean(self):
 		cleaned_data=super(PublishPitchForm,self).clean()
 
 class EditProfileModelForm(forms.ModelForm):
-	first_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
-	last_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
 	class Meta:
 		model=MyUser
 		fields=['first_name','last_name','bio','picture']
-		widgets={'picture':forms.FileInput(attrs={'class':'form-control'}),
-					'bio':forms.Textarea(attrs={'class':'form-control','placeholder':'Bio'})}
 
 class ChangePasswordModelForm(forms.ModelForm):
 	old_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Old Password'}))

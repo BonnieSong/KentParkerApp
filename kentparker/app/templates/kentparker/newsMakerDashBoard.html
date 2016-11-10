@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="main.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static "/css/kentparker.css" %}">
+  <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
 </head>
 <body>
 
@@ -22,7 +21,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">KENT PARKER</a>
+      <a class="navbar-brand" href="/">KENT PARKER</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -61,7 +60,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
-        <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
   </div>
@@ -113,34 +112,24 @@
 				<div class="profile-usermenu">
 					<ul class="nav">
 						<li class="active">
-							<a href="#">
+							<a href="/">
 							<i class="glyphicon glyphicon-home"></i>
-							Favourites </a>
+							Related News </a>
 						</li>
 						<li>
 							<a href="#">
 							<i class="glyphicon glyphicon-user"></i>
-							Bookmarked Pitches </a>
+							Related Pitches </a>
 						</li>
 						<li>
-							<a href="/show_pitches">
+							<a href="{% url "manage_pitch" %}">
 							<i class="glyphicon glyphicon-ok"></i>
-							Published Pitches </a>
+							Manage Pitches </a>
 						</li>
 						<li>
-							<a href="{% url "show_drafts" %}">
-							<i class="glyphicon glyphicon-flag"></i>
-							Draft </a>
-						</li>
-						<li>
-							<a href="{% url "publish_pitch" %}">
+							<a href="{% url "create_pitch" %}">
 							<i class="glyphicon glyphicon-pencil"></i>
 							New Pitch </a>
-						</li>
-						<li>
-							<a href="{% url "new_draft_pitch" %}">
-							<i class="glyphicon glyphicon-pencil"></i>
-							New Draft </a>
 						</li>
 					</ul>
 				</div>
@@ -150,7 +139,7 @@
 		<div class="col-md-9">
             <div class="profile-content">
 			   	<div class="panel panel-primary">
-      				<div class="panel-heading">Related Articles</div>
+      				<div class="panel-heading">Related News</div>
       				<div class="panel-body">
       				{%for article in related_articles%}
       				<p>{{article.author.first_name}} {{article.author.last_name}}<a href="profile/{{article.author}}">@{{article.author}}</a></p>

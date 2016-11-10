@@ -6,10 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="main.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Arimo|Bungee+Hairline|Coiny|Droid+Sans|Droid+Serif|Itim|Lato|Libre+Franklin|Merriweather|Montserrat|Noto+Sans|Open+Sans|Open+Sans+Condensed:300|Oswald|PT+Sans|Prociono|Raleway|Roboto|Roboto+Condensed|Roboto+Slab|Shrikhand|Slabo+27px|Source+Sans+Pro|Trirong|Ubuntu" rel="stylesheet">
+    {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
   <script>
 	$(document).on('ready', function() {
     	$("#input-4").fileinput({showCaption: false});
@@ -92,7 +93,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
-        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
   </div>
@@ -110,7 +111,8 @@
 				<!-- SIDEBAR USER TITLE -->
 				<div class="profile-usertitle">
 					<div class="profile-usertitle-name">
-						Inba Ganapathy
+					{{request.user.first_name}}
+					{{request.user.last_name}}
 					</div>
 					<div class="profile-usertitle-job">
 						CMU
@@ -132,28 +134,29 @@
 					</button>
 				</div>
 				<!-- END SIDEBAR BUTTONS -->
+
 				<!-- SIDEBAR MENU -->
 				<div class="profile-usermenu">
 					<ul class="nav">
-						<li class="active">
-							<a href="#">
+						<li>
+							<a href="/">
 							<i class="glyphicon glyphicon-home"></i>
-							Favourites </a>
+							Related News </a>
 						</li>
 						<li>
 							<a href="#">
 							<i class="glyphicon glyphicon-user"></i>
-							Bookmarked Pitches </a>
+							Related Pitches </a>
 						</li>
 						<li>
-							<a href="#">
+							<a href="{% url "manage_pitch" %}">
 							<i class="glyphicon glyphicon-ok"></i>
-							Draft Pitches </a>
+							Manage Pitches </a>
 						</li>
-						<li>
-							<a href="#">
-							<i class="glyphicon glyphicon-flag"></i>
-							Editor </a>
+						<li class="active">
+							<a href="{% url "create_pitch" %}">
+							<i class="glyphicon glyphicon-pencil"></i>
+							New Pitch </a>
 						</li>
 						<li>
 							<div class="container">
@@ -181,11 +184,11 @@
             <div class="profile-content">
 			   	<div class="panel panel-primary">
       				<div class="panel-heading">NEW PITCH</div>
+      				<form method="post" action="{% url "create_pitch" %}">
       				<div class="panel-body">
       					<div class="">
-      					<form method="post" action="{% url "new_draft_pitch" %}">
-      						<h4><b>{{publish_pitch_form.title.label}}</h4>
-      						{{publish_pitch_form.title}}
+      						<h4><b>Subject</h4>
+      						<input type="text" class="text-line" name="title" />
       						<h4><b>Pitch Description<h4>
       						<div class="form-group">
       							<div class="dropdown">
@@ -199,22 +202,16 @@
   									</ul>
 								</div>
 								<br>
-  								{# <textarea class="form-control" rows="5" id="comment" style="font-family: 'Shrikhand', cursive;"></textarea> #}
-  								{{publish_pitch_form.content}}
+  								<textarea name="content" class="form-control" rows="5" id="comment" style="font-family: 'Shrikhand', cursive;"></textarea>
 							</div>
       						<div class="dropdown">
 								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">CATEGORY
 								<span class="caret"></span></button>
 								<ul class="dropdown-menu">
-  									<li><a href="#" class="small" data-value="option1" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 1</a>
-  									<a href="#" class="small" data-value="option2" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 2</a></li>
-  									<li><a href="#" class="small" data-value="option3" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 3</a></li>
-  									<li><a href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 4</a></li>
-  									<li><a href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 4</a></li>
-  									<li><a href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 4</a></li>
-  									<li><a href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 4</a></li>
-  									<li><a href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 4</a></li>
-  								</ul>
+								{%for tag in tags %}
+								<li><a href="#" class="small" data-value="{{tag}}" tabIndex="-1"><input type="checkbox"/>{{tag}}</a></li>
+								{% endfor%}
+								</ul>
 							</div>
 							<br>
 							Upload Attachment
@@ -241,16 +238,13 @@
   								<label style="font-size:20px"><input type="checkbox" value="">Embargo</label>
 							</div>
 							<div class="center">
-
-								<input type="submit" class="btn btn-success" value="Save">
-								{% csrf_token%}
-							</form>
-							<form method="post" action="/">
-								<input type="submit" class="btn btn-danger" value="Cancel">
-								{% csrf_token%}
-							</form>
+								<input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish">
+								<input type="submit" name ="save_btn" class="btn btn-success" value="Save">
+								<input type="submit" name="cancel_btn" class="btn btn-danger" value="Cancel">
 							</div>
             			</div>
+            				{% csrf_token %}
+            			</form>
       				</div>
    				 </div>
             </div>
