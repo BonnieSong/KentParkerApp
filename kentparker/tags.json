@@ -1,0 +1,23 @@
+[
+{
+	"model":"app.Tag",
+	"pk":1,
+	"fields":{
+		"name":"tag1"
+	}
+},
+{
+	"model":"app.Tag",
+	"pk":2,
+	"fields":{
+		"name":"tag2"
+	}
+},
+{
+	"model":"app.Tag",
+	"pk":3,
+	"fields":{
+		"name":"tag3"
+	}
+}
+]
