@@ -78,6 +78,16 @@ def manage_pitch(request):
 	context={'pitches':pitches}
 	return render(request,'kentparker/manage_pitch.html',context)
 
+	
+@login_required
+def manage_journalists(request):
+	print ("manage_journalists")
+	# show all journalists belong to this media outlet
+	journalists = MyUser.objects.filter(user_type = 2, organization = request.user)
+	context={'journalists':journalists}
+	return render(request,'kentparker/manage_journalists.html',context)
+# 	return redirect('/')
+	
 @login_required
 def profile(request,name):
 	return HttpResponse("")
@@ -232,7 +242,7 @@ def login_google(request,email):
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
 	defaultpassword = "123"
-	new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=1)
+	new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=3)
 	new_user.save()
 	django.contrib.auth.login(request,new_user)
 	return redirect('/')
