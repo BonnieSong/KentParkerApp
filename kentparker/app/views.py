@@ -32,7 +32,7 @@ def home(request):
 		all_tags=request.user.tags
 		pitches=Pitch.objects.filter(tags__in=all_tags)
 		context = {'pitches':pitches}
-		return render(request,'kentparker/journalist_dashboard.html',context)
+		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
 		# media outlet
 		all_journalists = MyUser.objects.filter(organization=request.user)
@@ -48,12 +48,8 @@ def filter_pitch(request, tags):
 	#filter_pitches = []
 	tagsSet = tags.split()
 	pitches = Pitch.objects.filter(tags__in=tagsSet)
-
-	#for tag in tagsSet:
-	#	filter_pitches.append(Pitch.objects.filter(tag in Pitch.tags))
-		#filter_pitches.append(tag.pitch_set.all())
 	context = {'filter_pitches': pitches}
-	return render(request, 'kentparker/Journalist.html', context)
+	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 @login_required
 def create_pitch(request):
@@ -83,7 +79,26 @@ def create_pitch(request):
 		new_pitch.tags.add(target_tag)
 	new_pitch.save()
 	return redirect('/')
-	
+
+@login_required
+def draft_pitch(request, pitchid):
+	print("userid : " + userid + ", pitchid : " + pitchid)
+	if request.method == 'GET':
+		draft_pitch_form = DraftPitchForm()
+		context = {'publish_pitch_form': draft_pitch_form}
+		return render(request, 'kentparker/draftPitch.html', context)
+	draft_pitch_form = DraftPitchForm(request.POST)
+	context = {'draft_pitch_form': draft_pitch_form}
+	if not draft_pitch_form.is_valid():
+		return render(request, 'kentparker/draftPitch.html', context)
+	# find whether the pitch is already in the database
+	# if the pitch is already in the database
+	new_pitch = Pitch(title=publish_pitch_form.cleaned_data.get('title'),
+					  content=publish_pitch_form.cleaned_data.get('content'), author=request.user)
+	# if the pitch is not in the database, create a new one for it
+	new_pitch.save()
+	return redirect('/')
+
 @login_required
 def manage_pitch(request):
 	# show all my pitches including published and drafts
