@@ -46,7 +46,7 @@ def home(request):
 def filter_pitch(request, tags):
 	print("tagssssss: "+tags)
 	#filter_pitches = []
-	tagsSet = tags.split()
+	tagsSet = tags.split() 
 	pitches = Pitch.objects.filter(tags__in=tagsSet)
 	context = {'filter_pitches': pitches}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
