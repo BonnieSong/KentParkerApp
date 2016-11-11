@@ -43,6 +43,19 @@ def home(request):
 		return render(request,'kentparker/mediaoutlet_dashboard.html',context)
 
 @login_required
+def filter_pitch(request, tags):
+	print("tagssssss: "+tags)
+	#filter_pitches = []
+	tagsSet = tags.split()
+	pitches = Pitch.objects.filter(tags__in=tagsSet)
+
+	#for tag in tagsSet:
+	#	filter_pitches.append(Pitch.objects.filter(tag in Pitch.tags))
+		#filter_pitches.append(tag.pitch_set.all())
+	context = {'filter_pitches': pitches}
+	return render(request, 'kentparker/Journalist.html', context)
+
+@login_required
 def create_pitch(request):
 	all_tags=Tag.objects.all()
 	context={'tags':all_tags}
@@ -81,6 +94,21 @@ def manage_pitch(request):
 @login_required
 def profile(request,name):
 	return HttpResponse("")
+
+
+
+@login_required
+def show_pitches(request):
+	my_pitches=Pitch.objects.filter(author=request.user)
+	print('test my pitches',len(my_pitches))
+	context={'pitches':my_pitches}
+	return render(request,'kentparker/manageMyPitches.html',context)
+
+@login_required
+def show_drafts(request):
+	draft_pitches=Pitch.objects.filter(author=request.user,published=False)
+	context={'draft_pitches':draft_pitches}
+	return render(request,'kentparker/draftPitches.html',context)
 
 @login_required
 def edit_pitch(request,pitch_id):

@@ -1,3 +1,15 @@
+function updateTextArea() {
+		    var allVals = [];
+		    var allTagString='';
+		    $('#upreferences input[type="checkbox"]:checked').each(function() {
+		    	allVals.push($(this).val());
+		    	allTagString += $(this).val()+"@";
+		    });
+		    $('#t').val(allTagString);
+		    $('#myModal').modal('toggle')
+		    window.location.replace("/journalist/"+allTagString);
+		}
+
 function onGoogleSignIn(googleUser) {
 	var profile = googleUser.getBasicProfile();
 	console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
