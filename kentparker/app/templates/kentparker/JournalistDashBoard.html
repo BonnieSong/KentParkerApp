@@ -160,11 +160,11 @@
 							    		<br>
 									    <ul class="dropdown" id = "upreferences">
 		  									<li>
-		  										<input type="checkbox" value = "opt1">&nbsp;Option 1
-		  										<input type="checkbox" value = "opt2">&nbsp;Option 2
+		  										<input type="checkbox" value = "1">&nbsp;Option 1
+		  										<input type="checkbox" value = "2">&nbsp;Option 2
 		  									</li>
 		  									<li>
-		  										<input type="checkbox" value = "opt3">&nbsp;Option 3
+		  										<input type="checkbox" value = "3">&nbsp;Option 3
 		  										<input type="checkbox" value = "opt4">&nbsp;Option 4
 		  									</li>
 		  									<li>
@@ -196,18 +196,17 @@
       				<div class="panel-heading">Pitches</div>
       				<div class="panel-body">
       					<textarea id="t"></textarea>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-      					<div class="well well-lg">Large Well</div>
-
+						{%for pitch in filter_pitches%}
+						<div class="well well-lg">
+							<p>{{pitch.title}}</p>
+							<p>{{pitch.content}}</p>
+							<p>{{pitch.pub_time}}</p>
+							<p>Publihshed: {{pitch.published}}</p>
+							{% for tag in pitch.tags.all %}
+							<button class="btn btn-success">{{tag}}</button>
+							{%endfor%}
+						</div>
+						{% endfor %}
       				</div>
    				 </div>
             </div>

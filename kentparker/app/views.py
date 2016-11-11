@@ -30,8 +30,8 @@ def home(request):
 	elif request.user.user_type==2:
 		#journalist
 		all_tags=request.user.tags
-		pitches=Pitch.objects.filter(tags__in=all_tags)
-		context = {'pitches':pitches}
+		pitches = Pitch.objects.filter(tags__in=all_tags).distinct()
+		context = {'pitches':pitches, 'tags':all_tags}
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
 		# media outlet
@@ -44,12 +44,23 @@ def home(request):
 
 @login_required
 def filter_pitch(request, tags):
-	print("tagssssss: "+tags)
-	#filter_pitches = []
-	tagsSet = tags.split() 
-	pitches = Pitch.objects.filter(tags__in=tagsSet)
-	context = {'filter_pitches': pitches}
+	all_tags=Tag.objects.all()
+	tagsSet = set()
+
+	chosen_tags_ids = tags.split("@")
+	for tag_id in chosen_tags_ids:
+		if(len(tag_id)>0):
+			tag_id = tag_id[len(tag_id)-1:]
+			target_tag=Tag.objects.get(pk=tag_id)
+			tagsSet.add(target_tag)
+
+	if len(tagsSet)==0:
+		tagsSet = all_tags
+
+	pitches = Pitch.objects.filter(tags__in=tagsSet).distinct()
+	context = {'filter_pitches': pitches, 'tags':all_tags}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
+
 
 @login_required
 def create_pitch(request):
