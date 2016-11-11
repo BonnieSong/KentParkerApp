@@ -30,9 +30,9 @@ def home(request):
 	elif request.user.user_type==2:
 		#journalist
 		all_tags=request.user.tags
-		pitches=Pitch.objects.filter(tags__in=all_tags)
-		context = {'pitches':pitches}
-		return render(request,'kentparker/journalist_dashboard.html',context)
+		pitches = Pitch.objects.filter(tags__in=all_tags).distinct()
+		context = {'pitches':pitches, 'tags':all_tags}
+		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
 		# media outlet
 		all_journalists = MyUser.objects.filter(organization=request.user)
@@ -41,6 +41,26 @@ def home(request):
 			published_articles.append(journalist.article_set.all())
 		context = {'journalists': all_journalists, 'articles': published_articles }
 		return render(request,'kentparker/mediaoutlet_dashboard.html',context)
+
+@login_required
+def filter_pitch(request, tags):
+	all_tags=Tag.objects.all()
+	tagsSet = set()
+
+	chosen_tags_ids = tags.split("@")
+	for tag_id in chosen_tags_ids:
+		if(len(tag_id)>0):
+			tag_id = tag_id[len(tag_id)-1:]
+			target_tag=Tag.objects.get(pk=tag_id)
+			tagsSet.add(target_tag)
+
+	if len(tagsSet)==0:
+		tagsSet = all_tags
+
+	pitches = Pitch.objects.filter(tags__in=tagsSet).distinct()
+	context = {'filter_pitches': pitches, 'tags':all_tags}
+	return render(request, 'kentparker/JournalistDashBoard.html', context)
+
 
 @login_required
 def create_pitch(request):
@@ -70,7 +90,7 @@ def create_pitch(request):
 		new_pitch.tags.add(target_tag)
 	new_pitch.save()
 	return redirect('/')
-	
+
 @login_required
 def manage_pitch(request):
 	# show all my pitches including published and drafts
@@ -91,24 +111,6 @@ def manage_journalists(request):
 @login_required
 def profile(request,name):
 	return HttpResponse("")
-
-@login_required
-def edit_pitch(request,pitch_id):
-	context={}
-	target_pitch=Pitch.objects.get(pk=pitch_id)
-
-	if request.method=='GET':
-		context['edit_pitch_form']=PublishPitchForm(instance=target_pitch)
-		context['pitch_id']=pitch_id
-		return render(request,'kentparker/edit_pitch.html',context)
-
-	edit_pitch_form=PublishPitchForm(request.POST,instance=target_pitch)
-	context={'edit_pitch_form':edit_pitch_form,'pitch_id':pitch_id}
-	if not edit_pitch_form.is_valid():
-		return render(request,'kentparker/edit_pitch.html',context)
-	edit_pitch_form.save()
-	return redirect('/show_drafts')
-
 
 # add the target user to contacts by favoriting it
 @login_required

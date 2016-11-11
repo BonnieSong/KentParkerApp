@@ -23,20 +23,16 @@ class RegisterForm(forms.Form):
 class PublishPitchForm(forms.ModelForm):
 	class Meta:
 		model=Pitch
-		fields=['title','content']
-		
-class DraftPitchForm(forms.ModelForm):
-	class Meta:
-		model=Pitch
-		fields=['title','content']
-
-	def clean(self):
-		cleaned_data=super(PublishPitchForm,self).clean()
+		fields=['title','content','tags']
 
 class EditProfileModelForm(forms.ModelForm):
+	first_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
+	last_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
 	class Meta:
 		model=MyUser
 		fields=['first_name','last_name','bio','picture']
+		widgets={'picture':forms.FileInput(attrs={'class':'form-control'}),
+					'bio':forms.Textarea(attrs={'class':'form-control','placeholder':'Bio'})}
 
 class ChangePasswordModelForm(forms.ModelForm):
 	old_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Old Password'}))
