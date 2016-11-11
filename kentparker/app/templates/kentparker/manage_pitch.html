@@ -138,8 +138,10 @@
       					<p>{{pitch.title}}</p>
       					<p>{{pitch.content}}</p>
       					<p>{{pitch.pub_time}}</p>
-      					<p>Status:</p>
-      					<p>{{pitch.published}}</p>
+      					<p>Publihshed: {{pitch.published}}</p>
+      					{% for tag in pitch.tags.all %}
+      					<button class="btn btn-success">{{tag}}</button>
+      					{%endfor%}
       				</div>
       				{% endfor %}
    				 </div>

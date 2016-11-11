@@ -58,14 +58,17 @@ def create_pitch(request):
 	if 'publish_btn' in request.POST:
 		# publish the pitch
 		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
-		# new_pitch.save()
+		new_pitch.save()
 	if 'save_btn' in request.POST:
 		# save the pitch as a draft
 		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
-		# new_pitch.save()
+		new_pitch.save()
 
-	print('ready to output tags-list:  ',request.POST["tags-list"])
-	
+	chosen_tags_ids=request.POST.getlist("tags-list")
+	for tag_id in chosen_tags_ids:
+		target_tag=Tag.objects.get(pk=tag_id)
+		new_pitch.tags.add(target_tag)
+	new_pitch.save()
 	return redirect('/')
 	
 @login_required
@@ -263,6 +266,13 @@ def register(request):
 
 	new_user=MyUser.objects.create_user(username=register_form.cleaned_data.get('r_username'),email=register_form.cleaned_data.get('r_email'),password=register_form.cleaned_data.get('r_password'),first_name=register_form.cleaned_data.get('r_first_name'),last_name=register_form.cleaned_data.get('r_last_name'),user_type=register_form.cleaned_data.get('r_type'))
 	new_user.save()
+	# if new_user.user_type==1:
+	# 	return render(request,'kentparker/registration_newsmaker.html',context)
+	# if new_user.user_type==2:
+	# 	return render(request,'kentparker/registration_journalist.html',context)
+	# if new_user.user_type==3:
+	# 	return render(request,'kentparker/registration_mediaoutlet.html',context)
+
 	new_user=authenticate(username=register_form.cleaned_data.get('r_username'),password=register_form.cleaned_data.get('r_password'))
 	django.contrib.auth.login(request,new_user)
 	token=default_token_generator.make_token(new_user)
@@ -277,6 +287,15 @@ def register(request):
 			  recipient_list=[new_user.email])
 
 	return redirect('/')
+
+def register_newsmaker(request,data):
+	return HttpResponse("")
+
+def register_journalist(request,data):
+	return HttpResponse("")
+
+def register_mediaoutlet(request,data):
+	return HttpResponse("")
 
 def confirm_registration(request,name,token):
 	target_user=get_object_or_404(MyUser,username=name)

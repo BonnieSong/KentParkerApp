@@ -183,7 +183,7 @@
 		<div class="col-md-9">
             <div class="profile-content">
 			   	<div class="panel panel-primary">
-      				<div class="panel-heading">NEW PITCH</div>
+      				<div class="panel-heading">New Pitch</div>
       				<form method="post" action="{% url "create_pitch" %}">
       				<div class="panel-body">
       					<div class="">
@@ -205,13 +205,16 @@
   								<textarea name="content" class="form-control" rows="5" id="comment" style="font-family: 'Shrikhand', cursive;"></textarea>
 							</div>
       						<div class="dropdown">
-								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">CATEGORY
-								<span class="caret"></span></button>
-								<ul class="dropdown-menu">
+								{# <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">CATEGORY #}
+								{# <span class="caret"></span></button> #}
+								{# <ul class="dropdown-menu"> #}
+								<select multiple="multiple" name="tags-list">
 								{%for tag in tags %}
-								<li><a href="#" class="small" data-value="{{tag}}" tabIndex="-1"><input type="checkbox"/>{{tag}}</a></li>
+								{# <li><a href="#" class="small" data-value="{{tag}}" tabIndex="-1"><input type="checkbox"/>{{tag}}</a></li> #}
+								<option value="{{tag.id}}">{{tag}}</option>
 								{% endfor%}
-								</ul>
+								</select>
+								{# </ul> #}
 							</div>
 							<br>
 							Upload Attachment
