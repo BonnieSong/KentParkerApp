@@ -81,25 +81,6 @@ def create_pitch(request):
 	return redirect('/')
 
 @login_required
-def draft_pitch(request, pitchid):
-	print("userid : " + userid + ", pitchid : " + pitchid)
-	if request.method == 'GET':
-		draft_pitch_form = DraftPitchForm()
-		context = {'publish_pitch_form': draft_pitch_form}
-		return render(request, 'kentparker/draftPitch.html', context)
-	draft_pitch_form = DraftPitchForm(request.POST)
-	context = {'draft_pitch_form': draft_pitch_form}
-	if not draft_pitch_form.is_valid():
-		return render(request, 'kentparker/draftPitch.html', context)
-	# find whether the pitch is already in the database
-	# if the pitch is already in the database
-	new_pitch = Pitch(title=publish_pitch_form.cleaned_data.get('title'),
-					  content=publish_pitch_form.cleaned_data.get('content'), author=request.user)
-	# if the pitch is not in the database, create a new one for it
-	new_pitch.save()
-	return redirect('/')
-
-@login_required
 def manage_pitch(request):
 	# show all my pitches including published and drafts
 	pitches=Pitch.objects.filter(author=request.user)
@@ -109,39 +90,6 @@ def manage_pitch(request):
 @login_required
 def profile(request,name):
 	return HttpResponse("")
-
-
-
-@login_required
-def show_pitches(request):
-	my_pitches=Pitch.objects.filter(author=request.user)
-	print('test my pitches',len(my_pitches))
-	context={'pitches':my_pitches}
-	return render(request,'kentparker/manageMyPitches.html',context)
-
-@login_required
-def show_drafts(request):
-	draft_pitches=Pitch.objects.filter(author=request.user,published=False)
-	context={'draft_pitches':draft_pitches}
-	return render(request,'kentparker/draftPitches.html',context)
-
-@login_required
-def edit_pitch(request,pitch_id):
-	context={}
-	target_pitch=Pitch.objects.get(pk=pitch_id)
-
-	if request.method=='GET':
-		context['edit_pitch_form']=PublishPitchForm(instance=target_pitch)
-		context['pitch_id']=pitch_id
-		return render(request,'kentparker/edit_pitch.html',context)
-
-	edit_pitch_form=PublishPitchForm(request.POST,instance=target_pitch)
-	context={'edit_pitch_form':edit_pitch_form,'pitch_id':pitch_id}
-	if not edit_pitch_form.is_valid():
-		return render(request,'kentparker/edit_pitch.html',context)
-	edit_pitch_form.save()
-	return redirect('/show_drafts')
-
 
 # add the target user to contacts by favoriting it
 @login_required

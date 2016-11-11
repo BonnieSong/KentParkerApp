@@ -20,12 +20,10 @@ urlpatterns = [
     url(r'^confirm_registration/(?P<name>.*)/(?P<token>.*)$',views.confirm_registration,name='confirm_registration'),
     url(r'^request_reset_password$',views.request_reset_password,name='request_reset_password'),
     url(r'^reset_password/(?P<name>.*)/(?P<token>.*)$',views.reset_password,name='reset_password'),
-    # newsmaker
+    # newsmaker related urls
     url(r'^create_pitch$', views.create_pitch, name='create_pitch'),
     url(r'^manage_pitch$', views.manage_pitch, name='manage_pitch'),
-    url(r'^show_drafts$',views.show_drafts,name='show_drafts'),
     url(r'^edit_pitch/(?P<pitch_id>.*)$', views.edit_pitch, name='edit_pitch'),
-    url(r'^draft_pitch$', views.draft_pitch, name='draft_pitch'),
-    url(r'^show_pitches$', views.show_pitches, name='show_pitches'),
+    # journalist related urls
     url(r'^journalist/(?P<tags>.*)$', views.filter_pitch, name='filter_pitch'),
 ]
