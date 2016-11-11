@@ -21,20 +21,9 @@ class RegisterForm(forms.Form):
 		return cleaned_data
 
 class PublishPitchForm(forms.ModelForm):
-	#title=forms.CharField(max_length=30,widget=forms.TextInput(attrs={'class':'text-line'}))
 	class Meta:
 		model=Pitch
 		fields=['title','content','tags']
-		widget={ 'title':forms.TextInput(attrs={'class':'text-line'}),
-		'content':forms.Textarea(attrs={'class':'form-control'})}
-		
-class DraftPitchForm(forms.ModelForm):
-	class Meta:
-		model=Pitch
-		fields=['title','content','location']
-
-	def clean(self):
-		cleaned_data=super(PublishPitchForm,self).clean()
 
 class EditProfileModelForm(forms.ModelForm):
 	first_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
