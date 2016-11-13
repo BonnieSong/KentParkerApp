@@ -42,6 +42,7 @@ def home(request):
 		context = {'journalists': all_journalists, 'articles': published_articles }
 		return render(request,'kentparker/mediaoutlet_dashboard.html',context)
 
+
 @login_required
 def filter_pitch(request, tags):
 	all_tags=Tag.objects.all()
@@ -268,12 +269,12 @@ def register(request):
 
 	new_user=MyUser.objects.create_user(username=register_form.cleaned_data.get('r_username'),email=register_form.cleaned_data.get('r_email'),password=register_form.cleaned_data.get('r_password'),first_name=register_form.cleaned_data.get('r_first_name'),last_name=register_form.cleaned_data.get('r_last_name'),user_type=register_form.cleaned_data.get('r_type'))
 	new_user.save()
-	# if new_user.user_type==1:
-	# 	return render(request,'kentparker/registration_newsmaker.html',context)
-	# if new_user.user_type==2:
-	# 	return render(request,'kentparker/registration_journalist.html',context)
-	# if new_user.user_type==3:
-	# 	return render(request,'kentparker/registration_mediaoutlet.html',context)
+	if new_user.user_type=='1':
+		return redirect("/register_newsmaker")
+	if new_user.user_type=='2':
+		return redirect("/register_journalist")
+	if new_user.user_type=='3':
+		return redirect("/register_mediaoutlet")
 
 	new_user=authenticate(username=register_form.cleaned_data.get('r_username'),password=register_form.cleaned_data.get('r_password'))
 	django.contrib.auth.login(request,new_user)
@@ -290,14 +291,14 @@ def register(request):
 
 	return redirect('/')
 
-def register_newsmaker(request,data):
-	return HttpResponse("")
+def register_newsmaker(request):
+	return render(request,"kentparker/registration_newsmaker")
 
-def register_journalist(request,data):
-	return HttpResponse("")
+def register_journalist(request):
+	return render(request,"kentparker/registration_journalist")
 
-def register_mediaoutlet(request,data):
-	return HttpResponse("")
+def register_mediaoutlet(request):
+	return render(request,"kentparker/registration_mediaoutlet")
 
 def confirm_registration(request,name,token):
 	target_user=get_object_or_404(MyUser,username=name)
