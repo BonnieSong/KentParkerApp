@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^register$', views.register, name='register'),
     url(r'^login_google/(?P<email>.*)$', views.login_google, name='login_google'),
     url(r'^login_facebook/(?P<userid>.*)$', views.login_facebook, name='login_facebook'),
-    url(r'^profile/(?P<name>.*)$', views.profile),
+    url(r'^profile/(?P<name>.*)$', views.profile,name='profile'),
     url(r'^get_photo/(?P<name>.*)$',views.get_photo,name='get_photo'),
     url(r'^edit_profile/(?P<name>.*)$', views.edit_profile, name='edit_profile'),
     url(r'^change_password/(?P<name>.*)$', views.change_password, name='change_password'),
@@ -22,6 +22,7 @@ urlpatterns = [
     # newsmaker related urls
     url(r'^create_pitch$', views.create_pitch, name='create_pitch'),
     url(r'^manage_pitch$', views.manage_pitch, name='manage_pitch'),
+    url(r'^register_newsmaker$', views.register_newsmaker, name='register_newsmaker'),
     # journalist related urls
     url(r'^journalist/(?P<tags>.*)$', views.filter_pitch, name='filter_pitch'),
 ]

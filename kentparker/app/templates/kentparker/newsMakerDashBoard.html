@@ -84,13 +84,15 @@
 				<!-- END SIDEBAR USERPIC -->
 				<!-- SIDEBAR USER TITLE -->
 				<div class="profile-usertitle">
+				<a href="{% url "profile" request.user %}">
 					<div class="profile-usertitle-name">
 						{{request.user.first_name}}
 						{{request.user.last_name}}
 					</div>
 					<div class="profile-usertitle-job">
-						CMU
+						Newsmaker
 					</div>
+				</a>
 				</div>
 				<!-- END SIDEBAR USER TITLE -->
 				<!-- SIDEBAR BUTTONS -->

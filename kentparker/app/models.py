@@ -29,7 +29,7 @@ class Pitch(models.Model):
 	title=models.CharField(max_length=30)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_pr') # newsmaker
-	tags=models.ManyToManyField(Tag,null=True,blank=True)
+	tags=models.ManyToManyField(Tag)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
 	attachment=models.URLField(max_length=200)
