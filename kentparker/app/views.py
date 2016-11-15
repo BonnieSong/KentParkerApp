@@ -28,7 +28,7 @@ def home(request):
 		context={'pitches':my_pitches}
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
-		#journalist
+		# journalist
 		all_tags=request.user.tags
 		pitches = Pitch.objects.filter(tags__in=all_tags).distinct()
 		context = {'pitches':pitches, 'tags':all_tags}
@@ -291,31 +291,31 @@ def register(request):
 			  from_email='yujiel1@andrew.cmu.edu',
 			  recipient_list=[new_user.email])
 
-	if new_user.user_type=='1':
+	if new_user.user_type==1:
 		return redirect("/register_newsmaker")
-	if new_user.user_type=='2':
+	if new_user.user_type==2:
 		return redirect("/register_journalist")
-	if new_user.user_type=='3':
+	if new_user.user_type==3:
 		return redirect("/register_mediaoutlet")
 
 	return redirect('/')
 
 def register_newsmaker(request):
 	if request.method=='GET':
-		return render(request,"kentparker/registration_newsmaker")
+		return render(request,"kentparker/registration_newsmaker.html")
 	# update the reuqest.user with new form
-	return render(request,"kentparker/registration_newsmaker")
+	return render(request,"kentparker/registration_newsmaker.html")
 
 def register_journalist(request):
 	if request.method=='GET':
-		return render(request,"kentparker/registration_journalist")
+		return render(request,"kentparker/registration_journalist.html")
 	# update the request.user with new form
-	return render(request,"kentparker/registration_journalist")
+	return render(request,"kentparker/registration_journalist.html")
 
 def register_mediaoutlet(request):
 	if request.method=='GET':
-		return render(request,"kentparker/registration_mediaoutlet")
-	return render(request,"kentparker/registration_mediaoutlet")
+		return render(request,"kentparker/registration_mediaoutlet.html")
+	return render(request,"kentparker/registration_mediaoutlet.html")
 
 def confirm_registration(request,name,token):
 	target_user=get_object_or_404(MyUser,username=name)

@@ -9,6 +9,9 @@ urlpatterns = [
     url(r'^login$', views.login, name='login'),
     url(r'^logout$', django.contrib.auth.views.logout_then_login, name='logout'),
     url(r'^register$', views.register, name='register'),
+    url(r'^register_newsmaker$', views.register_newsmaker, name='register_newsmaker'),
+    url(r'^register_journalist$', views.register_journalist, name='register_journalist'),
+    url(r'^register_mediaoutlet$', views.register_mediaoutlet, name='register_mediaoutlet'),
     url(r'^login_google/(?P<email>.*)$', views.login_google, name='login_google'),
     url(r'^login_facebook/(?P<userid>.*)$', views.login_facebook, name='login_facebook'),
     url(r'^profile/(?P<name>.*)$', views.profile,name='profile'),
@@ -22,7 +25,6 @@ urlpatterns = [
     # newsmaker related urls
     url(r'^create_pitch$', views.create_pitch, name='create_pitch'),
     url(r'^manage_pitch$', views.manage_pitch, name='manage_pitch'),
-    url(r'^register_newsmaker$', views.register_newsmaker, name='register_newsmaker'),
     # journalist related urls
     url(r'^journalist/(?P<tags>.*)$', views.filter_pitch, name='filter_pitch'),
 ]
