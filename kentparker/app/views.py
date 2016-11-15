@@ -224,7 +224,7 @@ def reset_password(request,name,token):
 @login_required
 def publish_article(request):
 	return HttpResponse("")
-
+	
 def login(request):
 	context={'register_form':RegisterForm(),'from_login':True}
 	return django.contrib.auth.views.login(request,template_name='kentparker/login.html',extra_context=context)
@@ -291,12 +291,12 @@ def register(request):
 			  from_email='yujiel1@andrew.cmu.edu',
 			  recipient_list=[new_user.email])
 
-	if new_user.user_type==1:
-		return redirect("/register_newsmaker")
-	if new_user.user_type==2:
-		return redirect("/register_journalist")
-	if new_user.user_type==3:
-		return redirect("/register_mediaoutlet")
+	# if new_user.user_type==1:
+	# 	return redirect("/register_newsmaker")
+	# if new_user.user_type==2:
+	# 	return redirect("/register_journalist")
+	# if new_user.user_type==3:
+	# 	return redirect("/register_mediaoutlet")
 
 	return redirect('/')
 
