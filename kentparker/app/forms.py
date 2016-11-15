@@ -60,3 +60,8 @@ class ResetPaswordForm(forms.Form):
 		if cleaned_data.get('password')!=cleaned_data.get('confirm'):
 			raise forms.ValidationError('Passwords did not match')
 		return cleaned_data
+
+class register_step2_newsmaker_form(forms.ModelForm):
+	class Meta:
+		model=MyUser
+		fields=['address','website','phone','skype_id','twitter_id','facebook_id','bio','size','industry','source']

@@ -302,12 +302,12 @@ def register(request):
 			  from_email='yujiel1@andrew.cmu.edu',
 			  recipient_list=[new_user.email])
 
-	# if new_user.user_type==1:
-	# 	return redirect("/register_newsmaker")
-	# if new_user.user_type==2:
-	# 	return redirect("/register_journalist")
-	# if new_user.user_type==3:
-	# 	return redirect("/register_mediaoutlet")
+	if new_user.user_type==1:
+		return redirect("/register_newsmaker")
+	if new_user.user_type==2:
+		return redirect("/register_journalist")
+	if new_user.user_type==3:
+		return redirect("/register_mediaoutlet")
 
 	return redirect('/')
 
@@ -315,7 +315,10 @@ def register_newsmaker(request):
 	if request.method=='GET':
 		return render(request,"kentparker/registration_newsmaker.html")
 	# update the reuqest.user with new form
-	return render(request,"kentparker/registration_newsmaker.html")
+	step2_form=register_step2_newsmaker_form(request.POST,instance=request.user)
+	if step2_form.is_valid():
+		step2_form.save()
+	return redirect("/")
 
 def register_journalist(request):
 	if request.method=='GET':
