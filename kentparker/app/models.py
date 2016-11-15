@@ -27,9 +27,10 @@ class MyUser(AbstractUser):
 	facebook_id=models.CharField(max_length=20,blank=True)
 	phone=models.CharField(max_length=12,blank=True)
 	website=models.URLField(blank=True)
-	source=models.CharField(max_length=10,blank=True)
+	source=models.CharField(max_length=20,blank=True)
 	size=models.CharField(max_length=20,blank=True)
 	industry=models.CharField(max_length=10,blank=True)
+	
 	def __str__(self):
 		return self.username
 
@@ -37,7 +38,7 @@ class Pitch(models.Model):
 	title=models.CharField(max_length=30)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_pr') # newsmaker
-	tags=models.ManyToManyField(Tag)
+	tags=models.ManyToManyField(Tag,blank=True)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
 	attachment=models.URLField(max_length=200)
