@@ -92,7 +92,7 @@ def create_pitch(request):
 		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
 		new_pitch.save()
 	if 'save_btn' in request.POST:
-		# save the pitch as a draft
+		# save the pitch as a drafts
 		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
 		new_pitch.save()
 
@@ -308,7 +308,6 @@ def register(request):
 		return redirect("/register_journalist")
 	if new_user.user_type==3:
 		return redirect("/register_mediaoutlet")
-
 	return redirect('/')
 
 def register_newsmaker(request):
