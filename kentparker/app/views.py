@@ -28,10 +28,11 @@ def home(request):
 		context={'pitches':my_pitches}
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
-		# journalist
-		all_tags=request.user.tags
+		#journalist
+		# all_tags=request.user.tags
+		all_tags=Tag.objects.all()
 		pitches = Pitch.objects.filter(tags__in=all_tags).distinct()
-		context = {'pitches':pitches, 'tags':all_tags}
+		context = {'filter_pitches': pitches, 'tags': all_tags}
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
 		# media outlet
@@ -42,9 +43,19 @@ def home(request):
 		context = {'journalists': all_journalists, 'articles': published_articles }
 		return render(request,'kentparker/mediaoutlet_dashboard.html',context)
 
+@login_required
+def favNewsMakers_pitch(request):
+	all_tags = Tag.objects.all()
+	newsMakers = request.user.contacts
+	pitches = set()
+	if (newsMakers is not None) and (len(newsMakers)>0) :
+		for newsMaker in newsMakers:
+			pitches.append(newsMaker.pitch_set.all())
+	context = {'filter_pitches': pitches, 'tags': all_tags}
+	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 @login_required
-def filter_pitch(request, tags):
+def filterTags_pitch(request, tags):
 	all_tags=Tag.objects.all()
 	tagsSet = set()
 

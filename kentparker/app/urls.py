@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^create_pitch$', views.create_pitch, name='create_pitch'),
     url(r'^manage_pitch$', views.manage_pitch, name='manage_pitch'),
     # journalist related urls
-    url(r'^journalist/(?P<tags>.*)$', views.filter_pitch, name='filter_pitch'),
+    url(r'^journalist/favNewsMakers$', views.favNewsMakers_pitch, name='favNewsMakers_pitch'),
+    url(r'^journalist/(?P<tags>.*)$', views.filterTags_pitch, name='filterTags_pitch'),
 ]
