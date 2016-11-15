@@ -76,98 +76,61 @@
                             <form role="form" action="" method="post" class="registration-form">
                                 <div class="form-group">
                                   <label for="form-org">Organization Affiliated To</label>
-                                  <input type="text" name="form-org" placeholder="Where is your business" class="form-org form-control" id="form-org">
+                                  <input type="text" name="organization" placeholder="Where is your business" class="form-org form-control" id="form-org">
                                 </div>
                                 <div class="form-group">
                                   <label for="form-phone">Phone Number</label>
-                                  <input type="text" name="form-phone" placeholder="Your contact number" class="form-phone form-control" id="form-phone">
+                                  <input type="text" name="phone" placeholder="Your contact number" class="form-phone form-control" id="form-phone">
                                 </div>
                                 <div class="form-group">
                                   <label for="form-skype">Skype ID</label>
-                                  <input type="text" name="form-skype" placeholder="Your Skype ID" class="form-skype form-control" id="form-skype">
-                                </div>
-                                 <div class="form-group">
-                                  <label for="form-skype">Facebook ID</label>
-                                  <input type="text" name="form-facebook" placeholder="Your Facebook ID" class="form-facebook form-control" id="form-facebook">
+                                  <input type="text" name="skype_id" placeholder="Your Skype ID" class="form-skype form-control" id="form-skype">
                                 </div>
                                 <div class="form-group">
                                   <label for="form-twitter">Twitter ID</label>
-                                  <input type="text" name="form-twitter" placeholder="Your Twitter ID" class="form-twitter form-control" id="form-twitter">
+                                  <input type="text" name="twitter_id" placeholder="Your Twitter ID" class="form-twitter form-control" id="form-twitter">
+                                </div>
+                                  <div class="form-group">
+                                  <label for="form-twitter">Facebook ID</label>
+                                  <input type="text" name="facebook_id" placeholder="Your Facebook ID" class="form-twitter form-control" id="form-facebook">
+                                </div>
+
+                                <div class="dropdown">
+                                            {# <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">CATEGORY #}
+                                            {# <span class="caret"></span></button> #}
+                                            {# <ul class="dropdown-menu"> #}
+                                            <select multiple="multiple" name="tags">
+                                            {%for tag in tags %}
+                                            {# <li><a href="#" class="small" data-value="{{tag}}" tabIndex="-1"><input type="checkbox"/>{{tag}}</a></li> #}
+                                            <option value="{{tag.id}}">{{tag}}</option>
+                                            {% endfor%}
+                                            </select>
+                                            {# </ul> #}
                                 </div>
                                 <div class="form-group">
-                        <label for="comment">Bio:</label>
-                        <textarea class="form-control" rows="5" id="bio"></textarea>
-                    </div>
-                    <ul class="dropdown-menu">
-  <li>
-    <a href="#" class="small" data-value="option1" tabIndex="-1">
-      <input type="checkbox"/>&nbsp;Option 1
-    </a>
-  </li>
-  <li>
-    <a href="#" class="small" data-value="option2" tabIndex="-1">
-      <input type="checkbox"/>&nbsp;Option 2
-    </a>
-  </li>
-  <li>
-    <a href="#" class="small" data-value="option3" tabIndex="-1">
-       <input type="checkbox"/>&nbsp;Option 3
-    </a>
-  </li>
-  <li>
-     <a href="#" class="small" data-value="option4" tabIndex="-1">
-       <input type="checkbox"/>&nbsp;Option 4
-     </a>
-  </li>
-  <li>
-     <a href="#" class="small" data-value="option5" tabIndex="-1">
-       <input type="checkbox"/>&nbsp;Option 5
-     </a>
-  </li>
-  <li>
-     <a href="#" class="small" data-value="option6" tabIndex="-1">
-       <input type="checkbox"/>&nbsp;Option 6
-     </a>
-  </li>
-</ul>
+                                    <label for="comment">Bio:</label>
+                                    <textarea name="bio" class="form-control" rows="5" id="bio"></textarea>
+                                </div>
+
                                 <div class="form-group">
-                        <label for="form-employees" >Speciality</label>
-                        <ul class="dropdown" id = "upreferences">
-                        <li>
-                          <input type="checkbox" value = "1">&nbsp;Option 1
-                          <input type="checkbox" value = "2">&nbsp;Option 2
-                        </li>
-                        <li>
-                          <input type="checkbox" value = "3">&nbsp;Option 3
-                          <input type="checkbox" value = "opt4">&nbsp;Option 4
-                        </li>
-                        <li>
-                          <input type="checkbox" value = "opt5">&nbsp;Option 5
-                          <input type="checkbox" value = "opt6">&nbsp;Option 6
-                        </li>
-                        <li>
-                          <input type="checkbox" value = "opt7">&nbsp;Option 7
-                          <input type="checkbox" value = "opt8">&nbsp;Option 8
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-acctype" >How did you find Kent Parker:</label>
-                      <select class="form-control" id="sel1">
-                          <option>Social Media</option>
-                          <option>LinkedIn</option>
-                          <option>News</option>
-                          <option>Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-control btn btn-success btn-file">
-                          Upload Profile Picture <input type="file" style="display: none;">
-                      </label>
-                    <div>
-                    
-                    <br />
+                                    <label for="form-acctype" >How did you find Kent Parker:</label>
+                                  <select name="source" class="form-control" id="sel3">
+                                      <option>Social Media</option>
+                                      <option>LinkedIn</option>
+                                      <option>News</option>
+                                      <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                  <label class="form-control btn btn-success btn-file">
+                                      Upload Profile Picture <input type="file" style="display: none;">
+                                  </label>
+                                </div>
+
+                                 <br />
                                 <button type="submit" class="btn">Sign me up!</button>
+                                {% csrf_token %}
+
                             </form>
                           </div>
                           </div>

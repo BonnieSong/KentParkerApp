@@ -31,7 +31,8 @@ def home(request):
 		#journalist
 		# all_tags=request.user.tags
 		all_tags=Tag.objects.all()
-		pitches = Pitch.objects.filter(tags__in=all_tags).distinct()
+		user_tags = request.user.tags.all()
+		pitches = Pitch.objects.filter(tags__in=user_tags).distinct()
 		context = {'filter_pitches': pitches, 'tags': all_tags}
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
@@ -41,7 +42,8 @@ def home(request):
 		for journalist in all_journalists:
 			published_articles.append(journalist.article_set.all())
 		context = {'journalists': all_journalists, 'articles': published_articles }
-		return render(request,'kentparker/mediaoutlet_dashboard.html',context)
+		# TODO
+		return render(request,'kentparker/JournalistDashBoard.html',context)
 
 @login_required
 def favNewsMakers_pitch(request):
@@ -110,7 +112,7 @@ def manage_pitch(request):
 	context={'pitches':pitches}
 	return render(request,'kentparker/manage_pitch.html',context)
 
-	
+
 @login_required
 def manage_journalists(request):
 	print ("manage_journalists")
@@ -119,7 +121,7 @@ def manage_journalists(request):
 	context={'journalists':journalists}
 	return render(request,'kentparker/manage_journalists.html',context)
 # 	return redirect('/')
-	
+
 @login_required
 def profile(request,name):
 	target_user=get_object_or_404(MyUser,username=name)
@@ -245,7 +247,7 @@ def reset_password(request,name,token):
 @login_required
 def publish_article(request):
 	return HttpResponse("")
-	
+
 def login(request):
 	context={'register_form':RegisterForm(),'from_login':True}
 	return django.contrib.auth.views.login(request,template_name='kentparker/login.html',extra_context=context)
@@ -264,7 +266,7 @@ def login_google(request,email):
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
 	defaultpassword = "123"
-	new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=3)
+	new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=1)
 	new_user.save()
 	django.contrib.auth.login(request,new_user)
 	return redirect('/')
@@ -331,14 +333,36 @@ def register_newsmaker(request):
 
 def register_journalist(request):
 	if request.method=='GET':
-		return render(request,"kentparker/registration_journalist.html")
-	# update the request.user with new form
-	return render(request,"kentparker/registration_journalist.html")
+		all_tags = Tag.objects.all()
+		context = {'tags': all_tags}
+		return render(request, 'kentparker/Registration_Journalist.html', context)
+	# update the reuqest.user with new form
+	step2_form = register_step2_journalist_form(request.POST, instance=request.user)
+	print(request.POST)
+	if step2_form.is_valid():
+		#chosen_tags_ids = request.POST.getlist("tags")
+		#for tag_id in chosen_tags_ids:
+		#	target_tag = Tag.objects.get(pk=tag_id)
+		#	step2_form.tags.add(target_tag)
+		print("step2_form data: ")
+		print(step2_form.data)
+		step2_form.save()
+	curUser = MyUser.objects.filter(username = request.user)[0]
+	chosen_tags_ids = request.POST.getlist("tags")
+	for tag_id in chosen_tags_ids:
+		target_tag = Tag.objects.get(pk=tag_id)
+		curUser.tags.add(target_tag)
+	curUser.save()
+	return redirect("/")
 
 def register_mediaoutlet(request):
 	if request.method=='GET':
 		return render(request,"kentparker/registration_mediaoutlet.html")
-	return render(request,"kentparker/registration_mediaoutlet.html")
+	# update the reuqest.user with new form
+	step2_form = register_step2_mediaoutlet_form(request.POST, instance=request.user)
+	if step2_form.is_valid():
+		step2_form.save()
+	return redirect("/")
 
 def confirm_registration(request,name,token):
 	target_user=get_object_or_404(MyUser,username=name)
