@@ -103,6 +103,43 @@ def create_pitch(request):
 	new_pitch.save()
 	return redirect('/')
 
+
+@login_required
+def create_article(request):
+	print ("create_article")
+	print ("request: ", request)
+	print ("request.POST: ", request.POST)
+	all_tags=Tag.objects.all()
+	context={'tags':all_tags}
+	if request.method=='GET':
+		print ("request GET")
+		return render(request,'kentparker/create_article.html',context)
+	if 'cancel_btn' in request.POST:
+		print ("cancle publish")
+		return redirect('/')
+	# use the form to do validation
+	# publish_article_form=PublishArticleForm(request.POST)
+	# print ("publish_article_form: ", publish_article_form)
+	# if not publish_article_form.is_valid():
+	# 	print ("not valid")
+	# 	print ("errors: ", publish_article_form.errors)
+	# 	return render(request,'kentparker/create_article.html',context)
+	# print ("valid")
+	# return redirect('/')
+	orirequest = request
+	request = request.POST
+	if 'publish_btn' in request:
+		# publish the pitch
+		new_article=Article(title=request['title'],content=request['content'],author=orirequest.user,newsmaker=request['newsmaker'])
+		new_pitch.save()
+
+	# chosen_tags_ids=request.POST.getlist("tags-list")
+	# for tag_id in chosen_tags_ids:
+	# 	target_tag=Tag.objects.get(pk=tag_id)
+	# 	new_pitch.tags.add(target_tag)
+	# new_pitch.save()
+	return redirect('/')
+
 @login_required
 def manage_pitch(request):
 	# show all my pitches including published and drafts
@@ -264,7 +301,7 @@ def login_google(request,email):
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
 	defaultpassword = "123"
-	new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=3)
+	new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=2)
 	new_user.save()
 	django.contrib.auth.login(request,new_user)
 	return redirect('/')

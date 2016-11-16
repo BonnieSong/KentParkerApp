@@ -30,4 +30,5 @@ urlpatterns = [
     # journalist related urls
     url(r'^journalist/favNewsMakers$', views.favNewsMakers_pitch, name='favNewsMakers_pitch'),
     url(r'^journalist/(?P<tags>.*)$', views.filterTags_pitch, name='filterTags_pitch'),
+    url(r'^create_article$', views.create_article, name='create_article'),
 ]
