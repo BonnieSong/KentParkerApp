@@ -57,6 +57,13 @@ def favNewsMakers_pitch(request):
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 @login_required
+def bookmarked_pitch(request):
+	all_tags = Tag.objects.all()
+	pitches = request.user.pitch_set.all()
+	context = {'filter_pitches': pitches, 'tags': all_tags}
+	return render(request, 'kentparker/JournalistDashBoard.html', context)
+
+@login_required
 def filterTags_pitch(request, tags):
 	all_tags=Tag.objects.all()
 	tagsSet = set()
@@ -347,12 +354,11 @@ def register_journalist(request):
 		print("step2_form data: ")
 		print(step2_form.data)
 		step2_form.save()
-	curUser = MyUser.objects.filter(username = request.user)[0]
 	chosen_tags_ids = request.POST.getlist("tags")
 	for tag_id in chosen_tags_ids:
 		target_tag = Tag.objects.get(pk=tag_id)
-		curUser.tags.add(target_tag)
-	curUser.save()
+		request.user.tags.add(target_tag)
+	request.user.save()
 	return redirect("/")
 
 def register_mediaoutlet(request):
@@ -372,3 +378,16 @@ def confirm_registration(request,name,token):
 		target_user.save()
 		django.contrib.auth.login(request,target_user)
 	return redirect('/')
+
+def pitch_detail(request,pitchId):
+	if request.method == 'GET':
+		cur_pitch = Pitch.objects.get(pk=pitchId)
+		context = {"cur_pitch": cur_pitch}
+		return render(request, "kentparker/pitch_detail.html", context)
+	# bookmark the pitch
+	cur_pitch = Pitch.objects.get(pk=pitchId)
+	print(cur_pitch)
+	cur_pitch.bookmarked.add(request.user)
+	cur_pitch.save()
+
+	return redirect("/")

@@ -44,8 +44,8 @@ class Pitch(models.Model):
 	attachment=models.URLField(max_length=200)
 	special=models.CharField(max_length=1)
 	location=models.CharField(max_length=50,default="")
-	bookmarked=models.ForeignKey(MyUser,related_name='bookmarked_pr',null=True,blank=True)
 	published=models.BooleanField(default=False)
+	bookmarked = models.ManyToManyField(MyUser, blank=True)
 
 	class Meta:
 		ordering=['-pub_time']

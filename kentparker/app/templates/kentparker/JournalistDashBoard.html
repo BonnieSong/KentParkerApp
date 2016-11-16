@@ -129,7 +129,7 @@
 							Favourite Newsmakers</a>
 						</li>
 						<li>
-							<a href="#">
+							<a href="/journalist/bookmarked_pitch">
 							<i class="glyphicon glyphicon-user"></i>
 							Bookmarked Pitches </a>
 						</li>
@@ -202,7 +202,7 @@
 							<p>{{pitch.title}}</p>
 							<p>{{pitch.content}}</p>
 							<p>{{pitch.pub_time}}</p>
-							<p>Publihshed: {{pitch.published}}</p>
+							<p>{{pitch.id}}</p>
 							{% for tag in pitch.tags.all %}
 							<button class="btn btn-success">{{tag}}</button>
 							{%endfor%}
