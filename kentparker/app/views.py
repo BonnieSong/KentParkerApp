@@ -37,13 +37,12 @@ def home(request):
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
 		# media outlet
-		all_journalists = MyUser.objects.filter(organization=request.user)
+		all_journalists = MyUser.objects.filter(user_type = 2, organization=request.user)
 		published_articles = set()
-		for journalist in all_journalists:
-			published_articles.append(journalist.article_set.all())
+		#for journalist in all_journalists:
+		#	published_articles.append(journalist.article_set.all())
 		context = {'journalists': all_journalists, 'articles': published_articles }
-		# TODO
-		return render(request,'kentparker/JournalistDashBoard.html',context)
+		return render(request,'kentparker/mediaoutletdashboard.html', context)
 
 @login_required
 def favNewsMakers_pitch(request):
@@ -392,9 +391,12 @@ def register_journalist(request):
 		print(step2_form.data)
 		step2_form.save()
 	chosen_tags_ids = request.POST.getlist("tags")
+	organization = request.POST.get("organization")
 	for tag_id in chosen_tags_ids:
 		target_tag = Tag.objects.get(pk=tag_id)
 		request.user.tags.add(target_tag)
+	target_org = MyUser.objects.get(username=organization)
+	request.user.organization = target_org
 	request.user.save()
 	return redirect("/")
 

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Kent-Parker</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="main.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+  
+<script type="text/javascript">
+  var geocoder;
+  var map;
+  var address ="San Diego, CA";
+  function initialize() {
+    geocoder = new google.maps.Geocoder();
+    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+    mapTypeControl: true,
+    mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+    navigationControl: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    if (geocoder) {
+      geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
+          map.setCenter(results[0].geometry.location);
+
+            var infowindow = new google.maps.InfoWindow(
+                { content: '<b>'+address+'</b>',
+                  size: new google.maps.Size(150,50)
+                });
+
+            var marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: map, 
+                title:address
+            }); 
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.open(map,marker);
+            });
+
+          } else {
+            alert("No results found");
+          }
+        } else {
+          alert("Geocode was not successful for the following reason: " + status);
+        }
+      });
+    }
+  }
+</script>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">KENT PARKER</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Mail <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <div class="profile-usermenu-dropdown">
+					<ul class="nav">
+						<li class="active" style = "line-height: 5;">
+							<a href="#">
+							
+							Overview </a>
+						</li>
+						<li>
+							<a href="#">
+							
+							Account Settings </a>
+						</li>
+						<li>
+							<a href="#" target="_blank">
+							
+							Tasks </a>
+						</li>
+						<li>
+							<a href="#">
+							
+							Help </a>
+						</li>
+					</ul>
+				</div>
+          </ul>
+        </li>
+        <li><a href="#">Contacts</a></li>
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container">
+    <div class="row profile">
+		<div class="col-md-3">
+			<div class="profile-sidebar">
+				<!-- SIDEBAR USERPIC -->
+				<div class="profile-userpic">
+					<img src="/img/search.png" class="img-responsive" alt="">
+				</div>
+				<!-- END SIDEBAR USERPIC -->
+				<!-- SIDEBAR USER TITLE -->
+				<div class="profile-usertitle">
+					<div class="profile-usertitle-name">
+						{{request.user.first_name}}
+						{{request.user.last_name}}
+					</div>
+					<div class="profile-usertitle-job">
+						CMU
+					</div>
+				</div>
+				<!-- END SIDEBAR USER TITLE -->
+				<!-- SIDEBAR BUTTONS -->
+				<div class="profile-userbuttons">
+					<button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
+					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
+					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
+					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
+					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
+					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+					</button>
+				</div>
+				<!-- END SIDEBAR BUTTONS -->
+				<!-- SIDEBAR MENU -->
+				<div class="profile-usermenu">
+					<ul class="nav">
+						<li class="active">
+							<a href="#">
+							<i class="glyphicon glyphicon-home"></i>
+							Journalists </a>
+						</li>
+						<li>
+							<a href="#">
+							<i class="glyphicon glyphicon-user"></i>
+							Bookmarked Pitches </a>
+						</li>
+					</ul>
+				</div>
+				<div id="map_canvas">
+						map
+				</div>
+				<!-- END MENU -->
+			</div>
+		</div>
+		<div class="col-md-9" data-spy="scroll" >
+            <div class="profile-content">
+			   	<div class="panel panel-primary">
+      				<div class="panel-heading">Reporters</div>
+      				<div class="panel-body">
+      					<div class="container">
+    <div id="main_area">
+        <!-- Slider -->
+        <div class="row">
+            <div class="col-sm-7" id="slider-thumbs">
+                <!-- Bottom switcher of slider -->
+                <ul class="hide-bullets">
+
+                    {%for journalist in journalists%}
+						<div class="well well-lg">
+							<p>{{journalist.username}}</p>
+							<p>{{journalist.email}}</p>
+							<p>{{journalist.organization}}</p>
+                            {% for tag in journalist.tags.all %}
+							<button class="btn btn-success">{{tag}}</button>
+							{%endfor%}
+                             <a class="thumbnail" id="carousel-selector-1"><img src="http://placehold.it/150x150&text=1"></a>
+						</div>
+						{% endfor %}
+
+                   
+                </ul>
+            </div>
+            
+            <!--/Slider-->
+        </div>
+
+    </div>
+</div>
+      				</div>
+   				 </div>
+            </div>
+		</div>
+	</div>
+</div>
+<center>
+</center>
+<br>
+<br>
+
+</body>
+</html>
+
