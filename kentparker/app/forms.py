@@ -28,7 +28,7 @@ class PublishPitchForm(forms.ModelForm):
 class PublishArticleForm(forms.ModelForm):
 	class Meta:
 		model=Article
-		fields=['title','content','newsmaker']
+		fields=['title','content']
 
 class EditProfileModelForm(forms.ModelForm):
 	class Meta:

@@ -114,39 +114,31 @@ def create_pitch(request):
 
 @login_required
 def create_article(request):
-	print ("create_article")
-	print ("request: ", request)
-	print ("request.POST: ", request.POST)
 	all_tags=Tag.objects.all()
 	context={'tags':all_tags}
 	if request.method=='GET':
-		print ("request GET")
 		return render(request,'kentparker/create_article.html',context)
 	if 'cancel_btn' in request.POST:
-		print ("cancle publish")
 		return redirect('/')
 	# use the form to do validation
-	# publish_article_form=PublishArticleForm(request.POST)
-	# print ("publish_article_form: ", publish_article_form)
-	# if not publish_article_form.is_valid():
-	# 	print ("not valid")
-	# 	print ("errors: ", publish_article_form.errors)
-	# 	return render(request,'kentparker/create_article.html',context)
-	# print ("valid")
-	# return redirect('/')
-	orirequest = request
-	request = request.POST
-	if 'publish_btn' in request:
-		# publish the pitch
-		new_article=Article(title=request['title'],content=request['content'],author=orirequest.user,newsmaker=request['newsmaker'])
-		new_pitch.save()
+	publish_article_form=PublishArticleForm(request.POST)
+	if not publish_article_form.is_valid():
+		return render(request,'kentparker/create_article.html',context)
 
-	# chosen_tags_ids=request.POST.getlist("tags-list")
-	# for tag_id in chosen_tags_ids:
-	# 	target_tag=Tag.objects.get(pk=tag_id)
-	# 	new_pitch.tags.add(target_tag)
-	# new_pitch.save()
+	new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user)
+	new_article.save()
+	
+	chosen_news_makers=request.POST.getlist('newsmaker')
+	for news_makers in chosen_news_makers:
+		try:
+			target_news_maker=MyUser.objects.get(user_type=1, username=news_makers)
+			print ("target_news_maker, ", target_news_maker)
+			new_article.newsmaker.add(target_news_maker)
+		except:
+			pass
+	new_article.save()
 	return redirect('/')
+
 
 @login_required
 def manage_pitch(request):
