@@ -10,7 +10,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-  
+
 <script type="text/javascript">
   var geocoder;
   var map;
@@ -40,9 +40,9 @@
 
             var marker = new google.maps.Marker({
                 position: results[0].geometry.location,
-                map: map, 
+                map: map,
                 title:address
-            }); 
+            });
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.open(map,marker);
             });
@@ -80,22 +80,22 @@
 					<ul class="nav">
 						<li class="active" style = "line-height: 5;">
 							<a href="#">
-							
+
 							Overview </a>
 						</li>
 						<li>
 							<a href="#">
-							
+
 							Account Settings </a>
 						</li>
 						<li>
 							<a href="#" target="_blank">
-							
+
 							Tasks </a>
 						</li>
 						<li>
 							<a href="#">
-							
+
 							Help </a>
 						</li>
 					</ul>
@@ -103,16 +103,16 @@
           </ul>
         </li>
         <li><a href="#">Contacts</a></li>
-        
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
-    
+
         <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
   </div>
 </nav>
-  
+
 <div class="container">
     <div class="row profile">
 		<div class="col-md-3">
@@ -152,12 +152,12 @@
 				<div class="profile-usermenu">
 					<ul class="nav">
 						<li class="active">
-							<a href="#">
+							<a href="/">
 							<i class="glyphicon glyphicon-home"></i>
 							Journalists </a>
 						</li>
 						<li>
-							<a href="{% url "mediaoutlet_articles" %}">
+							<a href="#">
 							<i class="glyphicon glyphicon-user"></i>
 							Published articles </a>
 						</li>
@@ -172,7 +172,7 @@
 		<div class="col-md-9" data-spy="scroll" >
             <div class="profile-content">
 			   	<div class="panel panel-primary">
-      				<div class="panel-heading">Reporters</div>
+      				<div class="panel-heading">Articles</div>
       				<div class="panel-body">
       					<div class="container">
     <div id="main_area">
@@ -181,22 +181,24 @@
             <div class="col-sm-7" id="slider-thumbs">
                 <!-- Bottom switcher of slider -->
                 <ul class="hide-bullets">
-
-                    {%for journalist in journalists%}
+					{%for article in articles%}
 						<div class="well well-lg">
-							<p>{{journalist.username}}</p>
-							<p>{{journalist.email}}</p>
-							<p>{{journalist.organization}}</p>
-                            {% for tag in journalist.tags.all %}
-							<button class="btn btn-success">{{tag}}</button>
+							<p>{{article.title}}</p>
+							<p>{{article.content}}</p>
+							<p>{{article.pub_time}}</p>
+							<p>{{article.id}}</p>
+							<p>Author: {{article.author.first_name}} {{article.author.last_name}} <a href="profile/{{article.author}}">@{{article.author}}</a></p>
+							Newsmakers:
+							{% for eachnewsmaker in article.newsmaker.all %}
+							<a href="profile/{{eachnewsmaker}}">@{{eachnewsmaker}}</a>
 							{%endfor%}
-                             <a class="thumbnail" id="carousel-selector-1"><img src="http://placehold.it/150x150&text=1"></a>
 						</div>
 					{% endfor %}
 
+
                 </ul>
             </div>
-            
+
             <!--/Slider-->
         </div>
 

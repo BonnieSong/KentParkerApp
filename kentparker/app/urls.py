@@ -28,11 +28,12 @@ urlpatterns = [
     url(r'^contacts$', views.contacts, name='contacts'),
     # media_outlet
     url(r'^manage_journalists$', views.manage_journalists, name='manage_journalists'),
+    url(r'^mediaoutlet_articles', views.mediaoutlet_articles, name='mediaoutlet_articles'),
     # journalist related urls
     url(r'^journalist/favNewsMakers$', views.favNewsMakers_pitch, name='favNewsMakers_pitch'),
     url(r'^journalist/bookmarked_pitch', views.bookmarked_pitch, name='bookmarked_pitch'),
     url(r'^journalist/(?P<tags>.*)$', views.filterTags_pitch, name='filterTags_pitch'),
-    url(r'^my_Articles$', views.my_Articles, name='my_Articles'),
+    url(r'^journalist_Articles', views.journalist_Articles, name='journalist_Articles'),
     # pitch related urls
     url(r'^pitch_detail/(?P<pitchId>.*)$', views.pitch_detail, name='pitch_detail'),
     url(r'^create_article$', views.create_article, name='create_article'),

@@ -46,11 +46,22 @@ def home(request):
 		return render(request,'kentparker/mediaoutletdashboard.html', context)
 
 @login_required
-def my_Articles(request):
+def mediaoutlet_articles(request):
+	all_journalists = MyUser.objects.filter(user_type=2, organization=request.user)
+	published_articles = set()
+	for journalist in all_journalists:
+		articles = journalist.author_ar.all()
+		for article in articles:
+			published_articles.add(article)
+	context = {'journalists': all_journalists, 'articles': published_articles}
+	return render(request, 'kentparker/mediaoutlet_articles.html', context)
+
+@login_required
+def journalist_Articles(request):
 	all_tags = Tag.objects.all()
 	articles = Article.objects.filter(author = request.user)
 	context = {'articles': articles, 'tags':all_tags}
-	return render(request, 'kentparker/my_Articles.html', context)
+	return render(request, 'kentparker/journalist_Articles.html', context)
 
 @login_required
 def favNewsMakers_pitch(request):
