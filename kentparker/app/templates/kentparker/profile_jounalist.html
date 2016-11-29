@@ -120,7 +120,7 @@
             <div class="container">
     			<div class="panel panel-primary">
        			<div class="panel-heading clearfix">
-            	<h5 class="panel-title pull-left" style="padding-top: 15.0px;">Past Pitches</h5>
+            	<h5 class="panel-title pull-left" style="padding-top: 15.0px;">Past Articles</h5>
                 	<div class="input-group">
                 	<input id="Special" type="text" class="form-control" placeholder="Search">
                 	<div class="input-group-btn">
@@ -129,12 +129,12 @@
            	 </div>
         </div>
         <div class="panel-body">
-        {% for pitch in pitches %}
+        {% for article in articles %}
         <div class="well well-lg">
-        <p>{{pitch.title}}</p>
-        <p>{{pitch.content}}</p>
-        <p>{{pitch.pub_time}}</p>
-        <p>Publihshed: {{pitch.published}}</p>
+        <p>{{article.title}}</p>
+        <p>{{article.content}}</p>
+        <p>{{article.pub_time}}</p>
+        <p>Publihshed: {{article.published}}</p>
         {% for tag in pitch.tags.all %}
         <button class="btn btn-success">{{tag}}</button>
         {%endfor%}
