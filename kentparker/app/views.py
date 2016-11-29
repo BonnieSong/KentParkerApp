@@ -40,7 +40,7 @@ def home(request):
 		all_journalists = MyUser.objects.filter(user_type = 2, organization=request.user)
 		published_articles = set()
 		#for journalist in all_journalists:
-		#	published_articles.append(journalist.article_set.all())
+		#	published_articles.add(journalist.article_set.all())
 		context = {'journalists': all_journalists, 'articles': published_articles }
 		return render(request,'kentparker/mediaoutletdashboard.html', context)
 
@@ -369,28 +369,36 @@ def register_newsmaker(request):
 def register_journalist(request):
 	if request.method=='GET':
 		all_tags = Tag.objects.all()
-		context = {'tags': all_tags}
+		organizations = MyUser.objects.filter(user_type = 3)
+		context = {'tags': all_tags, 'organizations': organizations}
 		return render(request, 'kentparker/Registration_Journalist.html', context)
 	# update the reuqest.user with new form
 	step2_form = register_step2_journalist_form(request.POST, instance=request.user)
 	print(request.POST)
+	print("--------------")
+	print(step2_form.data)
 	if step2_form.is_valid():
-		#chosen_tags_ids = request.POST.getlist("tags")
-		#for tag_id in chosen_tags_ids:
-		#	target_tag = Tag.objects.get(pk=tag_id)
-		#	step2_form.tags.add(target_tag)
 		print("step2_form data: ")
 		print(step2_form.data)
 		step2_form.save()
-	chosen_tags_ids = request.POST.getlist("tags")
-	organization = request.POST.get("organization")
-	for tag_id in chosen_tags_ids:
-		target_tag = Tag.objects.get(pk=tag_id)
-		request.user.tags.add(target_tag)
-	target_org = MyUser.objects.get(username=organization)
-	request.user.organization = target_org
-	request.user.save()
-	return redirect("/")
+		chosen_tags_ids = request.POST.getlist("tags")
+		for tag_id in chosen_tags_ids:
+			target_tag = Tag.objects.get(pk=tag_id)
+			request.user.tags.add(target_tag)
+		#chosen_organization = request.POST.getlist("organization")
+		if "organization" in request.POST:
+			organization = request.POST.get("organization")
+			if len(organization)>0:
+				target_org = MyUser.objects.get(username=organization)
+				request.user.organization = target_org
+		request.user.save()
+		return redirect("/")
+	else:
+		all_tags = Tag.objects.all()
+		organizations = MyUser.objects.filter(user_type=3)
+		context = {'tags': all_tags, 'organizations': organizations}
+		return render(request, 'kentparker/Registration_Journalist.html', context)
+
 
 def register_mediaoutlet(request):
 	if request.method=='GET':

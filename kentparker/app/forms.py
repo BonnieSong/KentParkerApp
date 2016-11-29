@@ -77,4 +77,4 @@ class register_step2_journalist_form(forms.ModelForm):
 	#tags = forms.ModelChoiceField(queryset=Tag.objects.all(), required=False, help_text="Tag")
 	class Meta:
 		model=MyUser
-		fields=['organization','phone','skype_id','twitter_id','facebook_id','tags','bio','source']
+		fields=['phone','skype_id','twitter_id','facebook_id','tags','bio','source']
