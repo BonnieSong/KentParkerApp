@@ -22,10 +22,9 @@ def home(request):
 		# this is a newsmaker
 		# filter related articles about the current newsmaker
 		related_articles=Article.objects.filter(newsmaker=request.user)
-		context={'related_articles':related_articles}
 		# newsmaker
 		my_pitches=Pitch.objects.filter(author=request.user)
-		context={'pitches':my_pitches}
+		context={'related_articles':related_articles, 'pitches':my_pitches}
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
 		#journalist
@@ -160,13 +159,17 @@ def manage_journalists(request):
 @login_required
 def profile(request,name):
 	target_user=get_object_or_404(MyUser,username=name)
-	pitches=Pitch.objects.filter(author=target_user)
-	context={'target_user':target_user,'pitches':pitches}
 	if target_user.user_type==1:
+		pitches=Pitch.objects.filter(author=target_user)
+		context={'target_user':target_user,'pitches':pitches}
 		return render(request,"kentparker/profile_newsmaker.html",context)
 	if target_user.user_type==2:
+		articles=Article.objects.filter(author=target_user)
+		context={'target_user':target_user,'articles':articles}
 		return render(request,"kentparker/profile_jounalist.html",context)
 	if target_user.user_type==3:
+		pitches=Pitch.objects.filter(author=target_user)
+		context={'target_user':target_user,'pitches':pitches}
 		return render(request,"kentparker/profile_mediaoutlet.html",context)
 
 # add the target user to contacts by favoriting it
