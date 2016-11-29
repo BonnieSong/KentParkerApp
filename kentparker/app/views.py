@@ -326,10 +326,11 @@ def login_google(request,email):
 	if len(new_user) > 0:
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
-	defaultpassword = "123"
-	new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=2)
-	new_user.save()
-	django.contrib.auth.login(request,new_user)
+	# defaultpassword = "123"
+	# new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=2)
+	# new_user.save()
+	# django.contrib.auth.login(request,new_user)
+	# if no valid user exist in the database, require registration
 	return redirect('/')
 
 def login_facebook(request,userid):
@@ -343,10 +344,11 @@ def login_facebook(request,userid):
 	if len(new_user) > 0:
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
-	defaultpassword = "123"
-	new_user=MyUser.objects.create_user(username=newuseremail,email=newuseremail,password=defaultpassword,first_name='',last_name='',user_type=1)
-	new_user.save()
-	django.contrib.auth.login(request,new_user)
+	# defaultpassword = "123"
+	# new_user=MyUser.objects.create_user(username=newuseremail,email=newuseremail,password=defaultpassword,first_name='',last_name='',user_type=1)
+	# new_user.save()
+	# django.contrib.auth.login(request,new_user)
+	# if no valid user exist in the database, require registration
 	return redirect('/')
 
 def register(request):
