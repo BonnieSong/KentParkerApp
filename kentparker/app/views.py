@@ -185,8 +185,20 @@ def profile(request,name):
 		context={'target_user':target_user,'articles':articles}
 		return render(request,"kentparker/profile_jounalist.html",context)
 	if target_user.user_type==3:
+		articles = set()
+		# print ("target user is media outlet")
+		journalists = MyUser.objects.filter(user_type = 2, organization = target_user)
+		for i in range(len(journalists)):
+			# print ("i = ", i)
+			journalist = journalists[i]
+			# print ("journalist: ", journalist)
+			curntarticles = Article.objects.filter(author=journalist)
+			# print ("curntarticle: ", curntarticles)
+			for curntarticle in curntarticles:
+				articles.add(curntarticle)
+		# print ("articles size: ", len(articles))
 		pitches=Pitch.objects.filter(author=target_user)
-		context={'target_user':target_user,'pitches':pitches}
+		context={'target_user':target_user,'articles':articles}
 		return render(request,"kentparker/profile_mediaoutlet.html",context)
 
 # add the target user to contacts by favoriting it

@@ -64,7 +64,7 @@
                         {{target_user.last_name}}
 					</div>
 					<div class="profile-usertitle-job">
-						Journalist
+						MediaOutlet
 					</div>
 				</div>
 				<!-- END SIDEBAR USER TITLE -->
@@ -120,7 +120,7 @@
             <div class="container">
     			<div class="panel panel-primary">
        			<div class="panel-heading clearfix">
-            	<h5 class="panel-title pull-left" style="padding-top: 15.0px;">Past Articles</h5>
+            	<h5 class="panel-title pull-left" style="padding-top: 15.0px;">Related Articles</h5>
                 	<div class="input-group">
                 	<input id="Special" type="text" class="form-control" placeholder="Search">
                 	<div class="input-group-btn">
@@ -133,8 +133,8 @@
         <div class="well well-lg">
         <p>{{article.title}}</p>
         <p>{{article.content}}</p>
-        <p>{{article.pub_time}}</p>
-        <p>Publihshed: {{article.published}}</p>
+        <p>Published Time: {{article.pub_time}}</p>
+        <p>Author: {{article.author}}</p>
         {% for tag in pitch.tags.all %}
         <button class="btn btn-success">{{tag}}</button>
         {%endfor%}
