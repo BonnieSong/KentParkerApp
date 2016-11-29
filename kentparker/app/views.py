@@ -161,7 +161,12 @@ def manage_journalists(request):
 def profile(request,name):
 	target_user=get_object_or_404(MyUser,username=name)
 	pitches=Pitch.objects.filter(author=target_user)
-	context={'target_user':target_user,'pitches':pitches}
+	already=False
+	if request.user.username!=name:
+		temp=request.user.contacts_f.filter(username=name)
+		if temp:
+			already=True
+	context={'target_user':target_user,'pitches':pitches,'already':already}
 	if target_user.user_type==1:
 		return render(request,"kentparker/profile_newsmaker.html",context)
 	if target_user.user_type==2:
@@ -174,15 +179,21 @@ def profile(request,name):
 def favorite(request,name):
 	if request.user.username==name:
 		return redirect('/profile/'+name)
-	temp=request.user.contacts_set.filter(username=name)
+	temp=request.user.contacts_f.filter(username=name)
 	if temp:
 		# user already in the contacts
-		temp.get().delete()
+		# delete the user from the contacts list
+		request.user.contacts_f.remove(temp.get())
 	else:
 		# add user to the contacts
 		target_user=get_object_or_404(MyUser,username=name)
-		request.user.contacts_set.add(target_user)
+		request.user.contacts_f.add(target_user)
 	return redirect('/profile/'+name)
+
+@login_required
+def contacts(request):
+	context={'contacts':request.user.contacts_f.all()}
+	return render(request,'kentparker/contacts.html',context)
 
 @login_required
 def get_photo(request, name):
