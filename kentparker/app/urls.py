@@ -25,6 +25,7 @@ urlpatterns = [
     # newsmaker related urls
     url(r'^create_pitch$', views.create_pitch, name='create_pitch'),
     url(r'^manage_pitch$', views.manage_pitch, name='manage_pitch'),
+    url(r'^contacts$', views.contacts, name='contacts'),
     # media_outlet
     url(r'^manage_journalists$', views.manage_journalists, name='manage_journalists'),
     # journalist related urls
