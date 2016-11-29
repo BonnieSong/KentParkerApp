@@ -1,71 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Kent-Parker</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script type="text/javascript" src="http://www.softwhy.com/mytest/jQuery/jquery-1.8.3.js"></script> 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Arimo|Bungee+Hairline|Coiny|Droid+Sans|Droid+Serif|Itim|Lato|Libre+Franklin|Merriweather|Montserrat|Noto+Sans|Open+Sans|Open+Sans+Condensed:300|Oswald|PT+Sans|Prociono|Raleway|Roboto|Roboto+Condensed|Roboto+Slab|Shrikhand|Slabo+27px|Source+Sans+Pro|Trirong|Ubuntu" rel="stylesheet">
+	<title>Kent-Parker</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
-  <script>
-	$(document).on('ready', function() {
-    	$("#input-4").fileinput({showCaption: false});
-	});
-	$(function() {
+    <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
 
-  // We can attach the `fileselect` event to all file inputs on the page
-  $(document).on('change', ':file', function() {
-    var input = $(this),
-        numFiles = input.get(0).files ? input.get(0).files.length : 1,
-        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-    input.trigger('fileselect', [numFiles, label]);
-  });
-
-  // We can watch for our custom `fileselect` event like this
-  $(document).ready( function() {
-      $(':file').on('fileselect', function(event, numFiles, label) {
-
-          var input = $(this).parents('.input-group').find(':text'),
-              log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-          if( input.length ) {
-              input.val(log);
-          } else {
-              if( log ) alert(log);
-          }
-
-      });
-  });
-  
-	});
-	
-	$(document).ready(function(){
-  var afterId = 0;
-  var newId=1;  
-  $("#btnAddOption").click(function(){  
-    afterId++;  
-    newId=afterId+1;  
-    addSpot(this,afterId,newId);  
-  });  
-});  
-// Add new News Maker 
-function addSpot(obj,afterId,newId) 
-{  console.log("afterId: " + afterId);
-	console.log("newId: " + newId);
-    $('#vote_'+afterId).after(  
-    '<tr id="vote_'+newId+'" class="spot"><th>' + '</th>' +  
-    '<td><input type="text" id="txtInput_'+
- afterId+'" class="input-text" value="Put the name of News Maker here" size="40" name="newsmaker"/></td>'+  
-    '</tr>');  
-//     $(":text[id^='txtInput_']").val("Put the name of Media Outlet here");  
- 
-};   
-  </script>
+	<script>
+		function updateTextArea() {
+		    var allVals = [];
+		    var allTagString="";
+		    $('#upreferences input[type="checkbox"]:checked').each(function() {
+		    	allVals.push($(this).val());
+		    	allTagString += $(this).val()+"@";
+		    });
+		    $('#t').val(allTagString);
+		    $('#myModal').modal('toggle')
+		    window.location.replace("/journalist/"+allTagString);
+		}
+  	</script>
 </head>
 <body>
 
@@ -77,11 +35,11 @@ function addSpot(obj,afterId,newId)
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">KENT PARKER</a>
+      <a class="navbar-brand" href="#">KENT PARKER</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
+        <li class="active"><a href="#">Home</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Mail <span class="caret"></span></a>
           <ul class="dropdown-menu">
@@ -89,22 +47,22 @@ function addSpot(obj,afterId,newId)
 					<ul class="nav">
 						<li class="active" style = "line-height: 5;">
 							<a href="#">
-							
+
 							Overview </a>
 						</li>
 						<li>
 							<a href="#">
-							
+
 							Account Settings </a>
 						</li>
 						<li>
 							<a href="#" target="_blank">
-							
+
 							Tasks </a>
 						</li>
 						<li>
 							<a href="#">
-							
+
 							Help </a>
 						</li>
 					</ul>
@@ -112,30 +70,30 @@ function addSpot(obj,afterId,newId)
           </ul>
         </li>
         <li><a href="#">Contacts</a></li>
-        
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
-        <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+
+        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
   </div>
 </nav>
-  
+
 <div class="container">
     <div class="row profile">
 		<div class="col-md-3">
 			<div class="profile-sidebar">
 				<!-- SIDEBAR USERPIC -->
 				<div class="profile-userpic">
-					<img src="myphoto.jpeg" class="img-responsive" alt="">
+					<img class="img-responsive" alt="">
 				</div>
 				<!-- END SIDEBAR USERPIC -->
 				<!-- SIDEBAR USER TITLE -->
 				<div class="profile-usertitle">
 					<div class="profile-usertitle-name">
-					{{request.user.first_name}}
-					{{request.user.last_name}}
+						{{request.user.first_name}}
+						{{request.user.last_name}}
 					</div>
 					<div class="profile-usertitle-job">
 						CMU
@@ -157,37 +115,36 @@ function addSpot(obj,afterId,newId)
 					</button>
 				</div>
 				<!-- END SIDEBAR BUTTONS -->
-
 				<!-- SIDEBAR MENU -->
 				<div class="profile-usermenu">
 					<ul class="nav">
 						<li>
 							<a href="#">
 							<i class="glyphicon glyphicon-home"></i>
-							Favourite Tags</a>
+							Favorite Tags</a>
 						</li>
 						<li>
 							<a href="/journalist/favNewsMakers">
 							<i class="glyphicon glyphicon-ok"></i>
-							Favourite Newsmakers</a>
+							Favorite Newsmakers</a>
 						</li>
 						<li>
-							<a href="#">
+							<a href="/journalist/bookmarked_pitch">
 							<i class="glyphicon glyphicon-user"></i>
 							Bookmarked Pitches </a>
 						</li>
-						<li>
+						<li class="active">
 							<a href="{% url "my_Articles" %}">
 							<i class="glyphicon glyphicon-file"></i>
 							My Articles </a>
 						</li>
-						<li class="active">
+						<li>
 							<a href="{% url "create_article" %}">
 							<i class="glyphicon glyphicon-flag"></i>
 							Publish Article </a>
 						</li>
 						<li>
-							<!-- Button trigger modal 
+							<!-- Button trigger modal
 							<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 							 	Launch demo modal
 							</button>
@@ -201,7 +158,7 @@ function addSpot(obj,afterId,newId)
 							    <div class="modal-content">
 							    	<div class="modal-header">
 							        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							        	<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+							        	<h4 class="modal-title" id="myModalLabel">Tags</h4>
 							      	</div>
 							    	<div class="modal-body">
 							    		Select your preferences below:
@@ -242,36 +199,22 @@ function addSpot(obj,afterId,newId)
 		<div class="col-md-9">
             <div class="profile-content">
 			   	<div class="panel panel-primary">
-      				<div class="panel-heading">New Article</div>
-      				<form method="post" action="{% url "create_article" %}">
+      				<div class="panel-heading">Pitches</div>
       				<div class="panel-body">
-      					<div class="">
-      						<h4><b>Subject</h4>
-      						<input type="text" class="text-line" name="title" />
-      						<h4><b>Article Url<h4>
-      						<div class="form-group">
-								<br>
-  								<textarea name="content" class="form-control" rows="5" id="comment" style="font-family: 'Shrikhand', cursive;"></textarea>
-							</div>
-							<h4><b>News Maker</h4>
-							 <table cellpadding=0 cellspacing=0 width="100%" class="table_form"> 
-    							<tr id="vote_1"> 
-     							 <td><input type="button" id="btnAddOption" name="btnAddOption" class="btn btn-primary" value="Add News Maker"/></td> 
-    							</tr> 
-  							</table> 
-      						
-							<br>
-							
-            				<br>
-            			
-            				<br>
-							<div class="center">
-								<input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish">
-								<input type="submit" name="cancel_btn" class="btn btn-danger" value="Cancel">
-							</div>
-            			</div>
-            				{% csrf_token %}
-            			</form>
+      					<textarea id="t"></textarea>
+						{%for article in articles%}
+						<div class="well well-lg">
+							<p>{{article.title}}</p>
+							<p>{{article.content}}</p>
+							<p>{{article.pub_time}}</p>
+							<p>{{article.id}}</p>
+							<p>{{article.author.first_name}} {{article.author.last_name}}<a href="profile/{{article.author}}">@{{article.author}}</a></p>
+							Newsmakers:
+							{% for eachnewsmaker in article.newsmaker.all %}
+							<a href="profile/{{eachnewsmaker}}">@{{eachnewsmaker}}</a>
+							{%endfor%}
+						</div>
+						{% endfor %}
       				</div>
    				 </div>
             </div>

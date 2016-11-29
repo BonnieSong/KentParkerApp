@@ -39,10 +39,18 @@ def home(request):
 		all_journalists = MyUser.objects.filter(user_type = 2, organization=request.user)
 		published_articles = set()
 		for journalist in all_journalists:
-			published_articles.add(journalist.author_ar.all())
-		print(len(published_articles))
+			articles = journalist.author_ar.all()
+			for article in articles:
+				published_articles.add(article)
 		context = {'journalists': all_journalists, 'articles': published_articles }
 		return render(request,'kentparker/mediaoutletdashboard.html', context)
+
+@login_required
+def my_Articles(request):
+	all_tags = Tag.objects.all()
+	articles = Article.objects.filter(author = request.user)
+	context = {'articles': articles, 'tags':all_tags}
+	return render(request, 'kentparker/my_Articles.html', context)
 
 @login_required
 def favNewsMakers_pitch(request):
@@ -167,7 +175,7 @@ def profile(request,name):
 		if temp:
 			already=True
 	context={'target_user':target_user,'pitches':pitches,'already':already}
-==
+
 	if target_user.user_type==1:
 		pitches=Pitch.objects.filter(author=target_user)
 		context={'target_user':target_user,'pitches':pitches}

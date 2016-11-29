@@ -195,13 +195,17 @@
 					{% endfor %}
 					{%for article in articles%}
 						<div class="well well-lg">
-							<p>ssssss</p>
 							<p>{{article.title}}</p>
 							<p>{{article.content}}</p>
 							<p>{{article.pub_time}}</p>
-							<p>{{article.author}}</p>
+							<p>{{article.id}}</p>
+							<p>Author: {{article.author.first_name}} {{article.author.last_name}} <a href="profile/{{article.author}}">@{{article.author}}</a></p>
+							Newsmakers:
+							{% for eachnewsmaker in article.newsmaker.all %}
+							<a href="profile/{{eachnewsmaker}}">@{{eachnewsmaker}}</a>
+							{%endfor%}
 						</div>
-      				{% endfor %}
+					{% endfor %}
 
                    
                 </ul>
