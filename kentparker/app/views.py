@@ -39,8 +39,9 @@ def home(request):
 		# media outlet
 		all_journalists = MyUser.objects.filter(user_type = 2, organization=request.user)
 		published_articles = set()
-		#for journalist in all_journalists:
-		#	published_articles.add(journalist.article_set.all())
+		for journalist in all_journalists:
+			published_articles.add(journalist.author_ar.all())
+		print(len(published_articles))
 		context = {'journalists': all_journalists, 'articles': published_articles }
 		return render(request,'kentparker/mediaoutletdashboard.html', context)
 
