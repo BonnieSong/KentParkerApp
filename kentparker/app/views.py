@@ -127,7 +127,7 @@ def create_article(request):
 
 	new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user)
 	new_article.save()
-	
+
 	chosen_news_makers=request.POST.getlist('newsmaker')
 	for news_makers in chosen_news_makers:
 		try:
@@ -362,9 +362,8 @@ def register_newsmaker(request):
 		return render(request,"kentparker/registration_newsmaker.html")
 	# update the reuqest.user with new form
 	step2_form=register_step2_newsmaker_form(request.POST,instance=request.user)
-	if not step2_form.is_valid():
-		return render(request,"kentparker/registration_newsmaker.html")
-	step2_form.save()
+	if step2_form.is_valid():
+		step2_form.save()
 	return redirect("/")
 
 def register_journalist(request):
@@ -374,16 +373,15 @@ def register_journalist(request):
 		return render(request, 'kentparker/Registration_Journalist.html', context)
 	# update the reuqest.user with new form
 	step2_form = register_step2_journalist_form(request.POST, instance=request.user)
-	if not step2_form.is_valid():
-		return render(request, 'kentparker/Registration_Journalist.html', context)
+	print(request.POST)
+	if step2_form.is_valid():
 		#chosen_tags_ids = request.POST.getlist("tags")
 		#for tag_id in chosen_tags_ids:
 		#	target_tag = Tag.objects.get(pk=tag_id)
 		#	step2_form.tags.add(target_tag)
-	print("step2_form data: ")
-	print(step2_form.data)
-	step2_form.save()
-	curUser = MyUser.objects.filter(username = request.user)[0]
+		print("step2_form data: ")
+		print(step2_form.data)
+		step2_form.save()
 	chosen_tags_ids = request.POST.getlist("tags")
 	organization = request.POST.get("organization")
 	for tag_id in chosen_tags_ids:
@@ -399,9 +397,8 @@ def register_mediaoutlet(request):
 		return render(request,"kentparker/registration_mediaoutlet.html")
 	# update the reuqest.user with new form
 	step2_form = register_step2_mediaoutlet_form(request.POST, instance=request.user)
-	if not step2_form.is_valid():
-		return render(request,"kentparker/registration_mediaoutlet.html")
-	step2_form.save()
+	if step2_form.is_valid():
+		step2_form.save()
 	return redirect("/")
 
 def confirm_registration(request,name,token):

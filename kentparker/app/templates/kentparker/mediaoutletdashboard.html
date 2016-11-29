@@ -159,7 +159,7 @@
 						<li>
 							<a href="#">
 							<i class="glyphicon glyphicon-user"></i>
-							Bookmarked Pitches </a>
+							Published articles </a>
 						</li>
 					</ul>
 				</div>
@@ -192,7 +192,15 @@
 							{%endfor%}
                              <a class="thumbnail" id="carousel-selector-1"><img src="http://placehold.it/150x150&text=1"></a>
 						</div>
-						{% endfor %}
+					{% endfor %}
+					{%for article in articles%}
+						<div class="well well-lg">
+							<p>{{article.title}}</p>
+							<p>{{article.content}}</p>
+							<p>{{article.pub_time}}</p>
+							<p>{{article.author}}</p>
+						</div>
+      				{% endfor %}
 
                    
                 </ul>
