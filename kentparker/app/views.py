@@ -200,11 +200,8 @@ def profile(request,name):
 		# print ("target user is media outlet")
 		journalists = MyUser.objects.filter(user_type = 2, organization = target_user)
 		for i in range(len(journalists)):
-			# print ("i = ", i)
 			journalist = journalists[i]
-			# print ("journalist: ", journalist)
 			curntarticles = Article.objects.filter(author=journalist)
-			# print ("curntarticle: ", curntarticles)
 			for curntarticle in curntarticles:
 				articles.add(curntarticle)
 		# print ("articles size: ", len(articles))
