@@ -127,6 +127,15 @@ def create_pitch(request):
 	for tag_id in chosen_tags_ids:
 		target_tag=Tag.objects.get(pk=tag_id)
 		new_pitch.tags.add(target_tag)
+	if 'new_tag' in request.POST:
+		new_tag_name=request.POST['new_tag']
+		target_tag=Tag.objects.filter(name=new_tag_name)
+		if len(target_tag)>0:
+			target_tag=Tag.objects.get(name=new_tag_name)
+			new_pitch.tags.add(target_tag)
+		else:
+			target_tag=Tag.objects.create(name=new_tag_name)
+			new_pitch.tags.add(target_tag)
 	new_pitch.save()
 	return redirect('/')
 
