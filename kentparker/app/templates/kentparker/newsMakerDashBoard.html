@@ -112,10 +112,12 @@
       				<div class="panel-heading">Related News</div>
       				<div class="panel-body">
       				{%for article in related_articles%}
+      				<div class="well well-lg">
       				<p>{{article.author.first_name}} {{article.author.last_name}}<a href="profile/{{article.author}}">@{{article.author}}</a></p>
       					<p>{{article.title}}</p>
       					<p>{{article.content}}</p>
       					<p>{{article.pub_time}}</p>
+      				</div>
       				{% endfor %}
       				</div>
    				 </div>
