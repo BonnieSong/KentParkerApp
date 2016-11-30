@@ -296,7 +296,7 @@ def request_reset_password(request):
 	email_body="""
 	Please click the link below to reset your password:
 	http://%s%s
-	""" % ('localhost:8000', reverse('reset_password',args=(target_user.username,token)))
+	""" % (request.get_host(), reverse('reset_password',args=(target_user.username,token)))
 
 	send_mail(subject="Reset your password",
 			  message=email_body,
@@ -389,7 +389,7 @@ def register(request):
 	email_body="""
 	Please click the link below to confirm your email address:
 	http://%s%s
-	""" % ('localhost:8000', reverse('confirm_registration',args=(new_user.username,token)))
+	""" % (request.get_host(), reverse('confirm_registration',args=(new_user.username,token)))
 
 	send_mail(subject="Confirm your email address",
 			  message=email_body,

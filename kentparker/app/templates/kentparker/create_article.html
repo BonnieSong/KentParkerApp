@@ -82,36 +82,7 @@ function addSpot(obj,afterId,newId)
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="/">Home</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Mail <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <div class="profile-usermenu-dropdown">
-					<ul class="nav">
-						<li class="active" style = "line-height: 5;">
-							<a href="#">
-							
-							Overview </a>
-						</li>
-						<li>
-							<a href="#">
-							
-							Account Settings </a>
-						</li>
-						<li>
-							<a href="#" target="_blank">
-							
-							Tasks </a>
-						</li>
-						<li>
-							<a href="#">
-							
-							Help </a>
-						</li>
-					</ul>
-				</div>
-          </ul>
-        </li>
-        <li><a href="#">Contacts</a></li>
+        <li><a href="{% url "contacts" %}">Contacts</a></li>
         
       </ul>
       <ul class="nav navbar-nav navbar-right">
