@@ -89,7 +89,7 @@ def filterTags_pitch(request, tags):
 	chosen_tags_ids = tags.split("@")
 	for tag_id in chosen_tags_ids:
 		if(len(tag_id)>0):
-			tag_id = tag_id[len(tag_id)-1:]
+			#tag_id = tag_id[len(tag_id)-1:]
 			target_tag=Tag.objects.get(pk=tag_id)
 			tagsSet.add(target_tag)
 
@@ -129,13 +129,14 @@ def create_pitch(request):
 		new_pitch.tags.add(target_tag)
 	if 'new_tag' in request.POST:
 		new_tag_name=request.POST['new_tag']
-		target_tag=Tag.objects.filter(name=new_tag_name)
-		if len(target_tag)>0:
-			target_tag=Tag.objects.get(name=new_tag_name)
-			new_pitch.tags.add(target_tag)
-		else:
-			target_tag=Tag.objects.create(name=new_tag_name)
-			new_pitch.tags.add(target_tag)
+		if len(new_tag_name.strip())>0:
+			target_tag=Tag.objects.filter(name=new_tag_name)
+			if len(target_tag)>0:
+				target_tag=Tag.objects.get(name=new_tag_name)
+				new_pitch.tags.add(target_tag)
+			else:
+				target_tag=Tag.objects.create(name=new_tag_name)
+				new_pitch.tags.add(target_tag)
 	new_pitch.save()
 	return redirect('/')
 
@@ -430,12 +431,9 @@ def register_journalist(request):
 		return render(request, 'kentparker/Registration_Journalist.html', context)
 	# update the reuqest.user with new form
 	step2_form = register_step2_journalist_form(request.POST, instance=request.user)
-	print(request.POST)
-	print("--------------")
-	print(step2_form.data)
+	#print(request.POST)
+	#print(step2_form.data)
 	if step2_form.is_valid():
-		print("step2_form data: ")
-		print(step2_form.data)
 		step2_form.save()
 		chosen_tags_ids = request.POST.getlist("tags")
 		for tag_id in chosen_tags_ids:
@@ -477,12 +475,17 @@ def confirm_registration(request,name,token):
 def pitch_detail(request,pitchId):
 	if request.method == 'GET':
 		cur_pitch = Pitch.objects.get(pk=pitchId)
-		context = {"cur_pitch": cur_pitch}
+		already= False
+		if request.user in cur_pitch.bookmarked.all():
+			already = True
+		context = {"cur_pitch": cur_pitch, "already": already}
 		return render(request, "kentparker/pitch_detail.html", context)
 	# bookmark the pitch
 	cur_pitch = Pitch.objects.get(pk=pitchId)
-	print(cur_pitch)
-	cur_pitch.bookmarked.add(request.user)
+	if request.user in cur_pitch.bookmarked.all():
+		cur_pitch.bookmarked.remove(request.user)
+	else:
+		cur_pitch.bookmarked.add(request.user)
 	cur_pitch.save()
 
 	return redirect("/")

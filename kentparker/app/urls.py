@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^mediaoutlet_articles', views.mediaoutlet_articles, name='mediaoutlet_articles'),
     # journalist related urls
     url(r'^journalist/favNewsMakers$', views.favNewsMakers_pitch, name='favNewsMakers_pitch'),
-    url(r'^journalist/bookmarked_pitch', views.bookmarked_pitch, name='bookmarked_pitch'),
+    url(r'^bookmarked_pitch', views.bookmarked_pitch, name='bookmarked_pitch'),
     url(r'^journalist/(?P<tags>.*)$', views.filterTags_pitch, name='filterTags_pitch'),
     url(r'^journalist_Articles', views.journalist_Articles, name='journalist_Articles'),
     # pitch related urls
