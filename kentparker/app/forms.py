@@ -39,11 +39,14 @@ class EditProfileModelForm(forms.ModelForm):
 					'picture':forms.FileInput(attrs={'class':'form-control'}),
 					'bio':forms.Textarea(attrs={'class':'form-control','placeholder':'Bio'})}
 
-class ChangePasswordModelForm(forms.Form):
+class ChangePasswordModelForm(forms.ModelForm):
 	old_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Old Password'}))
 	new_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'New Password'}))
 	confirm=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm Password'}))
-
+	class Meta:
+		model=MyUser
+		fields=['old_password','new_password','confirm']
+	
 	def clean(self):
 		cleaned_data=super(ChangePasswordModelForm,self).clean()
 		if cleaned_data.get('new_password')!=cleaned_data.get('confirm'):
