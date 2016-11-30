@@ -189,11 +189,11 @@ def profile(request,name):
 
 	if target_user.user_type==1:
 		pitches=Pitch.objects.filter(author=target_user)
-		context={'target_user':target_user,'pitches':pitches}
+		#context={'target_user':target_user,'pitches':pitches}
 		return render(request,"kentparker/profile_newsmaker.html",context)
 	if target_user.user_type==2:
 		articles=Article.objects.filter(author=target_user)
-		context={'target_user':target_user,'articles':articles}
+		context['articles']=articles
 		return render(request,"kentparker/profile_jounalist.html",context)
 	if target_user.user_type==3:
 		articles = set()
@@ -208,8 +208,7 @@ def profile(request,name):
 			for curntarticle in curntarticles:
 				articles.add(curntarticle)
 		# print ("articles size: ", len(articles))
-		pitches=Pitch.objects.filter(author=target_user)
-		context={'target_user':target_user,'articles':articles}
+		context['articles'] = articles
 		return render(request,"kentparker/profile_mediaoutlet.html",context)
 
 # add the target user to contacts by favoriting it
