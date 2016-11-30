@@ -26,40 +26,9 @@
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="/">Home</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Mail <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <div class="profile-usermenu-dropdown">
-					<ul class="nav">
-						<li class="active" style = "line-height: 5;">
-							<a href="#">
-							
-							Overview </a>
-						</li>
-						<li>
-							<a href="#">
-							
-							Account Settings </a>
-						</li>
-						<li>
-							<a href="#" target="_blank">
-							
-							Tasks </a>
-						</li>
-						<li>
-							<a href="#">
-							
-							Help </a>
-						</li>
-					</ul>
-				</div>
-          </ul>
-        </li>
         <li><a href="{% url "contacts" %}">Contacts</a></li>
-        
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
         <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
       </ul>
     </div>
@@ -79,7 +48,11 @@
 			<div class="profile-sidebar">
 				<!-- SIDEBAR USERPIC -->
 				<div class="profile-userpic">
-					<img src="myphoto.jpeg" class="img-responsive" alt="">
+				{% if request.user.picture %}
+				<img src="{% url "get_photo" request.user %}" width="200px" class="img-avatar">
+				{% else %}
+				<img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
+				{% endif %}
 				</div>
 				<!-- END SIDEBAR USERPIC -->
 				<!-- SIDEBAR USER TITLE -->
@@ -117,11 +90,6 @@
 							<a href="/">
 							<i class="glyphicon glyphicon-home"></i>
 							Related News </a>
-						</li>
-						<li>
-							<a href="#">
-							<i class="glyphicon glyphicon-user"></i>
-							Related Pitches </a>
 						</li>
 						<li>
 							<a href="{% url "manage_pitch" %}">

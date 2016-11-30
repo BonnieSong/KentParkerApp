@@ -188,7 +188,7 @@ def profile(request,name):
 	context={'target_user':target_user,'pitches':pitches,'already':already}
 
 	if target_user.user_type==1:
-		pitches=Pitch.objects.filter(author=target_user)
+		# pitches=Pitch.objects.filter(author=target_user)
 		#context={'target_user':target_user,'pitches':pitches}
 		return render(request,"kentparker/profile_newsmaker.html",context)
 	if target_user.user_type==2:
