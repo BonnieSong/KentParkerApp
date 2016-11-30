@@ -60,6 +60,7 @@ class Scoop(Pitch):
 
 class Article(models.Model):
 	title=models.CharField(max_length=30)
+	related_pitch=models.ManyToManyField(Pitch,blank=True)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_ar') #Journalist
 	newsmaker=models.ManyToManyField(MyUser,related_name='newsmaker_am', null=True, blank=True)

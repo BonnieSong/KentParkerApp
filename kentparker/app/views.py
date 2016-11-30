@@ -157,6 +157,14 @@ def create_article(request):
 	new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user)
 	new_article.save()
 
+	if 'related_pitch' in request.POST:
+		related_pitch_url=request.POST['related_pitch']
+		pitch_id=related_pitch_url.split('/')[-1]
+		pitch_id=int(pitch_id)
+		related_pitch=get_object_or_404(Pitch,pk=pitch_id)
+		new_article.related_pitch.add(related_pitch)
+		new_article.save()
+
 	chosen_news_makers=request.POST.getlist('newsmaker')
 	for news_makers in chosen_news_makers:
 		try:
