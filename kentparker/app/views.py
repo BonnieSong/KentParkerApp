@@ -483,10 +483,12 @@ def confirm_registration(request,name,token):
 def pitch_detail(request,pitchId):
 	if request.method == 'GET':
 		cur_pitch = Pitch.objects.get(pk=pitchId)
+		related_articles = cur_pitch.article_set.all()
 		already= False
 		if request.user in cur_pitch.bookmarked.all():
 			already = True
-		context = {"cur_pitch": cur_pitch, "already": already}
+		print(related_articles)
+		context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles}
 		return render(request, "kentparker/pitch_detail.html", context)
 	# bookmark the pitch
 	cur_pitch = Pitch.objects.get(pk=pitchId)
@@ -497,3 +499,9 @@ def pitch_detail(request,pitchId):
 	cur_pitch.save()
 
 	return redirect("/")
+
+def article_detail(request, articleId):
+	if request.method == 'GET':
+		cur_article = Article.objects.get(pk=articleId)
+		context = {"cur_article": cur_article}
+		return render(request, "kentparker/article_detail.html", context)

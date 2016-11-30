@@ -58,27 +58,14 @@
         <div class="container">
         	<div class="row">
     			<div class="col-sm-7">
-    				<h3><span class="pull-left">{{cur_pitch.title}}</span></h3><br />
-    				<h4><span class="pull-left">By {{cur_pitch.cur_pitch.author}} | {{cur_pitch.pub_time}}</span></h4><br /><br />
+    				<h3><span class="pull-left">{{cur_article.title}}</span></h3><br />
+    				<h4><span class="pull-left">By {{cur_article.author}} | {{cur_article.pub_time}}</span></h4><br /><br />
     				<p align="left">
-						{{cur_pitch.content}}
+						{{cur_article.content}}
 						<br>
-						{% for tag in cur_pitch.tags.all %}
-							<button class="btn btn-success">{{tag}}</button>
-						{%endfor%}
 						<br>
     				</p>
     				<hr style="height:3px;border:none;color:#333;background-color:#333;" />
-    				<h4><span class="pull-left">Picked By:</span></h4><br />
-    				<p align="left">Saran Lafontant, Madeleine Abbott</p>
-					<form action="{% url 'pitch_detail' cur_pitch.id %}" method="post">
-						{% if not already%}
-							<button type="submit"  class='btn btn-success btn-sm'>Bookmark</button>
-						{% else %}
-							<button type="submit"  class='btn btn-danger btn-sm'>Unbookmark</button>
-						{% endif %}
-						{% csrf_token %}
-					</form>
 
     			</div>
     			<div class="col-sm-4">
@@ -91,21 +78,6 @@
     			<a href="#"><i class="fa fa-google-plus" aria-hidden="true" style="font-size:24px;color:#dd4b39"></i></a>&nbsp;
     			</span>
     			<br />
-    			<div class="list-group" style="border: none">
-    				<hr style="height:3px;border:none;color:#333;background-color:#333;" />
-    				<h4 class="list-group-item-heading">Related News</h4>
-					{%for article in related_articles%}
-						<div class="list-group-item">
-							<p><a href="../article_detail/{{article.id}}">{{article.title}}</a></p>
-							<p>{{article.content}}</p>
-							<p>{{article.author.first_name}} {{article.author.last_name}}<a href="../profile/{{article.author}}">@{{article.author}}</a></p>
-						</div>
-					{% endfor %}
-  					<a href="#" class="list-group-item">Someone famous used FoodCircles</a>
-  					<a href="#" class="list-group-item">After months of anticipation FoodCircles launches</a>
-  					<a href="#" class="list-group-item">After months of anticipation FoodCircles launches</a>
-  					<hr style="height:3px;border:none;color:#333;background-color:#333;" />
-				</div>
     			</div>
   			</div>
 		</div>
@@ -115,16 +87,16 @@
         <footer>
         	<div class="container">
         		<div class="row">
-        			
+
         			<div class="col-sm-8 col-sm-offset-2">
         				<div class="footer-border"></div>
-        				<p>Made by Kent Parker at <a href="http://www.cmu.edu/" target="_blank"><strong>CMU</strong></a> 
+        				<p>Made by Kent Parker at <a href="http://www.cmu.edu/" target="_blank"><strong>CMU</strong></a>
         				</p>
         				<p class="rights">
                             © 2016 <span>KENT</span> Parker All Rights Reserved.
                         </p>
         			</div>
-        			
+
         		</div>
         	</div>
         </footer>

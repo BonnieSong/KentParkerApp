@@ -48,7 +48,11 @@
 			<div class="profile-sidebar">
 				<!-- SIDEBAR USERPIC -->
 				<div class="profile-userpic">
-					<img src="myphoto.jpeg" class="img-responsive" alt="">
+					{% if request.user.picture %}
+					<img src="{% url "get_photo" request.user %}" width="200px" class="img-avatar">
+					{% else %}
+					<img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
+					{% endif %}
 				</div>
 				<!-- END SIDEBAR USERPIC -->
 				<!-- SIDEBAR USER TITLE -->
