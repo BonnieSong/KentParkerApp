@@ -13,6 +13,17 @@
     {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
   <script>
+  	function updateTextArea() {
+		    var allVals = [];
+		    var allTagString="";
+		    $('#upreferences input[type="checkbox"]:checked').each(function() {
+		    	allVals.push($(this).val());
+		    	allTagString += $(this).val()+"@";
+		    });
+		    $('#t').val(allTagString);
+		    $('#myModal').modal('toggle')
+		    window.location.replace("/journalist/"+allTagString);
+	}
 	$(document).on('ready', function() {
     	$("#input-4").fileinput({showCaption: false});
 	});
@@ -136,11 +147,6 @@ function addSpot(obj,afterId,newId)
 							<a href="#">
 							<i class="glyphicon glyphicon-home"></i>
 							Favourite Tags</a>
-						</li>
-						<li>
-							<a href="/journalist/favNewsMakers">
-							<i class="glyphicon glyphicon-ok"></i>
-							Favourite Newsmakers</a>
 						</li>
 						<li>
 							<a href="#">

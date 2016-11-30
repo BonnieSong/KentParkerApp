@@ -79,7 +79,7 @@ def bookmarked_pitch(request):
 	all_tags = Tag.objects.all()
 	pitches = request.user.pitch_set.all()
 	context = {'filter_pitches': pitches, 'tags': all_tags}
-	return render(request, 'kentparker/JournalistDashBoard.html', context)
+	return render(request, 'kentparker/bookmarked_pitches.html', context)
 
 @login_required
 def filterTags_pitch(request, tags):
