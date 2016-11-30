@@ -50,11 +50,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_HOST = 'smtp.andrew.cmu.edu'
-EMAIL_HOST_USER = 'jingq'
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 
 ROOT_URLCONF = 'kentparker.urls'
@@ -120,7 +120,7 @@ AUTH_USER_MODEL = 'app.MyUser'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'US/Eastern'
 
 USE_I18N = True
 
