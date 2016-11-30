@@ -3,21 +3,49 @@
 	"model":"app.Tag",
 	"pk":1,
 	"fields":{
-		"name":"tag1"
+		"name":"Business"
 	}
 },
 {
 	"model":"app.Tag",
 	"pk":2,
 	"fields":{
-		"name":"tag2"
+		"name":"Entertainment"
 	}
 },
 {
 	"model":"app.Tag",
 	"pk":3,
 	"fields":{
-		"name":"tag3"
+		"name":"National"
+	}
+},
+{
+	"model":"app.Tag",
+	"pk":4,
+	"fields":{
+		"name":"Politics"
+	}
+},
+{
+	"model":"app.Tag",
+	"pk":5,
+	"fields":{
+		"name":"World"
+	}
+},
+{
+	"model":"app.Tag",
+	"pk":6,
+	"fields":{
+		"name":"IT"
+	}
+},
+{
+	"model":"app.Tag",
+	"pk":7,
+	"fields":{
+		"name":"Health"
 	}
 }
 ]
