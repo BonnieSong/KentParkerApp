@@ -191,12 +191,9 @@ body {
 .well-color {
 	background-color: #337ab7;
 	color: #ffffff;
-	
+	padding: 8px 24px 0px 24px;
 }
-.well-color {
-	color: #ffffff;
-	
-}
+
 .nugget-footer {
 	font-family: "Times New Roman", Times, serif;
 }
