@@ -22,35 +22,74 @@ def home(request):
 		# this is a newsmaker
 		# filter related articles about the current newsmaker
 		related_articles=Article.objects.filter(newsmaker=request.user)
-		context={'related_articles':related_articles}
 		# newsmaker
 		my_pitches=Pitch.objects.filter(author=request.user)
-		context={'pitches':my_pitches}
+		context={'related_articles':related_articles, 'pitches':my_pitches}
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
 		#journalist
-		all_tags=request.user.tags
-		pitches = Pitch.objects.filter(tags__in=all_tags).distinct()
-		context = {'pitches':pitches, 'tags':all_tags}
+		# all_tags=request.user.tags
+		all_tags=Tag.objects.all()
+		user_tags = request.user.tags.all()
+		pitches = Pitch.objects.filter(tags__in=user_tags).distinct()
+		context = {'filter_pitches': pitches, 'tags': all_tags}
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
 		# media outlet
-		all_journalists = MyUser.objects.filter(organization=request.user)
+		all_journalists = MyUser.objects.filter(user_type = 2, organization=request.user)
 		published_articles = set()
 		for journalist in all_journalists:
-			published_articles.append(journalist.article_set.all())
+			articles = journalist.author_ar.all()
+			for article in articles:
+				published_articles.add(article)
 		context = {'journalists': all_journalists, 'articles': published_articles }
-		return render(request,'kentparker/mediaoutlet_dashboard.html',context)
+		return render(request,'kentparker/mediaoutletdashboard.html', context)
 
 @login_required
-def filter_pitch(request, tags):
+def mediaoutlet_articles(request):
+	all_journalists = MyUser.objects.filter(user_type=2, organization=request.user)
+	published_articles = set()
+	for journalist in all_journalists:
+		articles = journalist.author_ar.all()
+		for article in articles:
+			published_articles.add(article)
+	context = {'journalists': all_journalists, 'articles': published_articles}
+	return render(request, 'kentparker/mediaoutlet_articles.html', context)
+
+@login_required
+def journalist_Articles(request):
+	all_tags = Tag.objects.all()
+	articles = Article.objects.filter(author = request.user)
+	context = {'articles': articles, 'tags':all_tags}
+	return render(request, 'kentparker/journalist_Articles.html', context)
+
+@login_required
+def favNewsMakers_pitch(request):
+	all_tags = Tag.objects.all()
+	newsMakers = request.user.contacts
+	pitches = set()
+	if (newsMakers is not None) and (len(newsMakers)>0) :
+		for newsMaker in newsMakers:
+			pitches.append(newsMaker.pitch_set.all())
+	context = {'filter_pitches': pitches, 'tags': all_tags}
+	return render(request, 'kentparker/JournalistDashBoard.html', context)
+
+@login_required
+def bookmarked_pitch(request):
+	all_tags = Tag.objects.all()
+	pitches = request.user.pitch_set.all()
+	context = {'filter_pitches': pitches, 'tags': all_tags}
+	return render(request, 'kentparker/bookmarked_pitches.html', context)
+
+@login_required
+def filterTags_pitch(request, tags):
 	all_tags=Tag.objects.all()
 	tagsSet = set()
 
 	chosen_tags_ids = tags.split("@")
 	for tag_id in chosen_tags_ids:
 		if(len(tag_id)>0):
-			tag_id = tag_id[len(tag_id)-1:]
+			#tag_id = tag_id[len(tag_id)-1:]
 			target_tag=Tag.objects.get(pk=tag_id)
 			tagsSet.add(target_tag)
 
@@ -80,7 +119,7 @@ def create_pitch(request):
 		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
 		new_pitch.save()
 	if 'save_btn' in request.POST:
-		# save the pitch as a draft
+		# save the pitch as a drafts
 		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
 		new_pitch.save()
 
@@ -88,8 +127,55 @@ def create_pitch(request):
 	for tag_id in chosen_tags_ids:
 		target_tag=Tag.objects.get(pk=tag_id)
 		new_pitch.tags.add(target_tag)
+	if 'new_tag' in request.POST:
+		new_tag_name=request.POST['new_tag']
+		if len(new_tag_name.strip())>0:
+			target_tag=Tag.objects.filter(name=new_tag_name)
+			if len(target_tag)>0:
+				target_tag=Tag.objects.get(name=new_tag_name)
+				new_pitch.tags.add(target_tag)
+			else:
+				target_tag=Tag.objects.create(name=new_tag_name)
+				new_pitch.tags.add(target_tag)
 	new_pitch.save()
 	return redirect('/')
+
+
+@login_required
+def create_article(request):
+	all_tags=Tag.objects.all()
+	context={'tags':all_tags}
+	if request.method=='GET':
+		return render(request,'kentparker/create_article.html',context)
+	if 'cancel_btn' in request.POST:
+		return redirect('/')
+	# use the form to do validation
+	publish_article_form=PublishArticleForm(request.POST)
+	if not publish_article_form.is_valid():
+		return render(request,'kentparker/create_article.html',context)
+
+	new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user)
+	new_article.save()
+
+	if 'related_pitch' in request.POST:
+		related_pitch_url=request.POST['related_pitch']
+		pitch_id=related_pitch_url.split('/')[-1]
+		pitch_id=int(pitch_id)
+		related_pitch=get_object_or_404(Pitch,pk=pitch_id)
+		new_article.related_pitch.add(related_pitch)
+		new_article.save()
+
+	chosen_news_makers=request.POST.getlist('newsmaker')
+	for news_makers in chosen_news_makers:
+		try:
+			target_news_maker=MyUser.objects.get(user_type=1, username=news_makers)
+			print ("target_news_maker, ", target_news_maker)
+			new_article.newsmaker.add(target_news_maker)
+		except:
+			pass
+	new_article.save()
+	return redirect('/')
+
 
 @login_required
 def manage_pitch(request):
@@ -98,24 +184,68 @@ def manage_pitch(request):
 	context={'pitches':pitches}
 	return render(request,'kentparker/manage_pitch.html',context)
 
+
+@login_required
+def manage_journalists(request):
+	print ("manage_journalists")
+	# show all journalists belong to this media outlet
+	journalists = MyUser.objects.filter(user_type = 2, organization = request.user)
+	context={'journalists':journalists}
+	return render(request,'kentparker/manage_journalists.html',context)
+# 	return redirect('/')
+
 @login_required
 def profile(request,name):
-	return HttpResponse("")
+	target_user=get_object_or_404(MyUser,username=name)
+	pitches=Pitch.objects.filter(author=target_user)
+	already=False
+	if request.user.username!=name:
+		temp=request.user.contacts_f.filter(username=name)
+		if temp:
+			already=True
+	context={'target_user':target_user,'pitches':pitches,'already':already}
+
+	if target_user.user_type==1:
+		# pitches=Pitch.objects.filter(author=target_user)
+		#context={'target_user':target_user,'pitches':pitches}
+		return render(request,"kentparker/profile_newsmaker.html",context)
+	if target_user.user_type==2:
+		articles=Article.objects.filter(author=target_user)
+		context['articles']=articles
+		return render(request,"kentparker/profile_jounalist.html",context)
+	if target_user.user_type==3:
+		articles = set()
+		# print ("target user is media outlet")
+		journalists = MyUser.objects.filter(user_type = 2, organization = target_user)
+		for i in range(len(journalists)):
+			journalist = journalists[i]
+			curntarticles = Article.objects.filter(author=journalist)
+			for curntarticle in curntarticles:
+				articles.add(curntarticle)
+		# print ("articles size: ", len(articles))
+		context['articles'] = articles
+		return render(request,"kentparker/profile_mediaoutlet.html",context)
 
 # add the target user to contacts by favoriting it
 @login_required
 def favorite(request,name):
 	if request.user.username==name:
 		return redirect('/profile/'+name)
-	temp=request.user.contacts_set.filter(username=name)
+	temp=request.user.contacts_f.filter(username=name)
 	if temp:
 		# user already in the contacts
-		temp.get().delete()
+		# delete the user from the contacts list
+		request.user.contacts_f.remove(temp.get())
 	else:
 		# add user to the contacts
 		target_user=get_object_or_404(MyUser,username=name)
-		request.user.contacts_set.add(target_user)
+		request.user.contacts_f.add(target_user)
 	return redirect('/profile/'+name)
+
+@login_required
+def contacts(request):
+	context={'contacts':request.user.contacts_f.all()}
+	return render(request,'kentparker/contacts.html',context)
 
 @login_required
 def get_photo(request, name):
@@ -184,7 +314,7 @@ def request_reset_password(request):
 	email_body="""
 	Please click the link below to reset your password:
 	http://%s%s
-	""" % ('localhost:8000', reverse('reset_password',args=(target_user.username,token)))
+	""" % (request.get_host(), reverse('reset_password',args=(target_user.username,token)))
 
 	send_mail(subject="Reset your password",
 			  message=email_body,
@@ -233,10 +363,11 @@ def login_google(request,email):
 	if len(new_user) > 0:
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
-	defaultpassword = "123"
-	new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=1)
-	new_user.save()
-	django.contrib.auth.login(request,new_user)
+	# defaultpassword = "123"
+	# new_user=MyUser.objects.create_user(username=newemail,email=newemail,password=defaultpassword,first_name='',last_name='',user_type=2)
+	# new_user.save()
+	# django.contrib.auth.login(request,new_user)
+	# if no valid user exist in the database, require registration
 	return redirect('/')
 
 def login_facebook(request,userid):
@@ -250,10 +381,11 @@ def login_facebook(request,userid):
 	if len(new_user) > 0:
 		django.contrib.auth.login(request, new_user[0])
 		return redirect('/')
-	defaultpassword = "123"
-	new_user=MyUser.objects.create_user(username=newuseremail,email=newuseremail,password=defaultpassword,first_name='',last_name='',user_type=1)
-	new_user.save()
-	django.contrib.auth.login(request,new_user)
+	# defaultpassword = "123"
+	# new_user=MyUser.objects.create_user(username=newuseremail,email=newuseremail,password=defaultpassword,first_name='',last_name='',user_type=1)
+	# new_user.save()
+	# django.contrib.auth.login(request,new_user)
+	# if no valid user exist in the database, require registration
 	return redirect('/')
 
 def register(request):
@@ -268,36 +400,76 @@ def register(request):
 
 	new_user=MyUser.objects.create_user(username=register_form.cleaned_data.get('r_username'),email=register_form.cleaned_data.get('r_email'),password=register_form.cleaned_data.get('r_password'),first_name=register_form.cleaned_data.get('r_first_name'),last_name=register_form.cleaned_data.get('r_last_name'),user_type=register_form.cleaned_data.get('r_type'))
 	new_user.save()
-	# if new_user.user_type==1:
-	# 	return render(request,'kentparker/registration_newsmaker.html',context)
-	# if new_user.user_type==2:
-	# 	return render(request,'kentparker/registration_journalist.html',context)
-	# if new_user.user_type==3:
-	# 	return render(request,'kentparker/registration_mediaoutlet.html',context)
-
 	new_user=authenticate(username=register_form.cleaned_data.get('r_username'),password=register_form.cleaned_data.get('r_password'))
 	django.contrib.auth.login(request,new_user)
+
 	token=default_token_generator.make_token(new_user)
 	email_body="""
 	Please click the link below to confirm your email address:
 	http://%s%s
-	""" % ('localhost:8000', reverse('confirm_registration',args=(new_user.username,token)))
+	""" % (request.get_host(), reverse('confirm_registration',args=(new_user.username,token)))
 
 	send_mail(subject="Confirm your email address",
 			  message=email_body,
 			  from_email='yujiel1@andrew.cmu.edu',
 			  recipient_list=[new_user.email])
 
+	if new_user.user_type==1:
+		return redirect("/register_newsmaker")
+	if new_user.user_type==2:
+		return redirect("/register_journalist")
+	if new_user.user_type==3:
+		return redirect("/register_mediaoutlet")
 	return redirect('/')
 
-def register_newsmaker(request,data):
-	return HttpResponse("")
+def register_newsmaker(request):
+	if request.method=='GET':
+		return render(request,"kentparker/registration_newsmaker.html")
+	# update the reuqest.user with new form
+	step2_form=register_step2_newsmaker_form(request.POST,instance=request.user)
+	if step2_form.is_valid():
+		step2_form.save()
+	return redirect("/")
 
-def register_journalist(request,data):
-	return HttpResponse("")
+def register_journalist(request):
+	if request.method=='GET':
+		all_tags = Tag.objects.all()
+		organizations = MyUser.objects.filter(user_type = 3)
+		context = {'tags': all_tags, 'organizations': organizations}
+		return render(request, 'kentparker/Registration_Journalist.html', context)
+	# update the reuqest.user with new form
+	step2_form = register_step2_journalist_form(request.POST, instance=request.user)
+	#print(request.POST)
+	#print(step2_form.data)
+	if step2_form.is_valid():
+		step2_form.save()
+		chosen_tags_ids = request.POST.getlist("tags")
+		for tag_id in chosen_tags_ids:
+			target_tag = Tag.objects.get(pk=tag_id)
+			request.user.tags.add(target_tag)
+		#chosen_organization = request.POST.getlist("organization")
+		if "organization" in request.POST:
+			organization = request.POST.get("organization")
+			if len(organization)>0:
+				target_org = MyUser.objects.get(username=organization)
+				request.user.organization = target_org
+		request.user.save()
+		return redirect("/")
+	else:
+		all_tags = Tag.objects.all()
+		organizations = MyUser.objects.filter(user_type=3)
+		context = {'tags': all_tags, 'organizations': organizations}
+		return render(request, 'kentparker/Registration_Journalist.html', context)
 
-def register_mediaoutlet(request,data):
-	return HttpResponse("")
+
+def register_mediaoutlet(request):
+	if request.method=='GET':
+		return render(request,"kentparker/registration_mediaoutlet.html")
+	# update the reuqest.user with new form
+	step2_form = register_step2_mediaoutlet_form(request.POST, instance=request.user)
+	if step2_form.is_valid():
+		step2_form.save()
+	return redirect("/")
 
 def confirm_registration(request,name,token):
 	target_user=get_object_or_404(MyUser,username=name)
@@ -307,3 +479,29 @@ def confirm_registration(request,name,token):
 		target_user.save()
 		django.contrib.auth.login(request,target_user)
 	return redirect('/')
+
+def pitch_detail(request,pitchId):
+	if request.method == 'GET':
+		cur_pitch = Pitch.objects.get(pk=pitchId)
+		related_articles = cur_pitch.article_set.all()
+		already= False
+		if request.user in cur_pitch.bookmarked.all():
+			already = True
+		print(related_articles)
+		context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles}
+		return render(request, "kentparker/pitch_detail.html", context)
+	# bookmark the pitch
+	cur_pitch = Pitch.objects.get(pk=pitchId)
+	if request.user in cur_pitch.bookmarked.all():
+		cur_pitch.bookmarked.remove(request.user)
+	else:
+		cur_pitch.bookmarked.add(request.user)
+	cur_pitch.save()
+
+	return redirect("/")
+
+def article_detail(request, articleId):
+	if request.method == 'GET':
+		cur_article = Article.objects.get(pk=articleId)
+		context = {"cur_article": cur_article}
+		return render(request, "kentparker/article_detail.html", context)

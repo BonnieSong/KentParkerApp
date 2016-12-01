@@ -6,10 +6,58 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+<script type="text/javascript">
+  var geocoder;
+  var map;
+  var address ="San Diego, CA";
+  function initialize() {
+    geocoder = new google.maps.Geocoder();
+    var latlng = new google.maps.LatLng(-34.397, 150.644);
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+    mapTypeControl: true,
+    mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+    navigationControl: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    if (geocoder) {
+      geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
+          map.setCenter(results[0].geometry.location);
+
+            var infowindow = new google.maps.InfoWindow(
+                { content: '<b>'+address+'</b>',
+                  size: new google.maps.Size(150,50)
+                });
+
+            var marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: map,
+                title:address
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.open(map,marker);
+            });
+
+          } else {
+            alert("No results found");
+          }
+        } else {
+          alert("Geocode was not successful for the following reason: " + status);
+        }
+      });
+    }
+  }
+</script>
 </head>
 <body>
 
@@ -35,37 +83,28 @@
   </div>
 </nav>
 
-  {%if not request.user.email_verify %}
-  <div class="alert alert-danger">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <strong>Please Verify your email address</strong>
-  </div>
-  {% endif %}
-  
 <div class="container">
     <div class="row profile">
 		<div class="col-md-3">
 			<div class="profile-sidebar">
 				<!-- SIDEBAR USERPIC -->
 				<div class="profile-userpic">
-				{% if request.user.picture %}
-				<img src="{% url "get_photo" request.user %}" width="200px" class="img-avatar">
-				{% else %}
-				<img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
-				{% endif %}
+					{% if request.user.picture %}
+					<img src="{% url "get_photo" request.user %}" width="200px" class="img-avatar">
+					{% else %}
+					<img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
+					{% endif %}
 				</div>
 				<!-- END SIDEBAR USERPIC -->
 				<!-- SIDEBAR USER TITLE -->
 				<div class="profile-usertitle">
-				<a href="{% url "profile" request.user %}">
 					<div class="profile-usertitle-name">
 						{{request.user.first_name}}
 						{{request.user.last_name}}
 					</div>
 					<div class="profile-usertitle-job">
-						Newsmaker
+						CMU
 					</div>
-				</a>
 				</div>
 				<!-- END SIDEBAR USER TITLE -->
 				<!-- SIDEBAR BUTTONS -->
@@ -89,36 +128,56 @@
 						<li class="active">
 							<a href="/">
 							<i class="glyphicon glyphicon-home"></i>
-							Related News </a>
+							Journalists </a>
 						</li>
 						<li>
-							<a href="{% url "manage_pitch" %}">
-							<i class="glyphicon glyphicon-ok"></i>
-							Manage Pitches </a>
-						</li>
-						<li>
-							<a href="{% url "create_pitch" %}">
-							<i class="glyphicon glyphicon-pencil"></i>
-							New Pitch </a>
+							<a href="#">
+							<i class="glyphicon glyphicon-user"></i>
+							Published articles </a>
 						</li>
 					</ul>
+				</div>
+				<div id="map_canvas">
+						map
 				</div>
 				<!-- END MENU -->
 			</div>
 		</div>
-		<div class="col-md-9">
+		<div class="col-md-9" data-spy="scroll" >
             <div class="profile-content">
 			   	<div class="panel panel-primary">
-      				<div class="panel-heading">Related News</div>
+      				<div class="panel-heading">Articles</div>
       				<div class="panel-body">
-      				{%for article in related_articles%}
-      				<div class="well well-lg">
-      				<p>{{article.author.first_name}} {{article.author.last_name}}<a href="profile/{{article.author}}">@{{article.author}}</a></p>
-      					<p>{{article.title}}</p>
-      					<p>{{article.content}}</p>
-      					<p>{{article.pub_time}}</p>
-      				</div>
-      				{% endfor %}
+      					<div class="container">
+    <div id="main_area">
+        <!-- Slider -->
+        <div class="row">
+            <div class="col-sm-7" id="slider-thumbs">
+                <!-- Bottom switcher of slider -->
+                <ul class="hide-bullets">
+					{%for article in articles%}
+						<div class="well well-lg">
+							<p>{{article.title}}</p>
+							<p>{{article.content}}</p>
+							<p>{{article.pub_time}}</p>
+							<p>{{article.id}}</p>
+							<p>Author: {{article.author.first_name}} {{article.author.last_name}} <a href="profile/{{article.author}}">@{{article.author}}</a></p>
+							Newsmakers:
+							{% for eachnewsmaker in article.newsmaker.all %}
+							<a href="profile/{{eachnewsmaker}}">@{{eachnewsmaker}}</a>
+							{%endfor%}
+						</div>
+					{% endfor %}
+
+
+                </ul>
+            </div>
+
+            <!--/Slider-->
+        </div>
+
+    </div>
+</div>
       				</div>
    				 </div>
             </div>

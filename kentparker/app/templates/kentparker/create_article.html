@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Kent-Parker</title>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <title>Kent-Parker</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script type="text/javascript" src="http://www.softwhy.com/mytest/jQuery/jquery-1.8.3.js"></script> 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Arimo|Bungee+Hairline|Coiny|Droid+Sans|Droid+Serif|Itim|Lato|Libre+Franklin|Merriweather|Montserrat|Noto+Sans|Open+Sans|Open+Sans+Condensed:300|Oswald|PT+Sans|Prociono|Raleway|Roboto|Roboto+Condensed|Roboto+Slab|Shrikhand|Slabo+27px|Source+Sans+Pro|Trirong|Ubuntu" rel="stylesheet">
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
-
-	<script>
-		function updateTextArea() {
+  <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
+  <script>
+  	function updateTextArea() {
 		    var allVals = [];
 		    var allTagString="";
 		    $('#upreferences input[type="checkbox"]:checked').each(function() {
@@ -22,8 +23,60 @@
 		    $('#t').val(allTagString);
 		    $('#myModal').modal('toggle')
 		    window.location.replace("/journalist/"+allTagString);
-		}
-  	</script>
+	}
+	$(document).on('ready', function() {
+    	$("#input-4").fileinput({showCaption: false});
+	});
+	$(function() {
+
+  // We can attach the `fileselect` event to all file inputs on the page
+  $(document).on('change', ':file', function() {
+    var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.trigger('fileselect', [numFiles, label]);
+  });
+
+  // We can watch for our custom `fileselect` event like this
+  $(document).ready( function() {
+      $(':file').on('fileselect', function(event, numFiles, label) {
+
+          var input = $(this).parents('.input-group').find(':text'),
+              log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+          if( input.length ) {
+              input.val(log);
+          } else {
+              if( log ) alert(log);
+          }
+
+      });
+  });
+  
+	});
+	
+	$(document).ready(function(){
+  var afterId = 0;
+  var newId=1;  
+  $("#btnAddOption").click(function(){  
+    afterId++;  
+    newId=afterId+1;  
+    addSpot(this,afterId,newId);  
+  });  
+});  
+// Add new News Maker 
+function addSpot(obj,afterId,newId) 
+{  console.log("afterId: " + afterId);
+	console.log("newId: " + newId);
+    $('#vote_'+afterId).after(  
+    '<tr id="vote_'+newId+'" class="spot"><th>' + '</th>' +  
+    '<td><input type="text" id="txtInput_'+
+ afterId+'" class="input-text" value="Put the name of News Maker here" size="40" name="newsmaker"/></td>'+  
+    '</tr>');  
+//     $(":text[id^='txtInput_']").val("Put the name of Media Outlet here");  
+ 
+};   
+  </script>
 </head>
 <body>
 
@@ -65,8 +118,8 @@
 				<!-- SIDEBAR USER TITLE -->
 				<div class="profile-usertitle">
 					<div class="profile-usertitle-name">
-						{{request.user.first_name}}
-						{{request.user.last_name}}
+					{{request.user.first_name}}
+					{{request.user.last_name}}
 					</div>
 					<div class="profile-usertitle-job">
 						CMU
@@ -88,13 +141,14 @@
 					</button>
 				</div>
 				<!-- END SIDEBAR BUTTONS -->
+
 				<!-- SIDEBAR MENU -->
 				<div class="profile-usermenu">
 					<ul class="nav">
-						<li class="active">
+						<li>
 							<a href="/">
 							<i class="glyphicon glyphicon-home"></i>
-							Favorite Tags</a>
+							Favourite Tags</a>
 						</li>
 						<li>
 							<a href="/bookmarked_pitch">
@@ -106,7 +160,7 @@
 							<i class="glyphicon glyphicon-file"></i>
 							My Articles </a>
 						</li>
-						<li>
+						<li class="active">
 							<a href="{% url "create_article" %}">
 							<i class="glyphicon glyphicon-flag"></i>
 							Publish Article </a>
@@ -126,7 +180,7 @@
 							    <div class="modal-content">
 							    	<div class="modal-header">
 							        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							        	<h4 class="modal-title" id="myModalLabel">Tags</h4>
+							        	<h4 class="modal-title" id="myModalLabel">Modal title</h4>
 							      	</div>
 							    	<div class="modal-body">
 							    		Select your preferences below:
@@ -166,19 +220,43 @@
 		<div class="col-md-9">
             <div class="profile-content">
 			   	<div class="panel panel-primary">
-      				<div class="panel-heading">Pitches</div>
+      				<div class="panel-heading">New Article</div>
+      				<form method="post" action="{% url "create_article" %}">
       				<div class="panel-body">
-						{%for pitch in filter_pitches%}
-						<div class="well well-lg">
-							<p><a href="pitch_detail/{{pitch.id}}"> @{{pitch.title}}</a></p>
-							<p>{{pitch.content}}</p>
-							<p>{{pitch.pub_time}}</p>
-							<p>{{pitch.id}}</p>
-							{% for tag in pitch.tags.all %}
-							<button class="btn btn-success">{{tag}}</button>
-							{%endfor%}
-						</div>
-						{% endfor %}
+      					<div class="">
+      						<h4><b>Subject</h4>
+      						<input type="text" class="text-line" name="title" />
+      						<h4><b>Article Url<h4>
+      						<div class="form-group">
+								<br>
+  								<textarea name="content" class="form-control" rows="5" id="comment" style="font-family: 'Shrikhand', cursive;"></textarea>
+							</div>
+
+							<h4><b>Pitch Url<h4>
+      						<div class="form-group">
+								<br>
+  								<textarea name="related_pitch" class="form-control" rows="5" id="related_pitch" style="font-family: 'Shrikhand', cursive;"></textarea>
+							</div>
+
+							<h4><b>News Maker</h4>
+							 <table cellpadding=0 cellspacing=0 width="100%" class="table_form"> 
+    							<tr id="vote_1"> 
+     							 <td><input type="button" id="btnAddOption" name="btnAddOption" class="btn btn-primary" value="Add News Maker"/></td> 
+    							</tr> 
+  							</table> 
+      						
+							<br>
+							
+            				<br>
+            			
+            				<br>
+							<div class="center">
+								<input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish">
+								<input type="submit" name="cancel_btn" class="btn btn-danger" value="Cancel">
+							</div>
+            			</div>
+            				{% csrf_token %}
+            			</form>
       				</div>
    				 </div>
             </div>

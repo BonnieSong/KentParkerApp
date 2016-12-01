@@ -34,13 +34,6 @@
     </div>
   </div>
 </nav>
-
-  {%if not request.user.email_verify %}
-  <div class="alert alert-danger">
-          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-          <strong>Please Verify your email address</strong>
-  </div>
-  {% endif %}
   
 <div class="container">
     <div class="row profile">
@@ -48,24 +41,22 @@
 			<div class="profile-sidebar">
 				<!-- SIDEBAR USERPIC -->
 				<div class="profile-userpic">
-				{% if request.user.picture %}
-				<img src="{% url "get_photo" request.user %}" width="200px" class="img-avatar">
-				{% else %}
-				<img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
-				{% endif %}
+					{% if request.user.picture %}
+					<img src="{% url "get_photo" request.user %}" width="200px" class="img-avatar">
+					{% else %}
+					<img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
+					{% endif %}
 				</div>
 				<!-- END SIDEBAR USERPIC -->
 				<!-- SIDEBAR USER TITLE -->
 				<div class="profile-usertitle">
-				<a href="{% url "profile" request.user %}">
 					<div class="profile-usertitle-name">
 						{{request.user.first_name}}
 						{{request.user.last_name}}
 					</div>
 					<div class="profile-usertitle-job">
-						Newsmaker
+						CMU
 					</div>
-				</a>
 				</div>
 				<!-- END SIDEBAR USER TITLE -->
 				<!-- SIDEBAR BUTTONS -->
@@ -89,17 +80,12 @@
 						<li class="active">
 							<a href="/">
 							<i class="glyphicon glyphicon-home"></i>
-							Related News </a>
+							Related Stories </a>
 						</li>
 						<li>
-							<a href="{% url "manage_pitch" %}">
+							<a href="{% url "manage_journalists" %}">
 							<i class="glyphicon glyphicon-ok"></i>
-							Manage Pitches </a>
-						</li>
-						<li>
-							<a href="{% url "create_pitch" %}">
-							<i class="glyphicon glyphicon-pencil"></i>
-							New Pitch </a>
+							Manage Journalists </a>
 						</li>
 					</ul>
 				</div>
@@ -109,15 +95,13 @@
 		<div class="col-md-9">
             <div class="profile-content">
 			   	<div class="panel panel-primary">
-      				<div class="panel-heading">Related News</div>
+      				<div class="panel-heading">Related Stories</div>
       				<div class="panel-body">
       				{%for article in related_articles%}
-      				<div class="well well-lg">
       				<p>{{article.author.first_name}} {{article.author.last_name}}<a href="profile/{{article.author}}">@{{article.author}}</a></p>
       					<p>{{article.title}}</p>
       					<p>{{article.content}}</p>
       					<p>{{article.pub_time}}</p>
-      				</div>
       				{% endfor %}
       				</div>
    				 </div>

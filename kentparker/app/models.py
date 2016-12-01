@@ -11,17 +11,26 @@ class MyUser(AbstractUser):
 	picture=models.ImageField(upload_to="profile_photos",null=True,blank=True)
 	email_verify=models.BooleanField(default=False)
 	tags=models.ManyToManyField(Tag,blank=True)
-	location=models.CharField(max_length=50)
-	website=models.URLField(max_length=200)
+	location=models.CharField(max_length=50,blank=True)
+	website=models.URLField(max_length=200,blank=True)
 	contacts=models.ForeignKey('self',null=True,blank=True,related_name='contacts_f')
 	user_type=models.IntegerField()
 	# newsmaker 1
 	# journalist 2
 	# mediaoutlet 3
-	category=models.CharField(max_length=50)
-	bio=models.CharField(max_length=420, blank=True, default="")
+	category=models.CharField(max_length=50,blank=True)
+	bio=models.CharField(max_length=420, blank=True)
 	organization=models.ForeignKey('self',null=True,blank=True,related_name='organization_f')
-
+	address=models.CharField(max_length=50,blank=True)
+	skype_id=models.CharField(max_length=20,blank=True)
+	twitter_id=models.CharField(max_length=20,blank=True)
+	facebook_id=models.CharField(max_length=20,blank=True)
+	phone=models.CharField(max_length=12,blank=True)
+	website=models.URLField(blank=True)
+	source=models.CharField(max_length=20,blank=True)
+	size=models.CharField(max_length=20,blank=True)
+	industry=models.CharField(max_length=10,blank=True)
+	
 	def __str__(self):
 		return self.username
 
@@ -29,14 +38,14 @@ class Pitch(models.Model):
 	title=models.CharField(max_length=30)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_pr') # newsmaker
-	tags=models.ManyToManyField(Tag,null=True,blank=True)
+	tags=models.ManyToManyField(Tag,blank=True)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
 	attachment=models.URLField(max_length=200)
 	special=models.CharField(max_length=1)
 	location=models.CharField(max_length=50,default="")
-	bookmarked=models.ForeignKey(MyUser,related_name='bookmarked_pr',null=True,blank=True)
 	published=models.BooleanField(default=False)
+	bookmarked = models.ManyToManyField(MyUser, blank=True)
 
 	class Meta:
 		ordering=['-pub_time']
@@ -51,14 +60,12 @@ class Scoop(Pitch):
 
 class Article(models.Model):
 	title=models.CharField(max_length=30)
+	related_pitch=models.ManyToManyField(Pitch,blank=True)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_ar') #Journalist
-	newsmaker=models.ManyToManyField(MyUser,related_name='newsmaker_am')
-	tags=models.ManyToManyField(Tag)
+	newsmaker=models.ManyToManyField(MyUser,related_name='newsmaker_am', null=True, blank=True)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
-	related_pitch=models.ForeignKey(Pitch)
-	attachment=models.URLField(max_length=200)
 
 	class Meta:
 		ordering=['-pub_time']

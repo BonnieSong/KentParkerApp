@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Kent Parker Application</title>
+        {% load static %}
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome.css" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "css/form-elements" %}">
+        <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <!-- Favicon and touch icons -->
+        <link rel="shortcut icon" href="assets/ico/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+
+    </head>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">KENT PARKER</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/">Home</a></li>
+        <li><a href="{% url "contacts" %}">Contacts</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <body>
+
+        <!-- Top content -->
+        <div class="top-content">
+        	
+            <div class="inner-bg">
+                <div class="container">
+    <div class="profile">
+		<div class="col-md-3 col-lg-pull-1">
+			<div class="profile-sidebar">
+				<!-- SIDEBAR USERPIC -->
+				<div class="profile-userpic">
+                      {% if target_user.picture %}
+        <img src="{% url "get_photo" target_user %}" width="200px" class="img-avatar">
+      {% else %}
+        <img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
+      {% endif %}
+				</div>
+				<!-- END SIDEBAR USERPIC -->
+				<!-- SIDEBAR USER TITLE -->
+				<div class="profile-usertitle">
+					<div class="profile-usertitle-name">
+                        {{target_user.first_name}}
+                        {{target_user.last_name}}
+					</div>
+					<div class="profile-usertitle-job">
+						Journalist
+					</div>
+				</div>
+				<!-- END SIDEBAR USER TITLE -->
+				<!-- SIDEBAR BUTTONS -->
+                <div class="profile-userbuttons">
+                {% ifequal target_user request.user %}
+                <a class='btn btn-success btn-sm' href="{% url "edit_profile" target_user %}">Edit profile</a>
+                <a class='btn btn-danger btn-sm' href="{% url "change_password" target_user %}">Change password</a>
+                {% else %}
+                    {% if not already%}
+                    <a class='btn btn-success btn-sm' href="{% url "favorite" target_user %}">Favorite</a>
+                    {% else %}
+                    <a class='btn btn-danger btn-sm' href="{% url "favorite" target_user %}">Unfavorite</a>
+                    {% endif %}
+                {% endifequal %}
+                </div>
+                				<!-- END SIDEBAR BUTTONS -->
+				<!-- SIDEBAR MENU -->
+				<div class="profile-usermenu">
+					<div class="panel-group">
+					<div class="panel panel-default">
+					  <div class="panel-heading">ABOUT ME</div>
+					  <div class="panel-body">
+                      <p>{{target_user.bio}}</p>
+                      <p>{{target_user.first_name}}</p>  
+                        <p>{{target_user.skype_id}}</p>
+                        <p>{{target_user.size}}</p>         
+                      </div>
+					</div>
+
+					<div class="panel panel-default">
+					  <div class="panel-heading">CONTACT ME</div>
+					  <div class="panel-body">
+					  	<ul class="nav">
+						<li class="active">
+							<i class="glyphicon glyphicon-earphone"></i>
+							555-0100-3000 </a>
+						</li>
+						<li>
+							<i class="glyphicon glyphicon-envelope"></i>
+							lorem@posum.com </a>
+						</li>
+					</ul>
+					  </div>
+					</div>
+
+					<div class="panel panel-default">
+					  <div class="panel-heading">LOCATION</div>
+					  <div class="panel-body">Panel Content</div>
+					</div>
+				</div>
+				</div>
+				<!-- END MENU -->
+			</div>
+		</div>
+		<div class="col-md-1 col-lg-pull-1">
+            <div class="container">
+    			<div class="panel panel-primary">
+       			<div class="panel-heading clearfix">
+            	<h5 class="panel-title pull-left" style="padding-top: 15.0px;">Past Articles</h5>
+                	<div class="input-group">
+                	<input id="Special" type="text" class="form-control" placeholder="Search">
+                	<div class="input-group-btn">
+                    	<button id="Special1" class="btn btn-primary"><i style="font-size:0.8em;" class="glyphicon glyphicon-search"></i></button>
+                	</div>
+           	 </div>
+        </div>
+        <div class="panel-body">
+        {% for article in articles %}
+        <div class="well well-lg">
+        <p>{{article.title}}</p>
+        <p>{{article.content}}</p>
+        <p>{{article.pub_time}}</p>
+        <p>Publihshed: {{article.published}}</p>
+        {% for tag in pitch.tags.all %}
+        <button class="btn btn-success">{{tag}}</button>
+        {%endfor%}
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+		</div>
+	</div>
+</div>
+            </div>
+            
+        </div>
+
+        <!-- Footer -->
+        <footer>
+        	<div class="container">
+        		<div class="row">
+        			
+        			<div class="col-sm-8 col-sm-offset-2">
+        				<div class="footer-border"></div>
+        				<p>Made by Kent Parker at <a href="http://www.cmu.edu/" target="_blank"><strong>CMU</strong></a> 
+        				</p>
+        				<p class="rights">
+                            © 2016 <span>KENT</span> Parker All Rights Reserved.
+                        </p>
+        			</div>
+        			
+        		</div>
+        	</div>
+        </footer>
+
+        <!-- Javascript -->
+        <script src="assets/js/jquery-1.11.1.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/js/scripts.js"></script>
+        
+        <!--[if lt IE 10]>
+            <script src="assets/js/placeholder.js"></script>
+        <![endif]-->
+
+    </body>
+
+</html>

@@ -25,13 +25,18 @@ class PublishPitchForm(forms.ModelForm):
 		model=Pitch
 		fields=['title','content','tags']
 
+class PublishArticleForm(forms.ModelForm):
+	class Meta:
+		model=Article
+		fields=['title','content']
+
 class EditProfileModelForm(forms.ModelForm):
-	first_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
-	last_name = forms.CharField(max_length= 20, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}))
 	class Meta:
 		model=MyUser
 		fields=['first_name','last_name','bio','picture']
-		widgets={'picture':forms.FileInput(attrs={'class':'form-control'}),
+		widgets={	'first_name':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+					'last_name':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+					'picture':forms.FileInput(attrs={'class':'form-control'}),
 					'bio':forms.Textarea(attrs={'class':'form-control','placeholder':'Bio'})}
 
 class ChangePasswordModelForm(forms.ModelForm):
@@ -41,7 +46,7 @@ class ChangePasswordModelForm(forms.ModelForm):
 	class Meta:
 		model=MyUser
 		fields=['old_password','new_password','confirm']
-
+	
 	def clean(self):
 		cleaned_data=super(ChangePasswordModelForm,self).clean()
 		if cleaned_data.get('new_password')!=cleaned_data.get('confirm'):
@@ -60,3 +65,19 @@ class ResetPaswordForm(forms.Form):
 		if cleaned_data.get('password')!=cleaned_data.get('confirm'):
 			raise forms.ValidationError('Passwords did not match')
 		return cleaned_data
+
+class register_step2_newsmaker_form(forms.ModelForm):
+	class Meta:
+		model=MyUser
+		fields=['address','website','phone','skype_id','twitter_id','facebook_id','bio','size','industry','source']
+
+class register_step2_mediaoutlet_form(forms.ModelForm):
+	class Meta:
+		model=MyUser
+		fields=['address','website','phone','skype_id','twitter_id','facebook_id','bio','size','source']
+
+class register_step2_journalist_form(forms.ModelForm):
+	#tags = forms.ModelChoiceField(queryset=Tag.objects.all(), required=False, help_text="Tag")
+	class Meta:
+		model=MyUser
+		fields=['phone','skype_id','twitter_id','facebook_id','tags','bio','source']
