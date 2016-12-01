@@ -13,10 +13,6 @@ body {
   margin: 20px 0;
 }
 
-.form-control{
-  max-width: 100px;
-}
-
 /* Profile sidebar */
 .profile-sidebar {
   padding: 20px 0 10px 0;
@@ -171,10 +167,46 @@ body {
     font-family: 'Shrikhand', cursive;
 }
 .dropdown-menu {
-  overflow-y: scroll;
-  height: 100px;
+	overflow-y: scroll;
+	height: 100px;
 }
 .center {
-  margin: auto;
+	margin: auto;
     width: 35%;
+}
+.hide-bullets {
+    list-style:none;
+    margin-left: -40px;
+    margin-top:20px;
+}
+
+.thumbnail {
+    padding: 0;
+}
+
+.carousel-inner>.item>img, .carousel-inner>.item>a>img {
+    width: 100%;
+}
+
+.well-color {
+	background-color: #337ab7;
+	color: #ffffff;
+	
+}
+.well-color {
+	color: #ffffff;
+	
+}
+.nugget-footer {
+	font-family: "Times New Roman", Times, serif;
+}
+.dashboard-pagination {
+	position: absolute;
+    right: 0px;
+    width: 300px;
+    background-color: #b0e0e6;
+}
+.top-buffer{
+	margin-top: -5px;
+	margin-left: 0.33%;
 }
