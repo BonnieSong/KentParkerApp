@@ -182,9 +182,6 @@
 							{% for tag in pitch.tags.all %}
 							<button class="btn btn-success">{{tag}}</button>
 							{%endfor%}
-							{% for user in pitch.embargoed.all %}
-							<button class="btn btn-success">{{user}}</button>
-							{%endfor%}
 						</div>
 						{% endfor %}
       				</div>
