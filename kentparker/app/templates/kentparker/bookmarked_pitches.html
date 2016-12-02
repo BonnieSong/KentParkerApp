@@ -102,6 +102,11 @@
 							Bookmarked Pitches </a>
 						</li>
 						<li>
+							<a href="/embargo_pitch">
+							<i class="glyphicon glyphicon-book"></i>
+							Embargoed Pitches </a>
+						</li>
+						<li>
 							<a href="{% url "journalist_Articles" %}">
 							<i class="glyphicon glyphicon-file"></i>
 							My Articles </a>
@@ -176,6 +181,9 @@
 							<p>{{pitch.id}}</p>
 							{% for tag in pitch.tags.all %}
 							<button class="btn btn-success">{{tag}}</button>
+							{%endfor%}
+							{% for user in pitch.embargoed.all %}
+							<button class="btn btn-success">{{user}}</button>
 							{%endfor%}
 						</div>
 						{% endfor %}

@@ -30,6 +30,8 @@ class MyUser(AbstractUser):
 	source=models.CharField(max_length=20,blank=True)
 	size=models.CharField(max_length=20,blank=True)
 	industry=models.CharField(max_length=10,blank=True)
+
+
 	
 	def __str__(self):
 		return self.username
@@ -45,7 +47,8 @@ class Pitch(models.Model):
 	special=models.CharField(max_length=1)
 	location=models.CharField(max_length=50,default="")
 	published=models.BooleanField(default=False)
-	bookmarked = models.ManyToManyField(MyUser, blank=True)
+	bookmarked = models.ManyToManyField(MyUser,null=True,blank=True,related_name='bookmarked')
+	embargoed = models.ManyToManyField(MyUser,null=True,blank=True,related_name='embargoed')
 
 	class Meta:
 		ordering=['-pub_time']
