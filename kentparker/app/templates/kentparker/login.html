@@ -1,171 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head>  
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <meta name="google-signin-client_id" content="945458974994-fr5bsq7snhspko4v02h9c6dn92g0mf03.apps.googleusercontent.com">
-  <title>Kent Parker Application</title>
-  <!-- Bootstrap -->
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static "/css/style.css" %}">
-  <link rel="stylesheet" type="text/css" href="{% static "/css/font-awesome.css" %}">
-  <link rel="stylesheet" type="text/css" href="{% static "/css/font-element.css" %}">
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script src="{% static "/js/jquery-2.1.4.min.js" %}"></script>
-  <script src="{% static "/js/kentparker.js" %}"></script>
-  <script src="http://connect.facebook.net/en_EN/all.js"></script>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="google-signin-client_id" content="945458974994-fr5bsq7snhspko4v02h9c6dn92g0mf03.apps.googleusercontent.com">
+	<title>Kent Parker Application</title>
+	<!-- Bootstrap -->
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static "/css/style.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "/css/font-awesome.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "/css/font-element.css" %}">
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<script src="{% static "/js/jquery-2.1.4.min.js" %}"></script>
+	<script src="{% static "/js/kentparker.js" %}"></script>
+	<script src="http://connect.facebook.net/en_EN/all.js"></script>
 
 
 </head>
 
 <body>
 	<script>
-        FB.init({ appId: '1135311496521912',
-            status: true,
-            cookie: true,
-            xfbml: true,
-            oauth: true
-        });
+				FB.init({ appId: '1135311496521912',
+						status: true,
+						cookie: true,
+						xfbml: true,
+						oauth: true
+				});
 
-    
-    </script>
-  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">Kent Parker</a>
+		
+		</script>
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Kent Parker</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="#">About</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<!-- Top content -->
+	<div class="top-content">
+		<div class="inner-bg">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-sm-6 col-sm-offset-3 text">
+						<h1>Kent Parker Application</h1>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-5">
+				  <div class="form-box">
+				    {% if from_login%}
+				    {% if form.errors %}
+					   <div class="alert alert-danger">
+						  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						  <strong>Error!</strong> Incorrect username/password.
+					   </div>
+					 {% endif %}
+					 {% endif %}
+					 <div class="form-box">
+  					 	<div class="form-top">
+  							<div class="form-top-left">
+  								<h3>Login to our site</h3>
+  								<p>Enter username and password to log in:</p>
+  							</div>
+  						  <div class="form-top-right">
+  							 <i class="fa fa-key"></i>
+  						  </div>
+  						</div>
+  					<div class="form-bottom">
+    					<form action="{% url 'login' %}" method="post" class="login-form">
+      					{% for field in form %}
+      					 <div class="form-group">
+      					 {{field.label_tag}}
+      						{{ field }}
+      					</div>
+      					{% endfor %}
+      					<div class="form-group">
+      						<button type="submit" class='btn' value="Sign in!">
+                  </button>
+      					</div>
+
+      					<div class="form-group">
+      					<a href="/request_reset_password">Forgot your password? Reset!</a>
+      					</div>
+
+      					<input type="hidden" name="next" value="{{ next }}" />
+      					{% csrf_token%}
+    				  </form>
+  			     </div>
+		      </div>
       </div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
-        <li><a href="#">About</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Top content -->
-  <div class="top-content">
-    <div class="inner-bg">
-      <div class="container">
-
-        <div class="row">
-          <div class="col-sm-6 col-sm-offset-3 text">
-            <h1>Kent Parker Application</h1>
-            <div class="description">
-             <p>
-              This is a draft of the UI look and feel for login/Registration Page
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-5">
-         <div class="form-box">
-         {% if from_login%}
-         {% if form.errors %}
-           <div class="alert alert-danger">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Error!</strong> Incorrect username/password.
-          </div>
-          {% endif %}
-          {% endif %}
-          <div class="form-title">
-          <h3>Login to our site</h3>
-            <p>Enter username and password to log in:</p>
-          </div>
-          <form action="{% url 'login' %}" method="post">
-          {% for field in form %}
-           <div class="form-group">
-           {{field.label_tag}}
-            {{ field }}
-          </div>
-          {% endfor %}
-          <div class="form-group">
-            <input type="submit" class='form-control btn-primary' value="Sign in!">
-          </div>
-
-          <div class="form-group">
-          <a href="/request_reset_password">Forgot your password? Reset!</a>
-          </div>
-
-          <input type="hidden" name="next" value="{{ next }}" />
-          {% csrf_token%}
-        </form>
-    </div>
-
-    <div class="form-box">
-      <h3>...or login with:</h3>
-<!--       <a class="btn btn-primary" id="google-signout" onclick="GoogleSignOut();">Sign out</a> -->
+		  
+			 
+<!--			 <a class="btn btn-primary" id="google-signout" onclick="GoogleSignOut();">Sign out</a> -->
       <div class="social-login">
-      <div class="row">
-      <div class="col-md-4 col-md-offset-2">
-      <a id="google-signin" class="g-signin2" data-onsuccess="onGoogleSignIn"></a>
-<!--       <button onclick="onGoogleSignIn()" class="btn btn-danger">Google Login</button> -->
+        <h3>...or login with:</h3>
+          <div class="social-login-buttons">
+            <a id="google-signin" class="btn btn-link-1 btn-link-1-facebook" onclick="onFBSignIn()">
+              <i class="fa fa-facebook"></i> Facebook
+            </a>
+            <a id="google-signin" class="btn btn-link-1 btn-link-1-google-plus" data-onsuccess="onGoogleSignIn">
+              <i class="fa fa-google-plus"></i> Google Plus
+            </a>
+          </div>
       </div>
-      <div class="col-md-4 col-md-offset-0.5">
-      <button onclick="onFBSignIn()" class="btn btn-primary">FB Login</button>
-      </div>
-      </div>
-      
-      <!-- 
+			<!--<a id="google-signin" class="g-signin2" data-onsuccess="onGoogleSignIn"></a>
+			 <button onclick="onGoogleSignIn()" class="btn btn-danger">Google Login</button> -->
+			
+			
+			<!-- 
 <a class="btn btn-primary" href="#">Facebook</a>
-      <a class="btn btn-danger" href="#">Google</a>
+			<a class="btn btn-danger" href="#">Google</a>
  -->
-    </div>
-    
-  </div>
-  <!-- 
+		
+		
+	</div>
+	<!-- 
 <button onclick="onFBSignIn()">FB Login bt</button>
-  <button onclick="FBSignOut()">FB Logout</button>
+	<button onclick="FBSignOut()">FB Logout</button>
  -->
 
-</div>
+
 
 <div class="col-sm-1 middle-border">
 </div>
-
+ <div class="col-sm-1"></div>
 <div class="col-sm-5">
 
  <div class="form-box">
 
-     {% if register_form.errors %}
-    {% for field in register_form %}
-    {% for error in field.errors %}
-    <div class="alert alert-danger">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Error!</strong> {{error}}
-    </div>
-    {% endfor %}
-    {% endfor %}
-    {% for error in register_form.non_field_errors %}
-    <div class="alert alert-danger">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Error!</strong> {{error}}
-    </div>
-    {% endfor %}
-    {% endif %}
+		 {% if register_form.errors %}
+		{% for field in register_form %}
+		{% for error in field.errors %}
+		<div class="alert alert-danger">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		<strong>Error!</strong> {{error}}
+		</div>
+		{% endfor %}
+		{% endfor %}
+		{% for error in register_form.non_field_errors %}
+		<div class="alert alert-danger">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		<strong>Error!</strong> {{error}}
+		</div>
+		{% endfor %}
+		{% endif %}
 
-    <div class="form-title">
-    <h3>Sign up now</h3>
-    <p>Fill in the form to get instant access:</p>
+		<div class="form-top">
+      <div class="form-top-left">
+		    <h3>Sign up now</h3>
+		    <p>Fill in the form to get instant access:</p>
+		  </div>
     </div>
-
-  <form action="{% url 'register' %}" method="post" class="registration-form">
-
-  {% for field in register_form %}
-  <div class='form-group'>
-  {{field}}
+    <div class="form-bottom">
+    	<form action="{% url 'register' %}" method="post" class="registration-form">
+      	{% for field in register_form %}
+      	<div class='form-group'>
+      	{{field}}
+      	</div>
+      	{% endfor %}
+      	<button type="submit" class="btn" > Sign me up!</button>
+      	{% csrf_token%}
+      </form>
+    </div>
   </div>
-  {% endfor %}
-  <input type="submit" class="form-control btn-primary" value="Sign me up!">
-  {% csrf_token%}
-</form>
-
-</div>
 
 </div>
 </div>
@@ -178,16 +187,16 @@
 <!-- Footer -->
 <footer>
  <div class="container">
-  <div class="row">
+	<div class="row">
 
-   <div class="col-sm-8 col-sm-offset-2">
-    <div class="footer-border"></div>
-    <p>Made by Kent Parker at <a href="http://www.cmu.edu/" target="_blank"><strong>CMU</strong></a> 
-    </p>
-    <p class="rights">
-      © 2016 <span>KENT</span> Parker All Rights Reserved.
-    </p>
-  </div>
+	 <div class="col-sm-8 col-sm-offset-2">
+		<div class="footer-border"></div>
+		<p>Made by Kent Parker at <a href="http://www.cmu.edu/" target="_blank"><strong>CMU</strong></a> 
+		</p>
+		<p class="rights">
+			© 2016 <span>KENT</span> Parker All Rights Reserved.
+		</p>
+	</div>
 
 </div>
 </div>

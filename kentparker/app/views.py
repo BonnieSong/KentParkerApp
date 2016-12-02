@@ -484,11 +484,14 @@ def pitch_detail(request,pitchId):
 	if request.method == 'GET':
 		cur_pitch = Pitch.objects.get(pk=pitchId)
 		related_articles = cur_pitch.article_set.all()
+		picked_by = set()
+		for article in related_articles:
+			picked_by.add(article.author)
 		already= False
 		if request.user in cur_pitch.bookmarked.all():
 			already = True
 		print(related_articles)
-		context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles}
+		context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by}
 		return render(request, "kentparker/pitch_detail.html", context)
 	# bookmark the pitch
 	cur_pitch = Pitch.objects.get(pk=pitchId)
