@@ -70,16 +70,23 @@ def favNewsMakers_pitch(request):
 	pitches = set()
 	if (newsMakers is not None) and (len(newsMakers)>0) :
 		for newsMaker in newsMakers:
-			pitches.append(newsMaker.pitch_set.all())
+			pitches.append(newsMaker.bookmarked.all())
 	context = {'filter_pitches': pitches, 'tags': all_tags}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 @login_required
 def bookmarked_pitch(request):
 	all_tags = Tag.objects.all()
-	pitches = request.user.pitch_set.all()
+	pitches = request.user.bookmarked.all()
 	context = {'filter_pitches': pitches, 'tags': all_tags}
 	return render(request, 'kentparker/bookmarked_pitches.html', context)
+
+@login_required
+def embargo_pitch(request):
+	all_tags = Tag.objects.all()
+	pitches = request.user.embargoed.all()
+	context = {'embargo_pitches': pitches, 'tags': all_tags}
+	return render(request, 'kentparker/embargo_pitches.html', context)
 
 @login_required
 def filterTags_pitch(request, tags):
@@ -123,6 +130,8 @@ def create_pitch(request):
 		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
 		new_pitch.save()
 
+	print(request.POST)
+
 	chosen_tags_ids=request.POST.getlist("tags-list")
 	for tag_id in chosen_tags_ids:
 		target_tag=Tag.objects.get(pk=tag_id)
@@ -137,6 +146,19 @@ def create_pitch(request):
 			else:
 				target_tag=Tag.objects.create(name=new_tag_name)
 				new_pitch.tags.add(target_tag)
+	if 'Embargo' in request.POST:
+		chosen_journalists = request.POST.getlist('journalist')
+		for journalist in chosen_journalists:
+			try:
+				target_journalist = MyUser.objects.get(user_type=2, username=journalist)
+				print("target_journalist: ", target_journalist)
+				new_pitch.embargoed.add(target_journalist)
+				print("successssss")
+			except:
+				pass
+	print(new_pitch.tags.all())
+	print(new_pitch.embargoed.all())
+
 	new_pitch.save()
 	return redirect('/')
 
