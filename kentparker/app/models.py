@@ -47,6 +47,7 @@ class Pitch(models.Model):
 	special=models.CharField(max_length=1)
 	location=models.CharField(max_length=50,default="")
 	published=models.BooleanField(default=False)
+	embargoMark=models.BooleanField(default=False)
 	bookmarked = models.ManyToManyField(MyUser,null=True,blank=True,related_name='bookmarked')
 	embargoed = models.ManyToManyField(MyUser,null=True,blank=True,related_name='embargoed')
 
