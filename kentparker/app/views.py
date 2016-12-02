@@ -35,8 +35,9 @@ def home(request):
 		pitches = Pitch.objects.filter(tags__in=user_tags).distinct()
 		validpitches = set()
 		for pitch in pitches:
-			if not pitch.embargoMark:
-				validpitches.add(pitch)
+			if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
+				continue
+			validpitches.add(pitch)
 		context = {'filter_pitches': validpitches, 'tags': all_tags}
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
@@ -113,11 +114,12 @@ def filterTags_pitch(request, tags):
 		tagsSet = all_tags
 
 	pitches = Pitch.objects.filter(tags__in=tagsSet).distinct()
-	filter_pitches = set()
+	validpitches = set()
 	for pitch in pitches:
-		if not pitch.embargoMark:
-			filter_pitches.add(pitch)
-	context = {'filter_pitches': filter_pitches, 'tags':all_tags}
+		if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
+			continue
+		validpitches.add(pitch)
+	context = {'filter_pitches': validpitches, 'tags':all_tags}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 
@@ -208,7 +210,8 @@ def create_article(request):
 		pitch_id=related_pitch_url.split('/')[-1]
 		pitch_id=int(pitch_id)
 		related_pitch=get_object_or_404(Pitch,pk=pitch_id)
-		related_pitch.published = True
+		related_pitch.scooppublished = True
+		related_pitch.save()
 		new_article.related_pitch.add(related_pitch)
 		new_article.save()
 

@@ -51,6 +51,7 @@ class Pitch(models.Model):
 	bookmarked = models.ManyToManyField(MyUser,null=True,blank=True,related_name='bookmarked')
 	embargoed = models.ManyToManyField(MyUser,null=True,blank=True,related_name='embargoed')
 	scooped = models.BooleanField(default=False)
+	scooppublished = models.BooleanField(default=False)
 
 	class Meta:
 		ordering=['-pub_time']
