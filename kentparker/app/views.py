@@ -31,12 +31,14 @@ def home(request):
 		# all_tags=request.user.tags
 		all_tags=Tag.objects.all()
 		user_tags = request.user.tags.all()
+		print ("journalist user_tags: ", user_tags)
 		pitches = Pitch.objects.filter(tags__in=user_tags).distinct()
-		filter_pitches = set()
+		validpitches = set()
 		for pitch in pitches:
-			if not pitch.embargoMark:
-				filter_pitches.add(pitch)
-		context = {'filter_pitches': filter_pitches, 'tags': all_tags}
+			if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
+				continue
+			validpitches.add(pitch)
+		context = {'filter_pitches': validpitches, 'tags': all_tags}
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
 		# media outlet
@@ -112,11 +114,12 @@ def filterTags_pitch(request, tags):
 		tagsSet = all_tags
 
 	pitches = Pitch.objects.filter(tags__in=tagsSet).distinct()
-	filter_pitches = set()
+	validpitches = set()
 	for pitch in pitches:
-		if not pitch.embargoMark:
-			filter_pitches.add(pitch)
-	context = {'filter_pitches': filter_pitches, 'tags':all_tags}
+		if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
+			continue
+		validpitches.add(pitch)
+	context = {'filter_pitches': validpitches, 'tags':all_tags}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 
@@ -128,6 +131,7 @@ def create_pitch(request):
 		return render(request,'kentparker/create_pitch.html',context)
 	if 'cancel_btn' in request.POST:
 		return redirect('/')
+	# print ("request.POST publish: ", request.POST)
 	# use the form to do validation
 	publish_pitch_form=PublishPitchForm(request.POST)
 	if not publish_pitch_form.is_valid():
@@ -135,14 +139,23 @@ def create_pitch(request):
 
 	if 'publish_btn' in request.POST:
 		# publish the pitch
-		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
-		new_pitch.save()
+		if 'Scoop' in request.POST:
+			print ("scoop is True")
+			new_pitch=Pitch(scooped = True, title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
+			print ("new_pitch.scooped: ", new_pitch.scooped)
+			new_pitch.save()
+		else:
+			new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
+			new_pitch.save()
 	if 'save_btn' in request.POST:
 		# save the pitch as a drafts
-		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
-		new_pitch.save()
+		if 'Scoop' in request.POST:
+			new_pitch=Pitch(scooped = True, title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
+			new_pitch.save()
+		else:
+			new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
+			new_pitch.save()
 
-	print(request.POST)
 
 	chosen_tags_ids=request.POST.getlist("tags-list")
 	for tag_id in chosen_tags_ids:
@@ -169,8 +182,8 @@ def create_pitch(request):
 				print("successssss")
 			except:
 				pass
-	print(new_pitch.tags.all())
-	print(new_pitch.embargoed.all())
+	# print(new_pitch.tags.all())
+	# print(new_pitch.embargoed.all())
 
 	new_pitch.save()
 	return redirect('/')
@@ -197,6 +210,8 @@ def create_article(request):
 		pitch_id=related_pitch_url.split('/')[-1]
 		pitch_id=int(pitch_id)
 		related_pitch=get_object_or_404(Pitch,pk=pitch_id)
+		related_pitch.scooppublished = True
+		related_pitch.save()
 		new_article.related_pitch.add(related_pitch)
 		new_article.save()
 
