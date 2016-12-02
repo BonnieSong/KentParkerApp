@@ -35,10 +35,8 @@ def home(request):
 		pitches = Pitch.objects.filter(tags__in=user_tags).distinct()
 		validpitches = set()
 		for pitch in pitches:
-			if pitch.scooped == True and pitch.published == True:
-				print ("pitch scoop is True and pitch published is True")
-				continue
-			validpitches.add(pitch)
+			if not pitch.embargoMark:
+				validpitches.add(pitch)
 		context = {'filter_pitches': validpitches, 'tags': all_tags}
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
@@ -85,7 +83,11 @@ def favNewsMakers_pitch(request):
 def bookmarked_pitch(request):
 	all_tags = Tag.objects.all()
 	pitches = request.user.bookmarked.all()
-	context = {'filter_pitches': pitches, 'tags': all_tags}
+	filter_pitches = set()
+	for pitch in pitches:
+		if not pitch.embargoMark:
+			filter_pitches.add(pitch)
+	context = {'filter_pitches': filter_pitches, 'tags': all_tags}
 	return render(request, 'kentparker/bookmarked_pitches.html', context)
 
 @login_required
@@ -111,7 +113,11 @@ def filterTags_pitch(request, tags):
 		tagsSet = all_tags
 
 	pitches = Pitch.objects.filter(tags__in=tagsSet).distinct()
-	context = {'filter_pitches': pitches, 'tags':all_tags}
+	filter_pitches = set()
+	for pitch in pitches:
+		if not pitch.embargoMark:
+			filter_pitches.add(pitch)
+	context = {'filter_pitches': filter_pitches, 'tags':all_tags}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 
@@ -164,6 +170,7 @@ def create_pitch(request):
 				target_tag=Tag.objects.create(name=new_tag_name)
 				new_pitch.tags.add(target_tag)
 	if 'Embargo' in request.POST:
+		new_pitch.embargoMark=True
 		chosen_journalists = request.POST.getlist('journalist')
 		for journalist in chosen_journalists:
 			try:
