@@ -13,17 +13,6 @@
     {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
   <script>
-  	function updateTextArea() {
-		    var allVals = [];
-		    var allTagString="";
-		    $('#upreferences input[type="checkbox"]:checked').each(function() {
-		    	allVals.push($(this).val());
-		    	allTagString += $(this).val()+"@";
-		    });
-		    $('#t').val(allTagString);
-		    $('#myModal').modal('toggle')
-		    window.location.replace("/journalist/"+allTagString);
-	}
 	$(document).on('ready', function() {
     	$("#input-4").fileinput({showCaption: false});
 	});
@@ -75,7 +64,18 @@ function addSpot(obj,afterId,newId)
     '</tr>');  
 //     $(":text[id^='txtInput_']").val("Put the name of Media Outlet here");  
  
-};   
+};
+ function updateTextArea() {
+		    var allVals = [];
+		    var allTagString="";
+		    $('#upreferences input[type="checkbox"]:checked').each(function() {
+		    	allVals.push($(this).val());
+		    	allTagString += $(this).val()+"@";
+		    });
+		    $('#t').val(allTagString);
+		    $('#myModal').modal('toggle')
+		    window.location.replace("/journalist/"+allTagString);
+		}
   </script>
 </head>
 <body>
@@ -154,6 +154,11 @@ function addSpot(obj,afterId,newId)
 							<a href="/bookmarked_pitch">
 							<i class="glyphicon glyphicon-user"></i>
 							Bookmarked Pitches </a>
+						</li>
+						<li>
+							<a href="/embargo_pitch">
+							<i class="glyphicon glyphicon-book"></i>
+							Embargoed Pitches </a>
 						</li>
 						<li>
 							<a href="{% url "journalist_Articles" %}">

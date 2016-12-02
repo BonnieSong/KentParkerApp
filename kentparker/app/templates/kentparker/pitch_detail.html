@@ -76,7 +76,11 @@
     				</p>
     				<hr style="height:3px;border:none;color:#333;background-color:#333;" />
     				<h4><span class="pull-left">Picked By:</span></h4><br />
-    				<p align="left">Saran Lafontant, Madeleine Abbott</p>
+    				<p align="left">
+						{%for journalist in picked_by%}
+							{{journalist.first_name}} {{journalist.last_name}}<a href="../profile/{{journalist}}">@{{journalist}}</a>
+						{% endfor %}
+					</p>
 					<form action="{% url 'pitch_detail' cur_pitch.id %}" method="post">
 						{% if not already%}
 							<button type="submit"  class='btn btn-success btn-sm'>Bookmark</button>

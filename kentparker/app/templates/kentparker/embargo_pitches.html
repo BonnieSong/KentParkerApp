@@ -48,7 +48,7 @@
     </div>
   </div>
 </nav>
-  
+
 <div class="container">
     <div class="row profile">
 		<div class="col-md-3">
@@ -56,9 +56,9 @@
 				<!-- SIDEBAR USERPIC -->
 				<div class="profile-userpic">
 					{% if request.user.picture %}
-					<img src="{% url "get_photo" request.user %}" width="200px" class="img-responsive">
+					<img src="{% url "get_photo" request.user %}" width="200px" class="img-avatar">
 					{% else %}
-					<img src="{% static "img/profile.png" %}" width="200px" class="img-responsive">
+					<img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
 					{% endif %}
 				</div>
 				<!-- END SIDEBAR USERPIC -->
@@ -91,7 +91,7 @@
 				<!-- SIDEBAR MENU -->
 				<div class="profile-usermenu">
 					<ul class="nav">
-						<li class="active">
+						<li>
 							<a href="/">
 							<i class="glyphicon glyphicon-home"></i>
 							Favorite Tags</a>
@@ -101,8 +101,8 @@
 							<i class="glyphicon glyphicon-user"></i>
 							Bookmarked Pitches </a>
 						</li>
-						<li>
-							<a href="/embargo_pitch">
+                        <li class="active">
+							<a href="#">
 							<i class="glyphicon glyphicon-book"></i>
 							Embargoed Pitches </a>
 						</li>
@@ -117,7 +117,7 @@
 							Publish Article </a>
 						</li>
 						<li>
-							<!-- Button trigger modal 
+							<!-- Button trigger modal
 							<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 							 	Launch demo modal
 							</button>
@@ -173,7 +173,7 @@
 			   	<div class="panel panel-primary">
       				<div class="panel-heading">Pitches</div>
       				<div class="panel-body">
-						{%for pitch in filter_pitches%}
+						{%for pitch in embargo_pitches%}
 						<div class="well well-lg">
 							<p><a href="pitch_detail/{{pitch.id}}"> @{{pitch.title}}</a></p>
 							<p>{{pitch.content}}</p>

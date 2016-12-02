@@ -31,8 +31,14 @@ def home(request):
 		# all_tags=request.user.tags
 		all_tags=Tag.objects.all()
 		user_tags = request.user.tags.all()
+		print ("journalist user_tags: ", user_tags)
 		pitches = Pitch.objects.filter(tags__in=user_tags).distinct()
-		context = {'filter_pitches': pitches, 'tags': all_tags}
+		validpitches = set()
+		for pitch in pitches:
+			if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
+				continue
+			validpitches.add(pitch)
+		context = {'filter_pitches': validpitches, 'tags': all_tags}
 		return render(request,'kentparker/JournalistDashBoard.html',context)
 	elif request.user.user_type==3:
 		# media outlet
@@ -70,16 +76,27 @@ def favNewsMakers_pitch(request):
 	pitches = set()
 	if (newsMakers is not None) and (len(newsMakers)>0) :
 		for newsMaker in newsMakers:
-			pitches.append(newsMaker.pitch_set.all())
+			pitches.append(newsMaker.bookmarked.all())
 	context = {'filter_pitches': pitches, 'tags': all_tags}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 @login_required
 def bookmarked_pitch(request):
 	all_tags = Tag.objects.all()
-	pitches = request.user.pitch_set.all()
-	context = {'filter_pitches': pitches, 'tags': all_tags}
+	pitches = request.user.bookmarked.all()
+	filter_pitches = set()
+	for pitch in pitches:
+		if not pitch.embargoMark:
+			filter_pitches.add(pitch)
+	context = {'filter_pitches': filter_pitches, 'tags': all_tags}
 	return render(request, 'kentparker/bookmarked_pitches.html', context)
+
+@login_required
+def embargo_pitch(request):
+	all_tags = Tag.objects.all()
+	pitches = request.user.embargoed.all()
+	context = {'embargo_pitches': pitches, 'tags': all_tags}
+	return render(request, 'kentparker/embargo_pitches.html', context)
 
 @login_required
 def filterTags_pitch(request, tags):
@@ -97,7 +114,12 @@ def filterTags_pitch(request, tags):
 		tagsSet = all_tags
 
 	pitches = Pitch.objects.filter(tags__in=tagsSet).distinct()
-	context = {'filter_pitches': pitches, 'tags':all_tags}
+	validpitches = set()
+	for pitch in pitches:
+		if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
+			continue
+		validpitches.add(pitch)
+	context = {'filter_pitches': validpitches, 'tags':all_tags}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 
@@ -109,6 +131,7 @@ def create_pitch(request):
 		return render(request,'kentparker/create_pitch.html',context)
 	if 'cancel_btn' in request.POST:
 		return redirect('/')
+	# print ("request.POST publish: ", request.POST)
 	# use the form to do validation
 	publish_pitch_form=PublishPitchForm(request.POST)
 	if not publish_pitch_form.is_valid():
@@ -116,12 +139,23 @@ def create_pitch(request):
 
 	if 'publish_btn' in request.POST:
 		# publish the pitch
-		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
-		new_pitch.save()
+		if 'Scoop' in request.POST:
+			print ("scoop is True")
+			new_pitch=Pitch(scooped = True, title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
+			print ("new_pitch.scooped: ", new_pitch.scooped)
+			new_pitch.save()
+		else:
+			new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=True)
+			new_pitch.save()
 	if 'save_btn' in request.POST:
 		# save the pitch as a drafts
-		new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
-		new_pitch.save()
+		if 'Scoop' in request.POST:
+			new_pitch=Pitch(scooped = True, title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
+			new_pitch.save()
+		else:
+			new_pitch=Pitch(title=publish_pitch_form.cleaned_data.get('title'),content=publish_pitch_form.cleaned_data.get('content'),author=request.user,published=False)
+			new_pitch.save()
+
 
 	chosen_tags_ids=request.POST.getlist("tags-list")
 	for tag_id in chosen_tags_ids:
@@ -137,6 +171,20 @@ def create_pitch(request):
 			else:
 				target_tag=Tag.objects.create(name=new_tag_name)
 				new_pitch.tags.add(target_tag)
+	if 'Embargo' in request.POST:
+		new_pitch.embargoMark=True
+		chosen_journalists = request.POST.getlist('journalist')
+		for journalist in chosen_journalists:
+			try:
+				target_journalist = MyUser.objects.get(user_type=2, username=journalist)
+				print("target_journalist: ", target_journalist)
+				new_pitch.embargoed.add(target_journalist)
+				print("successssss")
+			except:
+				pass
+	# print(new_pitch.tags.all())
+	# print(new_pitch.embargoed.all())
+
 	new_pitch.save()
 	return redirect('/')
 
@@ -162,6 +210,8 @@ def create_article(request):
 		pitch_id=related_pitch_url.split('/')[-1]
 		pitch_id=int(pitch_id)
 		related_pitch=get_object_or_404(Pitch,pk=pitch_id)
+		related_pitch.scooppublished = True
+		related_pitch.save()
 		new_article.related_pitch.add(related_pitch)
 		new_article.save()
 
@@ -484,11 +534,14 @@ def pitch_detail(request,pitchId):
 	if request.method == 'GET':
 		cur_pitch = Pitch.objects.get(pk=pitchId)
 		related_articles = cur_pitch.article_set.all()
+		picked_by = set()
+		for article in related_articles:
+			picked_by.add(article.author)
 		already= False
 		if request.user in cur_pitch.bookmarked.all():
 			already = True
 		print(related_articles)
-		context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles}
+		context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by}
 		return render(request, "kentparker/pitch_detail.html", context)
 	# bookmark the pitch
 	cur_pitch = Pitch.objects.get(pk=pitchId)
