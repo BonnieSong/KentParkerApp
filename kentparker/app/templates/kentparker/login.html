@@ -12,14 +12,78 @@
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	{% load static %}
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="{% static "/css/style.css" %}">
 	<link rel="stylesheet" type="text/css" href="{% static "/css/font-awesome.css" %}">
-	<link rel="stylesheet" type="text/css" href="{% static "/css/font-element.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "/css/form-elements.css" %}">
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	<script src="{% static "/js/jquery-2.1.4.min.js" %}"></script>
 	<script src="{% static "/js/kentparker.js" %}"></script>
 	<script src="http://connect.facebook.net/en_EN/all.js"></script>
+	<script src="https://apis.google.com/js/api:client.js"></script>
+	<script>
+  var googleUser = {};
+  var startApp = function() {
+    gapi.load('auth2', function(){
+      // Retrieve the singleton for the GoogleAuth library and set up the client.
+      auth2 = gapi.auth2.init({
+        client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+        cookiepolicy: 'single_host_origin',
+        // Request scopes in addition to 'profile' and 'email'
+        //scope: 'additional_scope'
+      });
+      attachSignin(document.getElementById('customBtn'));
+    });
+  };
 
+  function attachSignin(element) {
+    console.log(element.id);
+    auth2.attachClickHandler(element, {},
+        function(googleUser) {
+          document.getElementById('name').innerText = "Signed in: " +
+              googleUser.getBasicProfile().getName();
+        }, function(error) {
+          alert(JSON.stringify(error, undefined, 2));
+        });
+  }
+  </script>
+  <style type="text/css">
+    #customBtn {
+      display: inline-block;
+      background: white;
+      color: #444;
+      width: 114px;
+      height: 50px;
+      border-radius: 5px;
+      border: thin solid #888;
+      box-shadow: 1px 1px 1px grey;
+      white-space: nowrap;
+      float: right;
+    }
+    #customBtn:hover {
+      cursor: pointer;
+    }
+    span.label {
+      font-family: serif;
+      font-weight: normal;
+    }
+    span.icon {
+      background: url('https://google-developers.appspot.com/identity/sign-in/g-normal.png') transparent 5px 50% no-repeat;
+      display: inline-block;
+      vertical-align: middle;
+      width: 42px;
+      height: 42px;
+    }
+    span.buttonText {
+      display: inline-block;
+      vertical-align: middle;
+      padding-right: 42px;
+      font-size: 14px;
+      font-weight: bold;
+      /* Use the Roboto font that is loaded in the <head> */
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
 
 </head>
 
@@ -74,9 +138,6 @@
   								<h3>Login to our site</h3>
   								<p>Enter username and password to log in:</p>
   							</div>
-  						  <div class="form-top-right">
-  							 <i class="fa fa-key"></i>
-  						  </div>
   						</div>
   					<div class="form-bottom">
     					<form action="{% url 'login' %}" method="post" class="login-form">
@@ -87,7 +148,7 @@
       					</div>
       					{% endfor %}
       					<div class="form-group">
-      						<button type="submit" class='btn' value="Sign in!">
+      						<button type="submit" class='btn' value="Sign in!">Sign in!</button>
                   </button>
       					</div>
 
@@ -107,22 +168,20 @@
       <div class="social-login">
         <h3>...or login with:</h3>
           <div class="social-login-buttons">
-            <a id="google-signin" class="btn btn-link-1 btn-link-1-facebook" onclick="onFBSignIn()">
-              <i class="fa fa-facebook"></i> Facebook
+            <a id="facebook-signin" class="btn btn-link-1 btn-link-1-facebook" onclick="onFBSignIn()">
+             Facebook
             </a>
-            <a id="google-signin" class="btn btn-link-1 btn-link-1-google-plus" data-onsuccess="onGoogleSignIn">
-              <i class="fa fa-google-plus"></i> Google Plus
-            </a>
+            <div id="gSignInWrapper" style ="float: right;margin-top: 4px;margin-right: 84px;">
+    			<div id="customBtn" class="customGPlusSignIn">
+	      			<span class="icon"></span>
+	      			<span class="buttonText">Google</span>
+    			</div>
+  			</div>
+  			<div id="name"></div>
+  				
           </div>
       </div>
-			<!--<a id="google-signin" class="g-signin2" data-onsuccess="onGoogleSignIn"></a>
-			 <button onclick="onGoogleSignIn()" class="btn btn-danger">Google Login</button> -->
-			
-			
-			<!-- 
-<a class="btn btn-primary" href="#">Facebook</a>
-			<a class="btn btn-danger" href="#">Google</a>
- -->
+		
 		
 		
 	</div>
@@ -204,9 +263,11 @@
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+<script>startApp();</script>
 </body>
 
 </html>
