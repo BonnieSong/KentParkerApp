@@ -231,9 +231,17 @@ def create_article(request):
 def manage_pitch(request):
 	# show all my pitches including published and drafts
 	pitches=Pitch.objects.filter(author=request.user)
-	context={'pitches':pitches}
+	tags=Tag.objects.all()
+	context={'pitches':pitches,'tags':tags}
 	return render(request,'kentparker/manage_pitch.html',context)
 
+@login_required
+def filter_pitch(request,tag_id):
+	chosen_tag=Tag.objects.get(id=tag_id)
+	pitches=chosen_tag.pitch_set.all().filter(author=request.user)
+	tags=Tag.objects.all()
+	context={'pitches':pitches,'tags':tags}
+	return render(request,'kentparker/manage_pitch.html',context)
 
 @login_required
 def manage_journalists(request):

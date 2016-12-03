@@ -1,40 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Kent-Parker</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
-</head>
-<body>
-
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">KENT PARKER</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
-        <li><a href="{% url "contacts" %}">Contacts</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
+{% extends "kentparker/base.html"%}
+{%load static%}
+{% block content %}
   {%if not request.user.email_verify %}
   <div class="alert alert-danger">
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -42,107 +8,64 @@
   </div>
   {% endif %}
   
-<div class="container">
-    <div class="row profile">
-		<div class="col-md-3">
-			<div class="profile-sidebar">
-				<!-- SIDEBAR USERPIC -->
-				<div class="profile-userpic">
-				{% if request.user.picture %}
-				<img src="{% url "get_photo" request.user %}" width="200px" class="img-responsive">
-				{% else %}
-				<img src="{% static "img/profile.png" %}" width="200px" class="img-responsive">
-				{% endif %}
-				</div>
-				<!-- END SIDEBAR USERPIC -->
-				<!-- SIDEBAR USER TITLE -->
-				<div class="profile-usertitle">
-				<a href="{% url "profile" request.user %}">
-					<div class="profile-usertitle-name">
-						{{request.user.first_name}}
-						{{request.user.last_name}}
-					</div>
-					<div class="profile-usertitle-job">
-						Newsmaker
-					</div>
-				</a>
-				</div>
-				<!-- END SIDEBAR USER TITLE -->
-				<!-- SIDEBAR BUTTONS -->
-				<div class="profile-userbuttons">
-					<button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					</button>
-				</div>
-				<!-- END SIDEBAR BUTTONS -->
-				<!-- SIDEBAR MENU -->
-				<div class="profile-usermenu">
-					<ul class="nav">
-						<li class="active">
-							<a href="/">
-							<i class="glyphicon glyphicon-home"></i>
-							Related News </a>
-						</li>
-						<li>
-							<a href="{% url "manage_pitch" %}">
-							<i class="glyphicon glyphicon-ok"></i>
-							Manage Pitches </a>
-						</li>
-						<li>
-							<a href="{% url "create_pitch" %}">
-							<i class="glyphicon glyphicon-pencil"></i>
-							New Pitch </a>
-						</li>
-					</ul>
-				</div>
-				<!-- END MENU -->
-			</div>
-		</div>
-		<div class="col-md-9">
-			<div class="profile-content">
-				<div class="panel panel-primary">
-					<div class="panel-heading">Related News</div>
-					<div class="panel-body">
-						{%for article in related_articles%}
-							<div class="container-fluid">
-								<div class="well well-lg well-color">
-									<h4>{{article.title}}</h4>
-									<br/>
-									<div class="nugget-content">
-										{{article.content}}
-									</div>
-									<div class="nugget-footer">
-										<p style="text-align:left;">
-											{{article.author.first_name}}
-											{{article.author.last_name}}
-											<a href="profile/{{article.author}}">
-												@{{article.author}}
-											</a>
-											<span style="float:right;">{{article.pub_time}}</span>
-										</p>
-									</div>
-								</div>
-							</div>
-						{% endfor %}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<center>
-</center>
-<br>
-<br>
+ <div class="row">
 
-</body>
-</html>
+      <div class="col s3">
+
+       <div class="card">
+            <div class="card-image">
+            {% if request.user.picture %}
+            <img src="{% url "get_photo" request.user %}" width="200px" class="circle responsive-img">
+            {% else %}
+			<img src="{% static "img/profile.png" %}" width="200px" class="circle responsive-img">
+			{% endif %}
+            </div>
+            <div class="card-content blue-grey-text">
+            	{{request.user.first_name}}
+            	{{request.user.last_name}}
+            </div>
+
+            <div class="card-action blue-grey">
+              <a class="white-text" href="/">News</a>
+            </div>
+
+            <div class="card-action">
+              <a class="blue-grey-text" href="{% url "manage_pitch" %}">Pitches</a>
+            </div>
+
+            <div class="card-action">
+              <a class="blue-grey-text" href="{% url "create_pitch" %}">Create Pitch</a>
+            </div>
+          </div>
+
+      </div>
+
+      <div class="col s9">
+
+      {%if not related_articles%}
+            <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">No Articles</span>
+              <p>You don't have related articles!</p>
+            </div>
+          </div>
+      {%endif%}
+
+      	{%for article in related_articles%}
+        <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">{{article.title}}</span>
+              <p>{{article.content}}</p>
+            </div>
+            <div class="card-action">
+              <a href="{% url "profile" article.author %}">{{article.author.first_name}} {{article.author.last_name}}</a>
+            </div>
+        </div>
+		  {% endfor %}
+          
+      </div>
+
+    </div>
+
+{% endblock %}
 
