@@ -4,7 +4,7 @@ from . import views
 import django.contrib.auth.views
 
 urlpatterns = [
-    url(r'^$', views.home),
+    url(r'^$', views.home,name='home'),
     url(r'^kentparker$',views.home),
     url(r'^login$', views.login, name='login'),
     url(r'^logout$', django.contrib.auth.views.logout_then_login, name='logout'),
@@ -40,4 +40,5 @@ urlpatterns = [
     url(r'^create_article$', views.create_article, name='create_article'),
     # article related urls
     url(r'^article_detail/(?P<articleId>.*)$', views.article_detail, name='article_detail'),
+    url(r'^filter_pitch/(?P<tag_id>.*)$', views.filter_pitch, name='filter_pitch'),
 ]
