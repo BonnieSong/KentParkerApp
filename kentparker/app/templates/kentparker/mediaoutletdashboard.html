@@ -90,9 +90,9 @@
 				<!-- SIDEBAR USERPIC -->
 				<div class="profile-userpic">
 					{% if request.user.picture %}
-					<img src="{% url "get_photo" request.user %}" width="200px" class="img-avatar">
+					<img src="{% url "get_photo" request.user %}" width="200px" class="img-responsive">
 					{% else %}
-					<img src="{% static "img/profile.png" %}" width="200px" class="img-avatar">
+					<img src="{% static "img/profile.png" %}" width="200px" class="img-responsive">
 					{% endif %}
 				</div>
 				<!-- END SIDEBAR USERPIC -->
