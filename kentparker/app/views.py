@@ -186,7 +186,7 @@ def create_pitch(request):
 	# print(new_pitch.embargoed.all())
 
 	new_pitch.save()
-	return redirect('/')
+	return redirect(reverse('manage_pitch'))
 
 
 @login_required
