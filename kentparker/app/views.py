@@ -564,5 +564,8 @@ def pitch_detail(request,pitchId):
 def article_detail(request, articleId):
 	if request.method == 'GET':
 		cur_article = Article.objects.get(pk=articleId)
+		cur_article.visited_times += 1
+		cur_article.save()
+		print ("visit time is: ", cur_article.visited_times)
 		context = {"cur_article": cur_article}
 		return render(request, "kentparker/article_detail.html", context)
