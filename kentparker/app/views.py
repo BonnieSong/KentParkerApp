@@ -25,7 +25,12 @@ def home(request):
 		related_articles=Article.objects.filter(newsmaker=request.user)
 		# newsmaker
 		my_pitches=Pitch.objects.filter(author=request.user)
-		context={'related_articles':related_articles, 'pitches':my_pitches}
+		validpitches = set()
+		for pitch in my_pitches:
+			if (pitch.scooped and pitch.scooppublished):
+				continue
+			validpitches.add(pitch)
+		context={'related_articles':related_articles, 'pitches':validpitches}
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
 		#journalist
@@ -233,7 +238,12 @@ def manage_pitch(request):
 	# show all my pitches including published and drafts
 	pitches=Pitch.objects.filter(author=request.user)
 	tags=Tag.objects.all()
-	context={'pitches':pitches,'tags':tags}
+	validpitches = set()
+	for pitch in pitches:
+		if (pitch.scooped and pitch.scooppublished):
+			continue
+		validpitches.add(pitch)
+	context = {'pitches': validpitches, 'tags': tags}
 	return render(request,'kentparker/manage_pitch.html',context)
 
 @login_required
@@ -241,8 +251,28 @@ def filter_pitch(request,tag_id):
 	chosen_tag=Tag.objects.get(id=tag_id)
 	pitches=chosen_tag.pitch_set.all().filter(author=request.user)
 	tags=Tag.objects.all()
-	context={'pitches':pitches,'tags':tags}
+	validpitches = set()
+	for pitch in pitches:
+		if (pitch.scooped and pitch.scooppublished):
+			continue
+		validpitches.add(pitch)
+	context = {'pitches': validpitches, 'tags': tags}
 	return render(request,'kentparker/manage_pitch.html',context)
+
+
+@login_required
+def filter_pitch_journalist(request,tag_id):
+	chosen_tag=Tag.objects.get(id=tag_id)
+	pitches=chosen_tag.pitch_set.all()
+	tags=Tag.objects.all()
+	validpitches = set()
+	for pitch in pitches:
+		if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
+			continue
+		validpitches.add(pitch)
+	context = {'pitches': validpitches, 'tags': tags}
+	return render(request, 'kentparker/JournalistDashBoard.html', context)
+
 
 @login_required
 def manage_journalists(request):
