@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from django.db.models import Q
+from decimal import Decimal
 
 @login_required
 def home(request):
@@ -539,28 +540,41 @@ def confirm_registration(request,name,token):
 		django.contrib.auth.login(request,target_user)
 	return redirect('/')
 
-def pitch_detail(request,pitchId):
-	if request.method == 'GET':
-		cur_pitch = Pitch.objects.get(pk=pitchId)
-		related_articles = cur_pitch.article_set.all()
-		picked_by = set()
-		for article in related_articles:
-			picked_by.add(article.author)
-		already= False
-		if request.user in cur_pitch.bookmarked.all():
-			already = True
-		print(related_articles)
-		context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by}
-		return render(request, "kentparker/pitch_detail.html", context)
+def bookmark_pitch(request,pitch_id):
 	# bookmark the pitch
-	cur_pitch = Pitch.objects.get(pk=pitchId)
+	cur_pitch = Pitch.objects.get(pk=pitch_id)
 	if request.user in cur_pitch.bookmarked.all():
 		cur_pitch.bookmarked.remove(request.user)
 	else:
 		cur_pitch.bookmarked.add(request.user)
 	cur_pitch.save()
 
-	return redirect("/")
+	return redirect(reverse('pitch_detail',args=[pitch_id]))
+
+def pitch_detail(request,pitch_id):
+	cur_pitch = Pitch.objects.get(pk=pitch_id)
+	related_articles = cur_pitch.article_set.all()
+	picked_by = set()
+	for article in related_articles:
+		picked_by.add(article.author)
+	
+	# determine if the current user is allowed to do the rating
+	invalid=True
+	if request.user in picked_by:
+		invalid=False
+	if cur_pitch.rated_by.filter(username=request.user.username).exists():
+		invalid=True
+	
+	# determine if the current user has bookmarked the pitch
+	already= False
+	if request.user in cur_pitch.bookmarked.all():
+		already = True
+
+	pitch_responsiveness=cur_pitch.rating_responsiveness
+	pitch_worthiness=cur_pitch.rating_worthiness
+
+	context = {"pitch_worthiness":pitch_worthiness,"pitch_responsiveness":pitch_responsiveness,"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by,'invalid':invalid}
+	return render(request, "kentparker/pitch_detail.html", context)
 
 def article_detail(request, articleId):
 	if request.method == 'GET':
@@ -593,3 +607,19 @@ def messages(request,username):
 	another_user.save()
 	return render(request,'kentparker/messages.html',context)
 
+@login_required
+def rate_pitch(request,pitch_id,username):
+	target_pitch=get_object_or_404(Pitch,pk=pitch_id)
+	rate_person=get_object_or_404(MyUser,username=username)
+	if 'rating_responsiveness' in request.POST and 'rating_worthiness' in request.POST:
+		if target_pitch.rating_count==0:
+			target_pitch.rating_responsiveness=Decimal(request.POST['rating_responsiveness'])
+			target_pitch.rating_worthiness=Decimal(request.POST['rating_worthiness'])
+			target_pitch.rating_count=1
+		else:
+			target_pitch.rating_responsiveness=(target_pitch.rating_responsiveness*target_pitch.rating_count+Decimal(request.POST['rate_responsiveness']))/(target_pitch.rating_count+1)
+			target_pitch.rating_worthiness=(target_pitch.rating_worthiness*target_pitch.rating_count+Decimal(request.POST['rating_worthiness']))/(target_pitch.rating_count+1)
+			target_pitch.rating_count=target_pitch.rating_count+1
+		target_pitch.rated_by.add(rate_person)
+		target_pitch.save()
+	return redirect(reverse('pitch_detail',args=[pitch_id]))

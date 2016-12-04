@@ -27,17 +27,22 @@
               <a href="{% url "profile" cur_pitch.author %}">By {{cur_pitch.author}}</a>
           </div>
 
-          {%if picked_by%}
           <div class="card-action">
-			  Picked By
-			  <br>
+          {%if picked_by%}
+          Picked By
+          <br>
             {%for journalist in picked_by%}
             <a href="{% url "profile" journalist %}"> @{{journalist}}</a>
             {% endfor %}
-        </div>
-        {% endif %}
+          {%else%}
+            <a href="{% url "create_article" %} " class="btn">Publish Article</a>
+          {% endif %}
+          </div>
 
-        <form action="{% url 'pitch_detail' cur_pitch.id %}" method="post">
+      {% ifnotequal request.user.user_type 1%}
+      <div class="card-action">
+
+        <form action="{% url 'bookmark_pitch' cur_pitch.id %}" method="post">
             {% if not already%}
             <button type="submit"  class='btn'>Bookmark</button>
             {% else %}
@@ -45,8 +50,31 @@
             {% endif %}
             {% csrf_token %}
         </form>
-			<br>
-			<a href="/create_article" class="btn">Publish Article</a>
+      </div>
+      {% endifnotequal %}
+
+      <div class="card-action">
+        <p>Pitch Responsiveness: {{pitch_responsiveness}}</p>
+        <p>Pitch Worthiness: {{pitch_worthiness}}</p>
+      </div>
+
+      <!-- journalist rate pitch -->
+      {%ifequal request.user.user_type 2%}
+      {%if not invalid%}
+      <div class="card-action">
+         <form action="{% url "rate_pitch" cur_pitch.id request.user.username %}" method="post">
+             <p class="range-field"><a>Responsiveness</a>
+             <input type="range" name="rating_responsiveness" min="0" max="100" />
+             </p>
+             <p class="range-field"><a>Worthiness</a>
+             <input type="range" name="rating_worthiness" min="0" max="100" />
+             </p>
+             <button type="submit"  class='btn'>Rate</button>
+            {% csrf_token %}
+        </form>
+      </div>
+      {%endif%}
+      {%endifequal%}
 
     </div>
 </div>
