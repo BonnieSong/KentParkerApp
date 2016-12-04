@@ -15,6 +15,7 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
+from django.db.models import Q
 
 @login_required
 def home(request):
@@ -569,3 +570,26 @@ def article_detail(request, articleId):
 		related_pitches = cur_article.related_pitch
 		context = {"cur_article": cur_article, "related_pitches":related_pitches}
 		return render(request, "kentparker/article_detail.html", context)
+
+@login_required
+def messages(request,username):
+	if not username:
+		username=request.user.message_people.all()[0].username
+	
+	another_user=get_object_or_404(MyUser,username=username)
+	all_messages=Message.objects.filter(Q(sender=request.user,receiver=another_user) | Q(sender=another_user,receiver=request.user))
+	context={'message_form':MessageForm(),'username':username,'all_messages':all_messages,'people':request.user.message_people.all()}
+
+	if request.method == 'GET':
+		return render(request,'kentparker/messages.html',context)
+	message_form=MessageForm(request.POST)
+
+	if not message_form.is_valid():
+		return render(request,'kentparker/messages.html',context)
+
+	new_message=Message.objects.create(sender=request.user,receiver=another_user,content=message_form.cleaned_data['content'])
+	new_message.save()
+	another_user.message_people.add(request.user)
+	another_user.save()
+	return render(request,'kentparker/messages.html',context)
+

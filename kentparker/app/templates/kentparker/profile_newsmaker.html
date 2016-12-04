@@ -81,6 +81,7 @@
                 <a class='btn btn-success btn-sm' href="{% url "edit_profile" target_user %}">Edit profile</a>
                 <a class='btn btn-danger btn-sm' href="{% url "change_password" target_user %}">Change password</a>
                 {% else %}
+                    <a class='btn' href="{% url "messages" target_user %}">Message</a>
                     {% if not already%}
                     <a class='btn btn-success btn-sm' href="{% url "favorite" target_user %}">Favorite</a>
                     {% else %}

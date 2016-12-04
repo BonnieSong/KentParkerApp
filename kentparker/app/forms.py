@@ -82,3 +82,14 @@ class register_step2_journalist_form(forms.ModelForm):
 		model=MyUser
 		fields=['phone','skype_id','twitter_id','facebook_id','tags','bio','source', 'related_url']
 
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model=Message
+        fields=['content']
+
+    def clean(self):
+        cleaned_data=super(MessageForm,self).clean()
+        content=cleaned_data.get('content')
+        if not content:
+            raise forms.ValidationError("You can't send an empty message")
+        return cleaned_data
