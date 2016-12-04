@@ -76,6 +76,7 @@ class Article(models.Model):
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
 	visited_times = models.IntegerField(default = 0)
+	published=models.BooleanField(default=False)
 
 	class Meta:
 		ordering=['-pub_time']
