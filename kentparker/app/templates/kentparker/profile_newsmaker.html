@@ -127,14 +127,20 @@
 					  <div class="panel-heading">CONTACT ME</div>
 					  <div class="panel-body">
 					  	<ul class="nav">
-						<li class="active">
+						<li>
+							<i class="glyphicon glyphicon-user"></i>
+							Media Contact:
+                            {{target_user.media_contact}} </a>
+						</li>
+                        <li class="active">
 							<i class="glyphicon glyphicon-earphone"></i>
-							555-0100-3000 </a>
+							{{target_user.phone}} </a>
 						</li>
 						<li>
 							<i class="glyphicon glyphicon-envelope"></i>
-							lorem@posum.com </a>
+							{{target_user.email}} </a>
 						</li>
+
 					</ul>
 					  </div>
 					</div>

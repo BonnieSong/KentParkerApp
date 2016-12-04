@@ -84,56 +84,67 @@
                                   <label for="form-twitter">Twitter ID</label>
                                   <input type="text" name="twitter_id" placeholder="Your Twitter ID" class="form-twitter form-control" id="form-twitter">
                                 </div>
-                                                             <div class="form-group">
+                                 <div class="form-group">
                                   <label for="form-twitter">Facebook ID</label>
-                                  <input type="text" name="facebook_id" placeholder="Your Facebook ID" class="form-twitter form-control" id="form-facebook">
+                                  <input type="text" name="facebook_id" placeholder="Your Facebook ID" class="form-facebook form-control" id="form-facebook">
+                                </div>
+
+                                   <div class="form-group">
+                                  <label for="form-media_contact">Media Contact Person</label>
+                                  <input type="text" name="media_contact" placeholder="Media Contact" class="form-media_contact form-control" id="form-media_contact">
+                                </div>
+
+                                  <div class="form-group">
+                                  <label for="form-media_contact_phone">Media Contact Phone Number</label>
+                                  <input type="text" name="media_contact_phone" placeholder="Media Contact Phone Number" class="form-media_contact_phone form-control" id="form-media_contact_phone">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="form-employees" >Number of employees:</label>
+                                  <select name="size" class="form-control" id="sel1">
+                                      <option>10-50</option>
+                                      <option>50-100</option>
+                                      <option>100-1000</option>
+                                      <option>1000 or more</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                        <label for="form-employees" >Number of employees:</label>
-                      <select name="size" class="form-control" id="sel1">
-                          <option>10-50</option>
-                          <option>50-100</option>
-                          <option>100-1000</option>
-                          <option>1000 or more</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-industry" >Industry:</label>
-                      <select name="industry" class="form-control" id="sel2">
-                          <option>Technology</option>
-                          <option>Food</option>
-                          <option>Healthcare</option>
-                          <option>Shop</option>
-                        </select>
-                    </div>
+                                    <label for="form-industry" >Industry:</label>
+                                  <select name="industry" class="form-control" id="sel2">
+                                      <option>Technology</option>
+                                      <option>Food</option>
+                                      <option>Healthcare</option>
+                                      <option>Shop</option>
+                                    </select>
+                                </div>
 
-                    <div class="form-group">
-                        <label for="comment">Bio:</label>
-                        <textarea name="bio" id="bio" rows="5" class="form-control"
-    onblur="if(this.value == ''){this.style.color = '#ACA899'; this.value = 'Please include your award!'; }" 
-    onfocus="if(this.value == 'Please include your award!'){this.value =''; this.style.color = '#000000'; }" 
-                                style="color:#ACA899;">Please include your award!</textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="related_url">Related URL:</label>
-                        <textarea name="related_url" class="form-control" rows="1" id="related_url"></textarea>		
-                    </div>
+                                <div class="form-group">
+                                    <label for="comment">Bio:</label>
+                                    <textarea name="bio" id="bio" rows="5" class="form-control"
+                onblur="if(this.value == ''){this.style.color = '#ACA899'; this.value = 'Please include your award!'; }"
+                onfocus="if(this.value == 'Please include your award!'){this.value =''; this.style.color = '#000000'; }"
+                                            style="color:#ACA899;">Please include your award!</textarea>
+                                </div>
 
-                    <div class="form-group">
-                        <label for="form-acctype" >How did you find Kent Parker:</label>
-                      <select name="source" class="form-control" id="sel3">
-                          <option>Social Media</option>
-                          <option>LinkedIn</option>
-                          <option>News</option>
-                          <option>Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-control btn btn-success btn-file">
-                          Upload Profile Picture <input type="file" style="display: none;">
-                      </label>
-                    </div>
+                                <div class="form-group">
+                                    <label for="related_url">Related URL:</label>
+                                    <textarea name="related_url" class="form-control" rows="1" id="related_url"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="form-acctype" >How did you find Kent Parker:</label>
+                                  <select name="source" class="form-control" id="sel3">
+                                      <option>Social Media</option>
+                                      <option>LinkedIn</option>
+                                      <option>News</option>
+                                      <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                  <label class="form-control btn btn-success btn-file">
+                                      Upload Profile Picture <input type="file" style="display: none;">
+                                  </label>
+                                </div>
                     
                     <br />
                                 <button type="submit" class="btn">Sign me up!</button>

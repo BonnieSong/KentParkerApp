@@ -32,14 +32,15 @@ class MyUser(AbstractUser):
 	industry=models.CharField(max_length=10,blank=True)
 	related_url = models.URLField(blank=True)
 	message_people=models.ManyToManyField('self',blank=True,related_name='message_people')
-
+	media_contact = models.CharField(max_length=20,null=True, blank=True)
+	media_contact_phone=models.CharField(max_length=12,blank=True)
 
 	
 	def __str__(self):
 		return self.username
 
 class Pitch(models.Model):
-	title=models.CharField(max_length=30)
+	title=models.CharField(max_length=60)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_pr') # newsmaker
 	tags=models.ManyToManyField(Tag,blank=True)
@@ -67,7 +68,7 @@ class Scoop(Pitch):
 	status=models.BooleanField()	
 
 class Article(models.Model):
-	title=models.CharField(max_length=30)
+	title=models.CharField(max_length=60)
 	related_pitch=models.ManyToManyField(Pitch,blank=True)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_ar') #Journalist
