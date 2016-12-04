@@ -31,6 +31,7 @@ class MyUser(AbstractUser):
 	size=models.CharField(max_length=20,blank=True)
 	industry=models.CharField(max_length=10,blank=True)
 	related_url = models.URLField(blank=True)
+	message_people=models.ManyToManyField('self',blank=True,related_name='message_people')
 
 
 	
@@ -79,15 +80,10 @@ class Article(models.Model):
 		ordering=['-pub_time']
 
 class Message(models.Model):
-	sender=models.ForeignKey(MyUser,related_name='sender')
-	receiver=models.ForeignKey(MyUser,related_name='receiver')
-	content=models.TextField()
-	send_time=models.DateTimeField(auto_now_add=True)
-	attachment=models.URLField(max_length=200)
+    sender = models.ForeignKey(MyUser, related_name='sender')
+    receiver = models.ForeignKey(MyUser, related_name='receiver')
+    content = models.CharField(max_length=100)
+    pub_time = models.DateTimeField(auto_now_add=True)
 
-	def __str__(self):
-		return self.content
-
-	# sort the message based on send time in reverse order
-	class Meta:
-		ordering=['-send_time']
+    class Meta:
+        ordering=['pub_time']

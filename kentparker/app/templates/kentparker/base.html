@@ -17,11 +17,13 @@
 
   <!-- custom css -->
   {% load static %}
-  {# <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}"> #}
+  <link rel="stylesheet" type="text/css" href="{% static "css/sticky_footer.css" %}">
 
 </head>
 
+<body class="grey lighten-3">
 
+<header>
 <!-- Navbar -->
 <div class="navbar-fixed">
 <!-- Dropdown Structure -->
@@ -34,7 +36,7 @@
       <a href="{% url "home" %}" class="brand-logo">Kent Parker</a>
       <ul class="right hide-on-med-and-down">
         <li><a href="{% url "contacts" %}">Contacts</a></li>
-        <li><a href="#">Messages</a></li>
+        <li><a href="{% url "messages" '' %}">Messages</a></li>
         <li><a href="#">Notifications</a></li>
          <!-- Dropdown Trigger -->
          <li><a class="dropdown-button" href="#!" data-activates="dropdown1">{{request.user}}<i class="material-icons right">arrow_drop_down</i></a></li>
@@ -43,9 +45,10 @@
   </nav>
 </div>
 <!-- Navbar end -->
+</header>
 
-<body class="grey lighten-3">
 
+<main>
 <!-- for notifications start -->
     <form action="#" method="post">
       <input type="hidden" id="timestamp" value="{{timestamp|date:"c"}}">
@@ -67,6 +70,8 @@
   {% block content%}
   {% endblock %}
 </div>
+
+</main>
 
    <footer class="page-footer teal lighten-2">
           <div class="container">
@@ -93,7 +98,7 @@
             <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
             </div>
           </div>
-        </footer>
+    </footer>
 
 </body>
 </html>
