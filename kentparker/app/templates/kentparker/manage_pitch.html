@@ -47,6 +47,11 @@
             <div class="card-action">
               <a class="blue-grey-text" href="{% url "create_pitch" %}">Create Pitch</a>
             </div>
+
+           <div class="card-action">
+              <a class="blue-grey-text" href="{% url "view_journalists" %}">View Journalists</a>
+            </div>
+
           </div>
 
       </div>
@@ -67,6 +72,7 @@
             <div class="card-content white-text">
               <span class="card-title">{{pitch.title}}</span>
               <p>{{pitch.content}}</p>
+                <br>
               {% for tag in pitch.tags.all %}
               <div class="chip">{{tag}}</div>
       		  {%endfor%}

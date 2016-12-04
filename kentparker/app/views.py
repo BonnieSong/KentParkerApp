@@ -275,13 +275,29 @@ def filter_pitch_journalist(request,tag_id):
 
 
 @login_required
+def view_journalists(request):
+	# show all journalists
+	journalists = MyUser.objects.filter(user_type=2)
+	tags = Tag.objects.all()
+	context = {'journalists': journalists,'tags': tags}
+	return render(request, 'kentparker/view_journalists.html', context)
+
+
+@login_required
+def filter_journalists(request,tag_id):
+	chosen_tag=Tag.objects.get(id=tag_id)
+	journalists = chosen_tag.myuser_set.all()
+	tags=Tag.objects.all()
+	context = {'journalists': journalists, 'tags': tags}
+	return render(request, 'kentparker/view_journalists.html', context)
+
+
+@login_required
 def manage_journalists(request):
-	print ("manage_journalists")
 	# show all journalists belong to this media outlet
 	journalists = MyUser.objects.filter(user_type = 2, organization = request.user)
 	context={'journalists':journalists}
 	return render(request,'kentparker/manage_journalists.html',context)
-# 	return redirect('/')
 
 @login_required
 def profile(request,name):
