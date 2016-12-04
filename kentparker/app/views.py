@@ -566,6 +566,6 @@ def article_detail(request, articleId):
 		cur_article = Article.objects.get(pk=articleId)
 		cur_article.visited_times += 1
 		cur_article.save()
-		print ("visit time is: ", cur_article.visited_times)
-		context = {"cur_article": cur_article}
+		related_pitches = cur_article.related_pitch
+		context = {"cur_article": cur_article, "related_pitches":related_pitches}
 		return render(request, "kentparker/article_detail.html", context)

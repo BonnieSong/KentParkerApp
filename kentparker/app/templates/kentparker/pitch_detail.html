@@ -11,7 +11,7 @@
             <div class="card-content white-text">
               <span class="card-title">{{cur_pitch.title}}</span>
               <p>{{cur_pitch.content}}</p>
-              
+				<br>
               {% for tag in cur_pitch.tags.all %}
               <div class="chip">{{tag}}</div>
               {%endfor%}
@@ -29,8 +29,10 @@
 
           {%if picked_by%}
           <div class="card-action">
+			  Picked By
+			  <br>
             {%for journalist in picked_by%}
-            {{journalist.first_name}} {{journalist.last_name}}<a href="{% url "profile" journalist %}">Picked By @{{journalist}}</a>
+            <a href="{% url "profile" journalist %}"> @{{journalist}}</a>
             {% endfor %}
         </div>
         {% endif %}
@@ -43,6 +45,8 @@
             {% endif %}
             {% csrf_token %}
         </form>
+			<br>
+			<a href="/create_article" class="btn">Publish Article</a>
 
     </div>
 </div>
@@ -55,12 +59,9 @@
             {%for article in related_articles%}
             <div class="card blue-grey darken-1">
                     <div class="card-content white-text">
-                    <span class="card-title">{{article.title}}</span>
+                    <span class="card-title"><a href="{% url "article_detail" article.id %}">{{article.title}}</a></span>
                     <p>{{article.content}}</p>
                 </div>
-
-                <div class="card-action">
-                <a href="{% url "profile" article.author %}">By {{article.author.first_name}} {{article.author.last_name}}</a>
                 </div>
             </div>
           {%endfor%}

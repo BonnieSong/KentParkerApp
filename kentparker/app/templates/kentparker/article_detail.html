@@ -1,115 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "kentparker/base.html"%}
+{% load static %}
+{% block content %}
 
-    <head>
-    <script src="https://use.fontawesome.com/952135d86a.js"></script>
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">KENT PARKER</a>
+    <div class="row">
+    <!-- pitch detail -->
+    <div class="col s8">
+
+
+        <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">{{cur_article.title}}</span>
+              <p>{{cur_article.content}}</p>
+                <br>
+                Visited Count: {{cur_article.visited_times}}
+          </div>
+
+          <div class="card-action">
+              <a>{{cur_article.pub_time}}</a>
+              <a href="{% url "profile" cur_article.author %}">By {{cur_article.author}}</a>
+          </div>
+
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
-        <li><a href="{% url "contacts" %}">Contacts</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-      </ul>
+</div>
+
+    <!-- Article related Pitches -->
+      <div class="col s4">
+
+            <hr style="height:3px;border:none;color:#333;background-color:#333;" />
+            <h4>Related Pitches</h4>
+          {%for pitch in related_pitches.all%}
+            <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                    <span class="card-title">
+                        <a href="{% url "pitch_detail" pitch.id %}">{{pitch.title}}</a>
+                    </span>
+                </div>
+
+                <div class="card-action">
+                <a href="{% url "profile" pitch.author %}">By {{pitch.author.first_name}} {{pitch.author.last_name}}</a>
+                </div>
+            </div>
+          {%endfor%}
+          <hr style="height:3px;border:none;color:#333;background-color:#333;" />
     </div>
-  </div>
-</nav>
+    </div>
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Kent Parker Application</title>
-
-        <!-- CSS -->
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-        <!-- Favicon and touch icons -->
-        <link rel="shortcut icon" href="assets/ico/favicon.png">
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
-
-		{% load static %}
-  		<link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
-		<link rel="stylesheet" type="text/css" href="{% static "/css/style.css" %}">
-		<link rel="stylesheet" type="text/css" href="{% static "/css/form-elements.css" %}">
-
-    </head>
-
-    <body>
-
-        <!-- Top content -->
-        <div class="top-content">
-        <div class="inner-bg">
-        <div class="container">
-        	<div class="row">
-    			<div class="col-sm-7">
-    				<h3><span class="pull-left">{{cur_article.title}}</span></h3><br />
-    				<h4><span class="pull-left">By {{cur_article.author}} | {{cur_article.pub_time}}</span></h4><br /><br />
-    				<p align="left">
-						{{cur_article.content}}
-						<br>
-						<br>
-						Visited Count: {{cur_article.visited_times}}
-						<br>
-    				</p>
-    				<hr style="height:3px;border:none;color:#333;background-color:#333;" />
-
-    			</div>
-    			<div class="col-sm-4">
-    			<br />
-    			<br /><br /><br />
-    			<span class="pull-left">
-    			<a href="#"><i class="fa fa-facebook" aria-hidden="true" style="font-size:24px;color:#3b5998"></i></a>&nbsp;
-    			<a href="#"><i class="fa fa-twitter" aria-hidden="true" style="font-size:24px;color:#00aced"></i></a>&nbsp;
-    			<a href="#"><i class="fa fa-linkedin" aria-hidden="true" style="font-size:24px;color:#007bb6"></i></a>&nbsp;
-    			<a href="#"><i class="fa fa-google-plus" aria-hidden="true" style="font-size:24px;color:#dd4b39"></i></a>&nbsp;
-    			</span>
-    			<br />
-    			</div>
-  			</div>
-		</div>
-		</div>
-		</div>
-        <!-- Footer -->
-        <footer>
-        	<div class="container">
-        		<div class="row">
-
-        			<div class="col-sm-8 col-sm-offset-2">
-        				<div class="footer-border"></div>
-        				<p>Made by Kent Parker at <a href="http://www.cmu.edu/" target="_blank"><strong>CMU</strong></a>
-        				</p>
-        				<p class="rights">
-                            © 2016 <span>KENT</span> Parker All Rights Reserved.
-                        </p>
-        			</div>
-
-        		</div>
-        	</div>
-        </footer>
-
-
-    </body>
-
-</html>
+{% endblock %}
