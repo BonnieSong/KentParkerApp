@@ -270,7 +270,7 @@ def filter_pitch_journalist(request,tag_id):
 		if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
 			continue
 		validpitches.add(pitch)
-	context = {'pitches': validpitches, 'tags': tags}
+	context = {'filter_pitches': validpitches, 'tags': tags}
 	return render(request, 'kentparker/JournalistDashBoard.html', context)
 
 

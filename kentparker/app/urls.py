@@ -41,5 +41,6 @@ urlpatterns = [
     # article related urls
     url(r'^article_detail/(?P<articleId>.*)$', views.article_detail, name='article_detail'),
     url(r'^filter_pitch/(?P<tag_id>.*)$', views.filter_pitch, name='filter_pitch'),
+    url(r'^filter_pitch_journalist/(?P<tag_id>.*)$', views.filter_pitch_journalist, name='filter_pitch_journalist'),
     url(r'^messages/(?P<username>.*)$', views.messages, name='messages'),
 ]
