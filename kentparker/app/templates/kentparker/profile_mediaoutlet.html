@@ -95,11 +95,32 @@
 					<div class="panel panel-default">
 					  <div class="panel-heading">ABOUT ME</div>
 					  <div class="panel-body">
+					  {% if target_user.bio == "Please include your award!"%}
+					  <p></p>
+					  {% else %}
                       <p>{{target_user.bio}}</p>
+                      {% endif %}
                       <p>{{target_user.first_name}}</p>  
                         <p>{{target_user.skype_id}}</p>
                         <p>{{target_user.size}}</p>         
                       </div>
+					</div>
+					
+				<div class="panel panel-default">
+					  <div class="panel-heading">SOCIAL MEDIAS</div>
+					  <div class="panel-body">
+					  	<p>{{target_user.skype_id}}</p>
+					  	<p>{{target_user.twitter_id}}</p>
+					  	<p>{{target_user.facebook_id}}</p>
+					  </div>
+					</div>
+					
+				<div class="panel panel-default">
+					  <div class="panel-heading">RELATED URLS</div>
+					  <div class="panel-body">
+					  	<p>{{target_user.related_url}}</p>
+					  	<a href={{target_user.related_url}}> {{target_user.related_url}}</a>
+					  </div>
 					</div>
 
 					<div class="panel panel-default">

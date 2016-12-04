@@ -30,6 +30,7 @@ class MyUser(AbstractUser):
 	source=models.CharField(max_length=20,blank=True)
 	size=models.CharField(max_length=20,blank=True)
 	industry=models.CharField(max_length=10,blank=True)
+	related_url = models.URLField(blank=True)
 
 
 	
@@ -72,6 +73,7 @@ class Article(models.Model):
 	newsmaker=models.ManyToManyField(MyUser,related_name='newsmaker_am', null=True, blank=True)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
+	visited_times = models.IntegerField(default = 0)
 
 	class Meta:
 		ordering=['-pub_time']
