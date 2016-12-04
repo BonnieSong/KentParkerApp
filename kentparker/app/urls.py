@@ -47,4 +47,6 @@ urlpatterns = [
     url(r'^filter_pitch/(?P<tag_id>.*)$', views.filter_pitch, name='filter_pitch'),
     url(r'^filter_pitch_journalist/(?P<tag_id>.*)$', views.filter_pitch_journalist, name='filter_pitch_journalist'),
     url(r'^messages/(?P<username>.*)$', views.messages, name='messages'),
+    url(r'^reedit_article/(?P<articleId>.*)$', views.reedit_article, name='reedit_article'),
+    
 ]
