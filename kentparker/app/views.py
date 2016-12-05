@@ -621,13 +621,10 @@ def pitch_detail(request,pitch_id):
 	if request.user in cur_pitch.bookmarked.all():
 		already = True
 
-	pitch_responsiveness=cur_pitch.rating_responsiveness
-	pitch_worthiness=cur_pitch.rating_worthiness
-
 	can_edit = (cur_pitch.published == False) and (request.user == cur_pitch.author)
 	print ("pitch detail can_edit? ", can_edit)
 
-	context = {"pitch_worthiness":pitch_worthiness,"pitch_responsiveness":pitch_responsiveness,"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by,'invalid':invalid, 'can_edit': can_edit}
+	context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by,'invalid':invalid, 'can_edit': can_edit}
 	return render(request, "kentparker/pitch_detail.html", context)
 
 def article_detail(request, article_id):
@@ -649,54 +646,21 @@ def article_detail(request, article_id):
 	context = {"cur_article": cur_article, "related_pitches":related_pitches, "can_edit": can_edit,"can_rate":can_rate}
 	return render(request, "kentparker/article_detail.html", context)
 
-def reedit_article(request, articleId):
-	cur_article = Article.objects.get(pk=articleId)
+def reedit_article(request, article_id):
+	cur_article = get_object_or_404(Article,pk=article_id)
 	cur_article.content = request.POST['article_content']
 	if 'publish_btn' in request.POST:
 		cur_article.published = True
 	cur_article.save()
-	related_pitches = cur_article.related_pitch
-	can_edit = (cur_article.published == False) and (request.user == cur_article.author)
-	context = {"cur_article": cur_article, "related_pitches":related_pitches, "can_edit": can_edit}
-	return render(request, "kentparker/article_detail.html", context)
-	# print ("request.POST", request.POST)
+	return redirect(reverse('article_detail',args=[article_id]))
 
 def reedit_pitch(request, pitch_id):
-	print ("reedit_pitch called")
-	print ("pitch_id: ", pitch_id)
-	cur_pitch = Pitch.objects.get(pk=pitch_id)
+	cur_pitch = get_object_or_404(Pitch,pk=pitch_id)
 	cur_pitch.content = request.POST['pitch_content']
-	if 'publish_pitch_btn' in request.POST:
+	if 'publish_btn' in request.POST:
 		cur_pitch.published = True
 	cur_pitch.save()
-	print ("cur_pitch.content:", cur_pitch.content)
-	related_articles = cur_pitch.article_set.all()
-	picked_by = set()
-	for article in related_articles:
-		picked_by.add(article.author)
-	
-	# determine if the current user is allowed to do the rating
-	invalid=True
-	if request.user in picked_by:
-		invalid=False
-	if cur_pitch.rated_by.filter(username=request.user.username).exists():
-		invalid=True
-	
-	# determine if the current user has bookmarked the pitch
-	already= False
-	if request.user in cur_pitch.bookmarked.all():
-		already = True
-
-	pitch_responsiveness=cur_pitch.rating_responsiveness
-	pitch_worthiness=cur_pitch.rating_worthiness
-
-	can_edit = (cur_pitch.published == False) and (request.user == cur_pitch.author)
-	print ("pitch detail can_edit? ", can_edit)
-
-	context = {"pitch_worthiness":pitch_worthiness,"pitch_responsiveness":pitch_responsiveness,"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by,'invalid':invalid, 'can_edit': can_edit}
-	return render(request, "kentparker/pitch_detail.html", context)
-
-
+	return redirect(reverse('pitch_detail',args=[pitch_id]))
 
 @login_required
 def messages(request,username):

@@ -52,5 +52,5 @@ urlpatterns = [
     url(r'^messages/(?P<username>.*)$', views.messages, name='messages'),
     url(r'^rate_pitch/(?P<pitch_id>.*)/(?P<username>.*)$', views.rate_pitch, name='rate_pitch'),
     url(r'^rate_article/(?P<article_id>.*)/(?P<username>.*)$', views.rate_article, name='rate_article'),
-    url(r'^reedit_article/(?P<articleId>.*)$', views.reedit_article, name='reedit_article'),
+    url(r'^reedit_article/(?P<article_id>.*)$', views.reedit_article, name='reedit_article'),
 ]
