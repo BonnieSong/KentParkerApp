@@ -20,18 +20,19 @@
               {%else%}
               <p>{{cur_article.content}}</p>
               {%endif%}
-              <br>
-                Visited: {{cur_article.visited_times}}
           </div>
 
-          <div class="card-action">
+          <div class="card-action align-center">
+              <a>Visited: {{cur_article.visited_times}}</a>
               <a>{{cur_article.pub_time}}</a>
-              <p>Author:
+            </div>
+
+            <div class="card-action">
+              <p class="white-text">By
 								{%for eachauthor in cur_article.author.all%}
-									{{eachauthor.first_name}} {{eachauthor.last_name}}<a href="/profile/{{eachauthor}}">@{{eachauthor}}  </a>
+									<a href="/profile/{{eachauthor}}">{{eachauthor.first_name}} {{eachauthor.last_name}}@{{eachauthor}}  </a>
 								{%endfor%}
               </p>
-
           </div>
 
             {%if can_edit%}
@@ -44,7 +45,7 @@
           {%endif%}
 
           <div class="card-action">
-            <p>Article Responsiveness: {{cur_article.rating_responsiveness}}</p>
+            <p class="white-text">Article Responsiveness: {{cur_article.rating_responsiveness}}</p>
           </div>
 
           {%if can_rate%}
