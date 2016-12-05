@@ -46,10 +46,11 @@ urlpatterns = [
     url(r'^reedit_pitch/(?P<pitch_id>.*)$', views.reedit_pitch, name='reedit_pitch'),
 
     # article related urls
-    url(r'^article_detail/(?P<articleId>.*)$', views.article_detail, name='article_detail'),
+    url(r'^article_detail/(?P<article_id>.*)$', views.article_detail, name='article_detail'),
     url(r'^filter_pitch/(?P<tag_id>.*)$', views.filter_pitch, name='filter_pitch'),
     url(r'^filter_pitch_journalist/(?P<tag_id>.*)$', views.filter_pitch_journalist, name='filter_pitch_journalist'),
     url(r'^messages/(?P<username>.*)$', views.messages, name='messages'),
     url(r'^rate_pitch/(?P<pitch_id>.*)/(?P<username>.*)$', views.rate_pitch, name='rate_pitch'),
+    url(r'^rate_article/(?P<article_id>.*)/(?P<username>.*)$', views.rate_article, name='rate_article'),
     url(r'^reedit_article/(?P<articleId>.*)$', views.reedit_article, name='reedit_article'),
 ]

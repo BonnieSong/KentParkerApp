@@ -630,19 +630,24 @@ def pitch_detail(request,pitch_id):
 	context = {"pitch_worthiness":pitch_worthiness,"pitch_responsiveness":pitch_responsiveness,"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by,'invalid':invalid, 'can_edit': can_edit}
 	return render(request, "kentparker/pitch_detail.html", context)
 
-def article_detail(request, articleId):
-	if request.method == 'GET':
-		print ("request user is:", request.user)
-		cur_article = Article.objects.get(pk=articleId)
-		cur_article.visited_times += 1
-		cur_article.save()
-		print ("cur_article author is:", cur_article.author)
-		print ("equals? ", request.user == cur_article.author)
-		related_pitches = cur_article.related_pitch
-		can_edit = (cur_article.published == False) and (request.user == cur_article.author)
-		print ("can_edit? ", can_edit)
-		context = {"cur_article": cur_article, "related_pitches":related_pitches, "can_edit": can_edit}
-		return render(request, "kentparker/article_detail.html", context)
+def article_detail(request, article_id):
+	cur_article = get_object_or_404(Article,pk=article_id)
+	cur_article.visited_times += 1
+	cur_article.save()
+	related_pitches = cur_article.related_pitch.all()
+	can_edit = (cur_article.published == False) and (request.user == cur_article.author)
+
+	# newsmakers rate article published by journalists
+	can_rate=False
+	ralated_newsmakers=cur_article.newsmaker.all()
+	rated_by=cur_article.rated_by.all()
+	if ralated_newsmakers.filter(username=request.user.username).exists():
+		can_rate=True
+	if rated_by.filter(username=request.user.username).exists():
+		can_rate=False
+
+	context = {"cur_article": cur_article, "related_pitches":related_pitches, "can_edit": can_edit,"can_rate":can_rate}
+	return render(request, "kentparker/article_detail.html", context)
 
 def reedit_article(request, articleId):
 	cur_article = Article.objects.get(pk=articleId)
@@ -695,6 +700,9 @@ def reedit_pitch(request, pitch_id):
 
 @login_required
 def messages(request,username):
+	if not request.user.message_people.all():
+		return redirect('/')
+
 	if not username:
 		username=request.user.message_people.all()[0].username
 	
@@ -727,7 +735,22 @@ def rate_pitch(request,pitch_id,username):
 		else:
 			target_pitch.rating_responsiveness=(target_pitch.rating_responsiveness*target_pitch.rating_count+Decimal(request.POST['rate_responsiveness']))/(target_pitch.rating_count+1)
 			target_pitch.rating_worthiness=(target_pitch.rating_worthiness*target_pitch.rating_count+Decimal(request.POST['rating_worthiness']))/(target_pitch.rating_count+1)
-			target_pitch.rating_count=target_pitch.rating_count+1
+			target_pitch.rating_count+=1
 		target_pitch.rated_by.add(rate_person)
 		target_pitch.save()
 	return redirect(reverse('pitch_detail',args=[pitch_id]))
+
+@login_required
+def rate_article(request,article_id,username):
+	target_article=get_object_or_404(Article,pk=article_id)
+	rate_person=get_object_or_404(MyUser,username=username)
+	if 'rating_responsiveness' in request.POST:
+		if target_article.rating_count==0:
+			target_article.rating_responsiveness=Decimal(request.POST['rating_responsiveness'])
+			target_article.rating_count=1
+		else:
+			target_article.rating_responsiveness=(target_article.rating_responsiveness*target_article.rating_count+Decimal(request.POST['rate_responsiveness']))/(target_article.rating_count+1)
+			target_article.rating_count+=1
+		target_article.rated_by.add(rate_person)
+		target_article.save()
+	return redirect(reverse('article_detail',args=[article_id]))
