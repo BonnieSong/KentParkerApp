@@ -26,9 +26,13 @@ urlpatterns = [
     url(r'^create_pitch$', views.create_pitch, name='create_pitch'),
     url(r'^manage_pitch$', views.manage_pitch, name='manage_pitch'),
     url(r'^contacts$', views.contacts, name='contacts'),
+    url(r'^view_journalists$', views.view_journalists, name='view_journalists'),
+    url(r'^filter_journalists/(?P<tag_id>.*)$', views.filter_journalists, name='filter_journalists'),
+
     # media_outlet
     url(r'^manage_journalists$', views.manage_journalists, name='manage_journalists'),
     url(r'^mediaoutlet_articles', views.mediaoutlet_articles, name='mediaoutlet_articles'),
+
     # journalist related urls
     url(r'^journalist/favNewsMakers$', views.favNewsMakers_pitch, name='favNewsMakers_pitch'),
     url(r'^bookmark_pitch/(?P<pitch_id>.*)$', views.bookmark_pitch, name='bookmark_pitch'),
@@ -42,6 +46,8 @@ urlpatterns = [
     # article related urls
     url(r'^article_detail/(?P<articleId>.*)$', views.article_detail, name='article_detail'),
     url(r'^filter_pitch/(?P<tag_id>.*)$', views.filter_pitch, name='filter_pitch'),
+    url(r'^filter_pitch_journalist/(?P<tag_id>.*)$', views.filter_pitch_journalist, name='filter_pitch_journalist'),
     url(r'^messages/(?P<username>.*)$', views.messages, name='messages'),
     url(r'^rate_pitch/(?P<pitch_id>.*)/(?P<username>.*)$', views.rate_pitch, name='rate_pitch'),
+    url(r'^reedit_article/(?P<articleId>.*)$', views.reedit_article, name='reedit_article'),
 ]

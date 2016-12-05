@@ -26,7 +26,12 @@ def home(request):
 		related_articles=Article.objects.filter(newsmaker=request.user)
 		# newsmaker
 		my_pitches=Pitch.objects.filter(author=request.user)
-		context={'related_articles':related_articles, 'pitches':my_pitches}
+		validpitches = set()
+		for pitch in my_pitches:
+			if (pitch.scooped and pitch.scooppublished):
+				continue
+			validpitches.add(pitch)
+		context={'related_articles':related_articles, 'pitches':validpitches}
 		return render(request,'kentparker/newsMakerDashBoard.html',context)
 	elif request.user.user_type==2:
 		#journalist
@@ -204,8 +209,13 @@ def create_article(request):
 	if not publish_article_form.is_valid():
 		return render(request,'kentparker/create_article.html',context)
 
-	new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user)
+	new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user, published = True)
+
+	if 'save_btn' in request.POST:
+		# print ("save the article")
+		new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user, published = False)
 	new_article.save()
+	# print ("published or not: ", new_article.published)
 
 	if 'related_pitch' in request.POST:
 		related_pitch_url=request.POST['related_pitch']
@@ -234,7 +244,12 @@ def manage_pitch(request):
 	# show all my pitches including published and drafts
 	pitches=Pitch.objects.filter(author=request.user)
 	tags=Tag.objects.all()
-	context={'pitches':pitches,'tags':tags}
+	validpitches = set()
+	for pitch in pitches:
+		if (pitch.scooped and pitch.scooppublished):
+			continue
+		validpitches.add(pitch)
+	context = {'pitches': validpitches, 'tags': tags}
 	return render(request,'kentparker/manage_pitch.html',context)
 
 @login_required
@@ -242,17 +257,53 @@ def filter_pitch(request,tag_id):
 	chosen_tag=Tag.objects.get(id=tag_id)
 	pitches=chosen_tag.pitch_set.all().filter(author=request.user)
 	tags=Tag.objects.all()
-	context={'pitches':pitches,'tags':tags}
+	validpitches = set()
+	for pitch in pitches:
+		if (pitch.scooped and pitch.scooppublished):
+			continue
+		validpitches.add(pitch)
+	context = {'pitches': validpitches, 'tags': tags}
 	return render(request,'kentparker/manage_pitch.html',context)
+
+
+@login_required
+def filter_pitch_journalist(request,tag_id):
+	chosen_tag=Tag.objects.get(id=tag_id)
+	pitches=chosen_tag.pitch_set.all()
+	tags=Tag.objects.all()
+	validpitches = set()
+	for pitch in pitches:
+		if (pitch.scooped and pitch.scooppublished) or pitch.embargoMark:
+			continue
+		validpitches.add(pitch)
+	context = {'filter_pitches': validpitches,'tags': tags}
+	return render(request, 'kentparker/JournalistDashBoard.html', context)
+
+
+@login_required
+def view_journalists(request):
+	# show all journalists
+	journalists = MyUser.objects.filter(user_type=2)
+	tags = Tag.objects.all()
+	context = {'journalists': journalists,'tags': tags}
+	return render(request, 'kentparker/view_journalists.html', context)
+
+
+@login_required
+def filter_journalists(request,tag_id):
+	chosen_tag=Tag.objects.get(id=tag_id)
+	journalists = chosen_tag.myuser_set.all()
+	tags=Tag.objects.all()
+	context = {'journalists': journalists, 'tags': tags}
+	return render(request, 'kentparker/view_journalists.html', context)
+
 
 @login_required
 def manage_journalists(request):
-	print ("manage_journalists")
 	# show all journalists belong to this media outlet
 	journalists = MyUser.objects.filter(user_type = 2, organization = request.user)
 	context={'journalists':journalists}
 	return render(request,'kentparker/manage_journalists.html',context)
-# 	return redirect('/')
 
 @login_required
 def profile(request,name):
@@ -578,12 +629,30 @@ def pitch_detail(request,pitch_id):
 
 def article_detail(request, articleId):
 	if request.method == 'GET':
+		print ("request user is:", request.user)
 		cur_article = Article.objects.get(pk=articleId)
 		cur_article.visited_times += 1
 		cur_article.save()
+		print ("cur_article author is:", cur_article.author)
+		print ("equals? ", request.user == cur_article.author)
 		related_pitches = cur_article.related_pitch
-		context = {"cur_article": cur_article, "related_pitches":related_pitches}
+		can_edit = (cur_article.published == False) and (request.user == cur_article.author)
+		print ("can_edit? ", can_edit)
+		context = {"cur_article": cur_article, "related_pitches":related_pitches, "can_edit": can_edit}
 		return render(request, "kentparker/article_detail.html", context)
+
+def reedit_article(request, articleId):
+	cur_article = Article.objects.get(pk=articleId)
+	cur_article.content = request.POST['article_content']
+	if 'publish_btn' in request.POST:
+		cur_article.published = True
+	cur_article.save()
+	related_pitches = cur_article.related_pitch
+	can_edit = (cur_article.published == False) and (request.user == cur_article.author)
+	context = {"cur_article": cur_article, "related_pitches":related_pitches, "can_edit": can_edit}
+	return render(request, "kentparker/article_detail.html", context)
+	# print ("request.POST", request.POST)
+
 
 @login_required
 def messages(request,username):

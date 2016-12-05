@@ -1,26 +1,23 @@
 {% extends "kentparker/base.html"%}
 {% load static %}
 
+{%block tag%}
+ <div class="fixed-action-btn vertical">
+    <a class="btn-floating btn-large red">
+    Tags
+    </a>
+    <ul>
+    	{% for tag in tags %}
+		<li>
+			<a class="blue-grey-text chip" href="{% url 'filter_pitch_journalist' tag.id%}">{{ tag.name }}</a>
+		</li>
+		{% endfor %}
+    </ul>
+  </div>
+{%endblock%}
+
 {% block content %}
 
-<script>
-		function updateTextArea() {
-		    var allVals = [];
-		    var allTagString="";
-		    $('#upreferences input[type="checkbox"]:checked').each(function() {
-		    	allVals.push($(this).val());
-		    	allTagString += $(this).val()+"@";
-		    });
-		    $('#t').val(allTagString);
-		    $('#myModal').modal('toggle')
-		    window.location.replace("/journalist/"+allTagString);
-		}
-		 $(document).ready(function() {
-    		$('select').material_select();
-  		});
-</script>
-
-  
   <div class="row">
 
 	<div class="col s3">
@@ -37,7 +34,9 @@
 				{{request.user.first_name}}
 				{{request.user.last_name}}
 			</div>
-
+			<div class="card-action blue-grey">
+				<a class="white-text" href="/">Favourite Pitches</a>
+			</div>
 			<div class="card-action">
 				<a class="blue-grey-text" href="/bookmarked_pitch">Bookmarked Pitches</a>
 			</div>
@@ -48,21 +47,8 @@
 				<a class="blue-grey-text" href="{% url "journalist_Articles" %}">Journalist Articles</a>
 			</div>
 
-			<div class="card-action blue-grey">
-				<a class="white-text" href="{% url "create_article" %}">Publish Article</a>
-			</div>
-			<div class="card-action blue-grey-text">
-				<div class="row">
-				<div class="input-field col s12">
-					<select multiple name="tags-list">
-						<option value="" disabled selected>Tags</option>
-						{%for tag in tags %}
-						<option value="{{tag.id}}">{{tag}}</option>
-						{% endfor%}
-					</select>
-					<label>Choose Tags</label>
-				</div>
-			</div>
+			<div class="card-action">
+				<a class="blue-grey-text" href="{% url "create_article" %}">Publish Article</a>
 			</div>
 		</div>
 	</div>
@@ -81,6 +67,7 @@
 				<div class="card-content white-text">
 					<span class="card-title">{{pitch.title}}</span>
 					<p>{{pitch.content}}</p>
+					<br>
 					{% for tag in pitch.tags.all %}
 						<div class="chip">{{tag}}</div>
 					{%endfor%}
