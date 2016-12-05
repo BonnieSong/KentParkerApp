@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from decimal import Decimal
 # Create your models here.
 
 class Tag(models.Model):
@@ -51,10 +52,14 @@ class Pitch(models.Model):
 	location=models.CharField(max_length=50,default="")
 	published=models.BooleanField(default=False)
 	embargoMark=models.BooleanField(default=False)
-	bookmarked = models.ManyToManyField(MyUser,null=True,blank=True,related_name='bookmarked')
-	embargoed = models.ManyToManyField(MyUser,null=True,blank=True,related_name='embargoed')
+	bookmarked = models.ManyToManyField(MyUser,blank=True,related_name='bookmarked')
+	embargoed = models.ManyToManyField(MyUser,blank=True,related_name='embargoed')
 	scooped = models.BooleanField(default=False)
 	scooppublished = models.BooleanField(default=False)
+	rating_responsiveness = models.DecimalField(blank=True, max_digits=9, decimal_places=2, null=True, default=0)
+	rating_worthiness = models.DecimalField(blank=True, max_digits=9, decimal_places=2, null=True, default=0)
+	rating_count = models.IntegerField(blank=True, null=True, default=0)
+	rated_by=models.ManyToManyField(MyUser,blank=True,related_name='rated_by')
 
 	class Meta:
 		ordering=['-pub_time']
@@ -72,7 +77,7 @@ class Article(models.Model):
 	related_pitch=models.ManyToManyField(Pitch,blank=True)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_ar') #Journalist
-	newsmaker=models.ManyToManyField(MyUser,related_name='newsmaker_am', null=True, blank=True)
+	newsmaker=models.ManyToManyField(MyUser,related_name='newsmaker_am', blank=True)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)
 	visited_times = models.IntegerField(default = 0)
