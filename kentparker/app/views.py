@@ -321,16 +321,23 @@ def profile(request,name):
 		temp=request.user.contacts_f.filter(username=name)
 		if temp:
 			already=True
-	context={'target_user':target_user,'pitches':pitches,'already':already}
+
+	user_type='News Maker'
+	if target_user.user_type==2:
+		user_type='Journalist'
+	if target_user.user_type==3:
+		user_type='Media Outlet'
+	
+	context={'target_user':target_user,'pitches':pitches,'already':already,'user_type':user_type}
 
 	if target_user.user_type==1:
 		# pitches=Pitch.objects.filter(author=target_user)
 		#context={'target_user':target_user,'pitches':pitches}
-		return render(request,"kentparker/profile_newsmaker.html",context)
+		return render(request,"kentparker/profile.html",context)
 	if target_user.user_type==2:
 		articles=Article.objects.filter(author=target_user)
 		context['articles']=articles
-		return render(request,"kentparker/profile_jounalist.html",context)
+		return render(request,"kentparker/profile.html",context)
 	if target_user.user_type==3:
 		articles = set()
 		# print ("target user is media outlet")
@@ -342,7 +349,7 @@ def profile(request,name):
 				articles.add(curntarticle)
 		# print ("articles size: ", len(articles))
 		context['articles'] = articles
-		return render(request,"kentparker/profile_mediaoutlet.html",context)
+		return render(request,"kentparker/profile.html",context)
 
 # add the target user to contacts by favoriting it
 @login_required
@@ -617,21 +624,30 @@ def pitch_detail(request,pitch_id):
 		picked_by.add(article.author)
 	
 	# determine if the current user is allowed to do the rating
-	invalid=True
+	can_rate=False
 	if request.user in picked_by:
-		invalid=False
+		can_rate=True
 	if cur_pitch.rated_by.filter(username=request.user.username).exists():
-		invalid=True
+		can_rate=False
+
+	# determine if the current user is allowed to publish an article for the pitch
+	can_publish_article=False
+	if (request.user.user_type==2) and (request.user not in picked_by):
+		can_publish_article=True
 	
-	# determine if the current user has bookmarked the pitch
-	already= False
-	if request.user in cur_pitch.bookmarked.all():
-		already = True
+	# determine if the current user can bookmarked the pitch
+	can_bookmark=False
+	if (request.user.user_type==2) and (request.user not in cur_pitch.bookmarked.all()):
+		can_bookmark=True
+
+	can_unbookmark=False
+	if (request.user.user_type==2) and (request.user in cur_pitch.bookmarked.all()):
+		can_unbookmark=True
 
 	can_edit = (cur_pitch.published == False) and (request.user == cur_pitch.author)
 	print ("pitch detail can_edit? ", can_edit)
 
-	context = {"cur_pitch": cur_pitch, "already": already, "related_articles": related_articles, "picked_by": picked_by,'invalid':invalid, 'can_edit': can_edit}
+	context = {"cur_pitch": cur_pitch, "can_bookmark": can_bookmark,'can_unbookmark':can_unbookmark, "related_articles": related_articles, "picked_by": picked_by,'can_rate':can_rate, 'can_edit': can_edit,'can_publish_article':can_publish_article}
 	return render(request, "kentparker/pitch_detail.html", context)
 
 def article_detail(request, article_id):

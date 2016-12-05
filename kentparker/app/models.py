@@ -33,8 +33,6 @@ class MyUser(AbstractUser):
 	industry=models.CharField(max_length=10,blank=True)
 	related_url = models.URLField(blank=True)
 	message_people=models.ManyToManyField('self',blank=True,related_name='message_people')
-	media_contact = models.CharField(max_length=20,null=True, blank=True)
-	media_contact_phone=models.CharField(max_length=12,blank=True)
 
 
 	def __str__(self):

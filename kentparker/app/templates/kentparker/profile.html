@@ -1,0 +1,190 @@
+{% extends "kentparker/base.html"%}
+{% load static %}
+{% block profile_page %}
+
+<!-- Banner start -->
+  <div class="card small hoverable">
+    <div class="card-image waves-effect waves-block waves-light">
+            {% if target_user.picture %}
+            <img src="{% url "get_photo" target_user.username %}" class="activator responsive-img">
+            {% else %}
+            <img src="{% static "img/profile.png" %}"class="activator responsive-img">
+            {% endif %}
+    </div>
+    <div class="card-content center-align">
+      <span class="card-title activator grey-text text-darken-4">
+        {{target_user.first_name}} {{target_user.last_name}} @{{target_user.username}}
+      </span>
+      <p><a>{{user_type}}</a></p>
+    </div>
+    <div class="card-reveal">
+      <span class="card-title center-align grey-text text-darken-4">
+      {{target_user.first_name}} {{target_user.last_name}} @{{target_user.username}}
+      <p><a>{{user_type}}</a></p>
+      <i class="material-icons right">close</i>
+      </span>
+      <h5>{{target_user.bio}}</h5>
+    </div>
+  </div>
+
+<!-- Banner end -->
+
+
+ <div class="row">
+
+      <div class="col s4">
+
+      <div class="card hoverable blue-grey darken-1">
+      <div class="card-content center-align white-text">
+      <span class="card-title">Bio</span>
+      <p>{{target_user.bio}}</p>
+      </div>
+      </div>
+
+      <div class="card hoverable blue-grey darken-1">
+      <div class="card-content center-align white-text">
+      <span class="card-title">Related Urls</span>
+      </div>
+      <div class="card-action center-align">
+          <a href="{{target_user.related_url}}"><p>dwdwd{{target_user.related_url}}</p></a>
+      </div>
+      </div>
+
+
+          
+      </div>
+
+      <div class="col s4">
+
+       <div class="card hoverable">
+            <div class="card-image">
+            {% if target_user.picture %}
+            <img src="{% url "get_photo" target_user.username %}" class="responsive-img">
+            {% else %}
+            <img src="{% static "img/profile.png" %}" class="responsive-img">
+            {% endif %}
+            </div>
+            <div class="card-content blue-grey-text center-align">
+                {{target_user.first_name}}
+                {{target_user.last_name}}
+            </div>
+
+            {%ifnotequal request.user.username target_user.username%}
+            <div class="card-action center-align">
+            <a class='btn' href="{% url "messages" target_user %}">Message</a>
+            {% if not already%}
+            <a class='btn' href="{% url "favorite" target_user %}">Favorite</a>
+            {% else %}
+            <a class='btn' href="{% url "favorite" target_user %}">Unfavorite</a>
+            {% endif %}
+            </div>
+            {%endifnotequal%}
+
+      </div>
+
+    </div>
+
+    <div class="col s4">
+
+        <div class="card hoverable blue-grey darken-1">
+      <div class="card-content center-align white-text">
+      <span class="card-title">Social Media</span>
+      <p>Skype {{target_user.skype_id}}</p>
+      <p>Twitter {{target_user.twitter_id}}</p>
+      <p>Facebook {{target_user.facebook_id}}</p>
+      </div>
+      </div>
+
+     <div class="card hoverable blue-grey darken-1">
+      <div class="card-content center-align white-text">
+      <span class="card-title">Contacts</span>
+      <p>Email: {{target_user.email}}</p>
+      <p>Phone: {{target_user.phone}}</p>
+      </div>
+      </div>
+        
+    </div>
+    </div>
+
+
+    <div class="row">
+       
+  {%if pitches%}
+   <div class="progress">
+      <div class="determinate" style="width: 100%"></div>
+  </div>
+  
+  <h4 class="center-align">Past Pitches</h4>
+
+   <div class="progress">
+      <div class="determinate" style="width: 100%"></div>
+  </div>
+  {%endif%}
+
+{%if articles%}
+
+ <div class="progress">
+      <div class="determinate" style="width: 100%"></div>
+  </div>
+
+<h4 class="center-align">Past Articles</h4>
+
+ <div class="progress">
+      <div class="determinate" style="width: 100%"></div>
+  </div>
+
+{%endif%}
+
+    {%for pitch in pitches %}
+        <div class="col s12 m6 l4" style="poition: relative">
+        <div class="card hoverable blue-grey darken-1">
+            <div class="card-content center-align white-text">
+              <span class="card-title">{{pitch.title}}</span>
+              <p>{{pitch.content}}</p>
+                <br>
+              {% for tag in pitch.tags.all %}
+              <div class="chip">{{tag}}</div>
+              {%endfor%}
+              {%if not pitch.tags.all%}
+              <div class="chip">No Tags</div>
+              {%endif%}
+ 
+            </div>
+            <div class="card-action">
+              <a href="{% url "pitch_detail" pitch.id %}">Detail</a>
+              {%if pitch.published%}
+              <a>Public</a>
+              {%else%}
+              <a>Draft</a>
+              {%endif%}
+              <a>{{pitch.pub_time}}</a>
+            </div>
+        </div>
+        </div>
+        {%endfor%}
+
+        {% for article in articles %}
+
+        <div class="col s12 m6 l4" style="poition: relative">
+          <div class="card hoverable blue-grey darken-1">
+            <div class="card-content center-align white-text">
+              <span class="card-title">{{article.title}}</span>
+              <p>{{article.content}}</p>
+          </div>
+          <div class="card-action">
+              <a href="{% url "article_detail" article.id %}">Detail</a>
+              {%if article.published%}
+              <a>Published</a>
+              {%else%}
+              <a>Draft</a>
+              {%endif%}
+              <a>{{article.pub_time}}</a>
+          </div>
+      </div>
+  </div>
+
+  {% endfor %}
+
+    </div>
+
+{% endblock %}
