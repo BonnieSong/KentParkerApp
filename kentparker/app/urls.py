@@ -43,6 +43,8 @@ urlpatterns = [
     # pitch related urls
     url(r'^pitch_detail/(?P<pitch_id>.*)$', views.pitch_detail, name='pitch_detail'),
     url(r'^create_article$', views.create_article, name='create_article'),
+    url(r'^reedit_pitch/(?P<pitch_id>.*)$', views.reedit_pitch, name='reedit_pitch'),
+
     # article related urls
     url(r'^article_detail/(?P<articleId>.*)$', views.article_detail, name='article_detail'),
     url(r'^filter_pitch/(?P<tag_id>.*)$', views.filter_pitch, name='filter_pitch'),
