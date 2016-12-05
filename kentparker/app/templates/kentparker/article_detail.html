@@ -7,31 +7,52 @@
     <!-- pitch detail -->
     <div class="col s8">
 
-	<form method="post" action="{% url "reedit_article" cur_article.id %}">
+	
         <div class="card blue-grey darken-1">
             <div class="card-content white-text">
               <span class="card-title">{{cur_article.title}}</span>
-              {%if can_edit == True%}
+
+              {%if can_edit%}
+              <form method="post" action="{% url "reedit_article" cur_article.id %}">
               <p>
               <input id="article_content" name="article_content" type="text" class="materialize-textarea" value = "{{cur_article.content}}">
               </p>
               {%else%}
               <p>{{cur_article.content}}</p>
               {%endif%}
-                <br>
-                Visited Count: {{cur_article.visited_times}}
+              <br>
+                Visited: {{cur_article.visited_times}}
           </div>
 
           <div class="card-action">
               <a>{{cur_article.pub_time}}</a>
               <a href="{% url "profile" cur_article.author %}">By {{cur_article.author}}</a>
           </div>
-    {%if can_edit == True%}
-    	<input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish">
-		<input type="submit" name ="save_btn" class="btn btn-primary" value="Save">
-	{%endif%}
-	{% csrf_token %}
-    </form>
+
+            {%if can_edit%}
+            <div class="card-action">
+              <input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish">
+              <input type="submit" name ="save_btn" class="btn btn-primary" value="Save">
+                {% csrf_token %}
+                </form>
+            </div>
+          {%endif%}
+
+          <div class="card-action">
+            <p>Article Responsiveness: {{cur_article.rating_responsiveness}}</p>
+          </div>
+
+          {%if can_rate%}
+          <div class="card-action">
+             <form action="{% url "rate_article" cur_article.id request.user.username %}" method="post">
+             <p class="range-field"><a>Responsiveness</a>
+             <input type="range" name="rating_responsiveness" min="0" max="100" />
+             </p>
+             <button type="submit"  class='btn'>Rate</button>
+            {% csrf_token %}
+        </form>
+          </div>
+          {%endif%}
 
     </div>
 </div>

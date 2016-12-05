@@ -34,8 +34,8 @@
               <a href="{% url "profile" cur_pitch.author %}">By {{cur_pitch.author}}</a>
           </div>
 			{%if can_edit == True%}
-    			<input type="submit" name ="publish_pitch_btn" class="btn btn-primary" value="Publish Pitch">
-				<input type="submit" name ="save_pitch_btn" class="btn btn-primary" value="Save Pitch">
+    			<input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish Pitch">
+				<input type="submit" name ="save_btn" class="btn btn-primary" value="Save Pitch">
 			{%endif%}
 			{% csrf_token %}
 	    </form>
@@ -67,8 +67,8 @@
       {% endifnotequal %}
 
       <div class="card-action">
-        <p>Pitch Responsiveness: {{pitch_responsiveness}}</p>
-        <p>Pitch Worthiness: {{pitch_worthiness}}</p>
+        <p>Pitch Responsiveness: {{cur_pitch.rating_responsiveness}}</p>
+        <p>Pitch Worthiness: {{cur_pitch.rating_worthiness}}</p>
       </div>
 
       <!-- journalist rate pitch -->

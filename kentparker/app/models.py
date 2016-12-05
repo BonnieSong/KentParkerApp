@@ -82,6 +82,9 @@ class Article(models.Model):
 	last_modified_time=models.DateTimeField(auto_now=True)
 	visited_times = models.IntegerField(default = 0)
 	published=models.BooleanField(default=False)
+	rating_responsiveness = models.DecimalField(blank=True, max_digits=9, decimal_places=2, null=True, default=0)
+	rating_count = models.IntegerField(blank=True, null=True, default=0)
+	rated_by=models.ManyToManyField(MyUser,blank=True,related_name='article_rated_by')
 
 	class Meta:
 		ordering=['-pub_time']
