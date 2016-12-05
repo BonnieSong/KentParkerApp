@@ -24,7 +24,12 @@
 
           <div class="card-action">
               <a>{{cur_article.pub_time}}</a>
-              <a href="{% url "profile" cur_article.author %}">By {{cur_article.author}}</a>
+              <p>Author:
+								{%for eachauthor in cur_article.author.all%}
+									{{eachauthor.first_name}} {{eachauthor.last_name}}<a href="/profile/{{eachauthor}}">@{{eachauthor}}  </a>
+								{%endfor%}
+              </p>
+
           </div>
     {%if can_edit == True%}
     	<input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish">

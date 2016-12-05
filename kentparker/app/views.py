@@ -38,7 +38,6 @@ def home(request):
 		# all_tags=request.user.tags
 		all_tags=Tag.objects.all()
 		user_tags = request.user.tags.all()
-		print ("journalist user_tags: ", user_tags)
 		pitches = Pitch.objects.filter(tags__in=user_tags).distinct()
 		validpitches = set()
 		for pitch in pitches:
@@ -209,13 +208,14 @@ def create_article(request):
 	if not publish_article_form.is_valid():
 		return render(request,'kentparker/create_article.html',context)
 
-	new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user, published = True)
+	new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'), published = True)
 
 	if 'save_btn' in request.POST:
-		# print ("save the article")
-		new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'),author=request.user, published = False)
+		new_article=Article(title=publish_article_form.cleaned_data.get('title'),content=publish_article_form.cleaned_data.get('content'), published = False)
+
 	new_article.save()
-	# print ("published or not: ", new_article.published)
+	new_article.author.add(request.user)
+	new_article.save()
 
 	if 'related_pitch' in request.POST:
 		related_pitch_url=request.POST['related_pitch']
@@ -226,16 +226,23 @@ def create_article(request):
 		related_pitch.save()
 		new_article.related_pitch.add(related_pitch)
 		new_article.save()
-
 	chosen_news_makers=request.POST.getlist('newsmaker')
 	for news_makers in chosen_news_makers:
 		try:
 			target_news_maker=MyUser.objects.get(user_type=1, username=news_makers)
-			print ("target_news_maker, ", target_news_maker)
 			new_article.newsmaker.add(target_news_maker)
 		except:
 			pass
 	new_article.save()
+	chosen_journalists = request.POST.getlist('journalist')
+	for journalist in chosen_journalists:
+		try:
+			target_journalist = MyUser.objects.get(user_type=2, username=journalist)
+			new_article.author.add(target_journalist)
+		except:
+			pass
+	new_article.save()
+	print(new_article.author.all())
 	return redirect('/')
 
 

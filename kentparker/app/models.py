@@ -36,7 +36,7 @@ class MyUser(AbstractUser):
 	media_contact = models.CharField(max_length=20,null=True, blank=True)
 	media_contact_phone=models.CharField(max_length=12,blank=True)
 
-	
+
 	def __str__(self):
 		return self.username
 
@@ -70,13 +70,13 @@ class Embargo(Pitch):
 
 class Scoop(Pitch):
 	selected_journalist=models.ForeignKey(MyUser) # Journalist
-	status=models.BooleanField()	
+	status=models.BooleanField()
 
 class Article(models.Model):
 	title=models.CharField(max_length=60)
 	related_pitch=models.ManyToManyField(Pitch,blank=True)
 	content=models.TextField()
-	author=models.ForeignKey(MyUser,related_name='author_ar') #Journalist
+	author=models.ManyToManyField(MyUser,blank=True, related_name='author_ar') #Journalist
 	newsmaker=models.ManyToManyField(MyUser,related_name='newsmaker_am', blank=True)
 	pub_time=models.DateTimeField(auto_now_add=True)
 	last_modified_time=models.DateTimeField(auto_now=True)

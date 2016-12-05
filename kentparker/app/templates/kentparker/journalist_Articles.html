@@ -179,7 +179,11 @@
 							<p>{{article.content}}</p>
 							<p>{{article.pub_time}}</p>
 							<p>{{article.id}}</p>
-							<p>{{article.author.first_name}} {{article.author.last_name}}<a href="profile/{{article.author}}">@{{article.author}}</a></p>
+							<p>Author:
+								{%for eachauthor in article.author.all%}
+									{{eachauthor.first_name}} {{eachauthor.last_name}}<a href="profile/{{eachauthor}}">@{{eachauthor}}  </a>
+								{%endfor%}
+							</p>
 							Newsmakers:
 							{% for eachnewsmaker in article.newsmaker.all %}
 							<a href="profile/{{eachnewsmaker}}">@{{eachnewsmaker}}</a>
