@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Kent-Parker</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script type="text/javascript" src="http://www.softwhy.com/mytest/jQuery/jquery-1.8.3.js"></script> 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link href="https://fonts.googleapis.com/css?family=Arimo|Bungee+Hairline|Coiny|Droid+Sans|Droid+Serif|Itim|Lato|Libre+Franklin|Merriweather|Montserrat|Noto+Sans|Open+Sans|Open+Sans+Condensed:300|Oswald|PT+Sans|Prociono|Raleway|Roboto|Roboto+Condensed|Roboto+Slab|Shrikhand|Slabo+27px|Source+Sans+Pro|Trirong|Ubuntu" rel="stylesheet">
-    {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
+{% extends "kentparker/base.html"%}
+{% load static %}
+
+{% block content %}
+
   <script>
 	$(document).on('ready', function() {
     	$("#input-4").fileinput({showCaption: false});
@@ -39,30 +30,28 @@
               if( log ) alert(log);
           }
 
-      });
-  });
+      	});
+  	});
   
 	});
 	
 	$(document).ready(function(){
-  var afterId = 0;
-  var newId=1;  
-  $("#btnAddOption").click(function(){  
-    afterId++;  
-    newId=afterId+1;  
-    addSpot(this,afterId,newId);  
-  });  
-});  
-// Add new News Maker 
+  		var afterId = 0;
+  		var newId=1;  
+  		$("#btnAddOption").click(function(){  
+    		afterId++;  
+    		newId=afterId+1;  
+    		addSpot(this,afterId,newId);  
+  		});  
+	});  
 function addSpot(obj,afterId,newId) 
 {  console.log("afterId: " + afterId);
 	console.log("newId: " + newId);
     $('#vote_'+afterId).after(  
     '<tr id="vote_'+newId+'" class="spot"><th>' + '</th>' +  
-    '<td><input type="text" id="txtInput_'+
- afterId+'" class="input-text" value="Put the name of News Maker here" size="40" name="newsmaker"/></td>'+  
+    '<td><div class="input-field"><input id="txtInput_'+afterId+'" name="title" type="text" class="validate"><label for="title">News Maker</label></td></div>'+  
     '</tr>');  
-//     $(":text[id^='txtInput_']").val("Put the name of Media Outlet here");  
+ 
  
 };
  function updateTextArea() {
@@ -77,9 +66,8 @@ function addSpot(obj,afterId,newId)
 		    window.location.replace("/journalist/"+allTagString);
 		}
   </script>
+  <!--
 </head>
-<body>
-
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -106,7 +94,7 @@ function addSpot(obj,afterId,newId)
     <div class="row profile">
 		<div class="col-md-3">
 			<div class="profile-sidebar">
-				<!-- SIDEBAR USERPIC -->
+				<!-- SIDEBAR USERPIC
 				<div class="profile-userpic">
 					{% if request.user.picture %}
 					<img src="{% url "get_photo" request.user %}" width="200px" class="img-responsive">
@@ -115,7 +103,7 @@ function addSpot(obj,afterId,newId)
 					{% endif %}
 				</div>
 				<!-- END SIDEBAR USERPIC -->
-				<!-- SIDEBAR USER TITLE -->
+				<!-- SIDEBAR USER TITLE 
 				<div class="profile-usertitle">
 					<div class="profile-usertitle-name">
 					{{request.user.first_name}}
@@ -125,8 +113,8 @@ function addSpot(obj,afterId,newId)
 						CMU
 					</div>
 				</div>
-				<!-- END SIDEBAR USER TITLE -->
-				<!-- SIDEBAR BUTTONS -->
+				<!-- END SIDEBAR USER TITLE
+				<!-- SIDEBAR BUTTONS
 				<div class="profile-userbuttons">
 					<button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
 					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
@@ -142,7 +130,7 @@ function addSpot(obj,afterId,newId)
 				</div>
 				<!-- END SIDEBAR BUTTONS -->
 
-				<!-- SIDEBAR MENU -->
+				<!-- SIDEBAR MENU
 				<div class="profile-usermenu">
 					<ul class="nav">
 						<li>
@@ -175,11 +163,10 @@ function addSpot(obj,afterId,newId)
 							<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 							 	Launch demo modal
 							</button>
-							-->
-							<a href="#" data-toggle="modal" data-target="#myModal">
+														<a href="#" data-toggle="modal" data-target="#myModal">
 							<i class="glyphicon glyphicon-star"></i>
 							My preferences </a>
-							<!-- Modal -->
+							<!-- Modal 
 							<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 								<div class="modal-dialog" role="document">
 							    <div class="modal-content">
@@ -219,61 +206,79 @@ function addSpot(obj,afterId,newId)
 						</li>
 					</ul>
 				</div>
-				<!-- END MENU -->
+				<!-- END MENU
+			</div>
+		</div>-->
+	<div class="row">
+
+	<div class="col s3">
+
+		<div class="card">
+			<div class="card-image">
+				{% if request.user.picture %}
+				<img src="{% url "get_photo" request.user %}" width="200px" class="circle responsive-img">
+				{% else %}
+				<img src="{% static "img/profile.png" %}" width="200px" class="circle responsive-img">
+				{% endif %}
+			</div>
+			<div class="card-content blue-grey-text">
+				{{request.user.first_name}}
+				{{request.user.last_name}}
+			</div>
+			<div class="card-action">
+				<a class="blue-grey-text" href="/">Favourite Pitches</a>
+			</div>
+			<div class="card-action">
+				<a class="blue-grey-text" href="/bookmarked_pitch">Bookmarked Pitches</a>
+			</div>
+			<div class="card-action">
+				<a class="blue-grey-text" href="/embargo_pitch">Embargoed Pitches </a>
+			</div>
+			<div class="card-action">
+				<a class="blue-grey-text" href="{% url "journalist_Articles" %}">Journalist Articles</a>
+			</div>
+
+			<div class="card-action blue-grey">
+				<a class="white-text" href="{% url "create_article" %}">Publish Article</a>
 			</div>
 		</div>
-		<div class="col-md-9">
-            <div class="profile-content">
-			   	<div class="panel panel-primary">
-      				<div class="panel-heading">New Article</div>
-      				<form method="post" action="{% url "create_article" %}">
-      				<div class="panel-body">
-      					<div class="">
-      						<h4><b>Subject</h4>
-      						<input type="text" class="text-line" name="title" />
-      						<h4><b>Article Url<h4>
-      						<div class="form-group">
-								<br>
-  								<textarea name="content" class="form-control" rows="5" id="comment" style="font-family: 'Shrikhand', cursive;"></textarea>
-							</div>
-
-							<h4><b>Pitch Url<h4>
-      						<div class="form-group">
-								<br>
-  								<textarea name="related_pitch" class="form-control" rows="5" id="related_pitch" style="font-family: 'Shrikhand', cursive;"></textarea>
-							</div>
-
-							<h4><b>News Maker</h4>
-							 <table cellpadding=0 cellspacing=0 width="100%" class="table_form"> 
-    							<tr id="vote_1"> 
-     							 <td><input type="button" id="btnAddOption" name="btnAddOption" class="btn btn-primary" value="Add News Maker"/></td> 
-    							</tr> 
-  							</table> 
-      						
-							<br>
-							
-            				<br>
-            			
-            				<br>
-							<div class="center">
-								<input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish">
-								<input type="submit" name ="save_btn" class="btn btn-primary" value="Save">
-								<input type="submit" name="cancel_btn" class="btn btn-danger" value="Cancel">
-							</div>
-            			</div>
-            				{% csrf_token %}
-            			</form>
-      				</div>
-   				 </div>
-            </div>
-		</div>
 	</div>
-</div>
-<center>
-</center>
-<br>
-<br>
+		<div class="col s9">
+      		<form method="post" action="{% url "create_article" %}">
+				<div class="input-field">
+					<input id="title" name="title" type="text" class="validate">
+					<label for="title">Subject</label>
+				</div>
+				<div class="input-field">
+					<input id="title" name="title" type="text" class="validate">
+					<label for="title">Article Url</label>
+				</div>
+				<div class="input-field">
+					<input id="title" name="title" type="text" class="validate">
+					<label for="title">Pitch Url</label>
+				</div>
+				
+      			<div class="input-field">
+					<input type="button" id="btnAddOption" name="btnAddOption" class="btn btn-primary" value="Add News Maker"/>
+				</div>
+				<div class="col s8">
+      				<table cellpadding=0 cellspacing=0 width="100%" class="table_form"> 
+	    				<tr id="vote_1"> 
+	     				</tr> 
+  					</table> 
+      			</div>		
+							
+				<div class="center">
+					<input type="submit" name ="publish_btn" class="btn btn-primary" value="Publish">
+					<input type="submit" name="cancel_btn" class="btn btn-danger" value="Cancel">
+				</div>
+       
+            				{% csrf_token %}
+            </form>
+      	</div>
+   	 </div>
+           
 
-</body>
-</html>
+{% endblock %}
+
 
