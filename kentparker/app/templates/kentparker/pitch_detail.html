@@ -7,10 +7,17 @@
     <!-- pitch detail -->
     <div class="col s8">
 
+	<form method="post" action="{% url "reedit_pitch" cur_pitch.id %}">
         <div class="card blue-grey darken-1">
             <div class="card-content white-text">
               <span class="card-title">{{cur_pitch.title}}</span>
+              {%if can_edit == True%}
+              <p>
+              <input id="pitch_content" name="pitch_content" type="text" class="materialize-textarea" value = "{{cur_pitch.content}}">
+              </p>
+              {%else%}
               <p>{{cur_pitch.content}}</p>
+              {%endif%}
 				<br>
               {% for tag in cur_pitch.tags.all %}
               <div class="chip">{{tag}}</div>
@@ -26,7 +33,13 @@
               <a>{{cur_pitch.pub_time}}</a>
               <a href="{% url "profile" cur_pitch.author %}">By {{cur_pitch.author}}</a>
           </div>
-
+			{%if can_edit == True%}
+    			<input type="submit" name ="publish_pitch_btn" class="btn btn-primary" value="Publish Pitch">
+				<input type="submit" name ="save_pitch_btn" class="btn btn-primary" value="Save Pitch">
+			{%endif%}
+			{% csrf_token %}
+	    </form>
+	    
           <div class="card-action">
           {%if picked_by%}
           Picked By
