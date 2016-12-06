@@ -217,8 +217,10 @@ def create_article(request):
 	new_article.author.add(request.user)
 	new_article.save()
 
-	if 'related_pitch' in request.POST:
-		related_pitch_url=request.POST['related_pitch']
+	print(request.POST)
+	if 'pitch_url' in request.POST:
+		related_pitch_url=request.POST['pitch_url']
+		print(related_pitch_url)
 		pitch_id=related_pitch_url.split('/')[-1]
 		pitch_id=int(pitch_id)
 		related_pitch=get_object_or_404(Pitch,pk=pitch_id)
@@ -619,9 +621,11 @@ def bookmark_pitch(request,pitch_id):
 def pitch_detail(request,pitch_id):
 	cur_pitch = Pitch.objects.get(pk=pitch_id)
 	related_articles = cur_pitch.article_set.all()
+	#print(related_articles)
 	picked_by = set()
 	for article in related_articles:
-		picked_by.add(article.author)
+		for author in article.author.all():
+			picked_by.add(author)
 	
 	# determine if the current user is allowed to do the rating
 	can_rate=False
@@ -667,6 +671,7 @@ def article_detail(request, article_id):
 		can_rate=False
 	print ("cur_article.published:", cur_article.published , "article can_edit:", can_edit)
 	print ("request.user == cur_article.author:", request.user, cur_article.author)
+	print(related_pitches.all())
 	context = {"cur_article": cur_article, "related_pitches":related_pitches, "can_edit": can_edit,"can_rate":can_rate}
 	return render(request, "kentparker/article_detail.html", context)
 
