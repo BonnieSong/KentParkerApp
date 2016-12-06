@@ -655,7 +655,7 @@ def article_detail(request, article_id):
 	cur_article.visited_times += 1
 	cur_article.save()
 	related_pitches = cur_article.related_pitch.all()
-	can_edit = (cur_article.published == False) and (request.user == cur_article.author)
+	can_edit = (cur_article.published == False) and (request.user in cur_article.author.all())
 
 	# newsmakers rate article published by journalists
 	can_rate=False
@@ -665,7 +665,8 @@ def article_detail(request, article_id):
 		can_rate=True
 	if rated_by.filter(username=request.user.username).exists():
 		can_rate=False
-
+	print ("cur_article.published:", cur_article.published , "article can_edit:", can_edit)
+	print ("request.user == cur_article.author:", request.user, cur_article.author)
 	context = {"cur_article": cur_article, "related_pitches":related_pitches, "can_edit": can_edit,"can_rate":can_rate}
 	return render(request, "kentparker/article_detail.html", context)
 
