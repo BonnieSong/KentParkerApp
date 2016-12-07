@@ -693,12 +693,12 @@ def reedit_pitch(request, pitch_id):
 
 @login_required
 def messages(request,username):
-	if not request.user.message_people.all():
-		return redirect('/')
-
-	if not username:
-		username=request.user.message_people.all()[0].username
 	
+	if not username:
+		if not request.user.message_people.all():
+			return redirect('/')
+		username=request.user.message_people.all()[0].username
+
 	another_user=get_object_or_404(MyUser,username=username)
 	all_messages=Message.objects.filter(Q(sender=request.user,receiver=another_user) | Q(sender=another_user,receiver=request.user))
 	context={'message_form':MessageForm(),'username':username,'all_messages':all_messages,'people':request.user.message_people.all()}
