@@ -19,6 +19,7 @@
               </p>
               {%else%}
               <p>{{cur_pitch.content}}</p>
+                <br>
               {%endif%}
               {% for tag in cur_pitch.tags.all %}
               <div class="chip">{{tag}}</div>
