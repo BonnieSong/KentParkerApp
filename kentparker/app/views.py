@@ -26,7 +26,6 @@ def home(request):
 		related_articles=Article.objects.filter(newsmaker=request.user)
 		print(request.user.related_url)
 		print(request.user.twitter_id)
-		print("ssssss")
 		# newsmaker
 		my_pitches=Pitch.objects.filter(author=request.user)
 		validpitches = set()
