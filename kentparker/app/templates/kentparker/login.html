@@ -40,8 +40,10 @@
     console.log(element.id);
     auth2.attachClickHandler(element, {},
         function(googleUser) {
-          document.getElementById('name').innerText = "Signed in: " +
-              googleUser.getBasicProfile().getName();
+          $.get("/login_google/"+googleUser.getBasicProfile().getEmail() + "+" + googleUser.getBasicProfile().getName())
+            .done(function () {
+              window.location.replace("/");
+          });
         }, function(error) {
           alert(JSON.stringify(error, undefined, 2));
         });
