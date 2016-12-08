@@ -4,7 +4,7 @@ from decimal import Decimal
 # Create your models here.
 
 class Tag(models.Model):
-	name=models.CharField(max_length=10)
+	name=models.CharField(max_length=50)
 	def __str__(self):
 		return self.name
 
@@ -30,7 +30,6 @@ class MyUser(AbstractUser):
 	website=models.URLField(blank=True)
 	source=models.CharField(max_length=20,blank=True)
 	size=models.CharField(max_length=20,blank=True)
-	industry=models.CharField(max_length=10,blank=True)
 	related_url = models.URLField(blank=True)
 	message_people=models.ManyToManyField('self',blank=True,related_name='message_people')
 
@@ -39,7 +38,7 @@ class MyUser(AbstractUser):
 		return self.username
 
 class Pitch(models.Model):
-	title=models.CharField(max_length=60)
+	title=models.CharField(max_length=200)
 	content=models.TextField()
 	author=models.ForeignKey(MyUser,related_name='author_pr') # newsmaker
 	tags=models.ManyToManyField(Tag,blank=True)
@@ -71,7 +70,7 @@ class Scoop(Pitch):
 	status=models.BooleanField()
 
 class Article(models.Model):
-	title=models.CharField(max_length=60)
+	title=models.CharField(max_length=200)
 	related_pitch=models.ManyToManyField(Pitch,blank=True)
 	content=models.TextField()
 	author=models.ManyToManyField(MyUser,blank=True, related_name='author_ar') #Journalist

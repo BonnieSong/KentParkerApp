@@ -25,12 +25,10 @@
         if (status == google.maps.GeocoderStatus.OK) {
           if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
           map.setCenter(results[0].geometry.location);
-
             var infowindow = new google.maps.InfoWindow(
                 { content: '<b>'+address+'</b>',
                   size: new google.maps.Size(150,50)
                 });
-
             var marker = new google.maps.Marker({
                 position: results[0].geometry.location,
                 map: map, 
@@ -39,7 +37,6 @@
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.open(map,marker);
             });
-
           } else {
             alert("No results found");
           }
@@ -50,12 +47,17 @@
     }
   }
 {% block content %}
+<<<<<<< HEAD
+<div class="row">
+  <div class="col s3">
+=======
 
 
 <div class="row">
 
   <div class="col s3">
 
+>>>>>>> master
     <div class="card">
       <div class="card-image">
         {% if request.user.picture %}
@@ -85,7 +87,6 @@
             <div class="col-sm-7" id="slider-thumbs">
                 <!-- Bottom switcher of slider -->
                 <ul class="hide-bullets">
-
                     {%for journalist in journalists%}
                         <div class="well well-lg">
                        <p>{{journalist.username}}</p>
@@ -94,19 +95,25 @@
                           {% for tag in journalist.tags.all %}
                              <button class="btn btn-success">{{tag}}</button>
                            {%endfor%}
-                            <a class="thumbnail" id="carousel-selector-1"><img src="http://placehold.it/150x150&text=1"></a>
+                            {% if journalist.picture %}
+                            <img src="{% url "get_photo" journalist %}" class="responsive-img">
+                            {% else %}
+                            <img src="{% static "img/profile.png" %}" class="responsive-img">
+                            {% endif %}
                         </div>
                    {% endfor %}
-
                 </ul>
             </div>
             
             <!--/Slider-->
         </div>
-
     </div>
 </div>
 </div>
+<<<<<<< HEAD
+{% endblock %}
+=======
 {% endblock %}
 
 
+>>>>>>> master

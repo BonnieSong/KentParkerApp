@@ -69,7 +69,7 @@ class ResetPaswordForm(forms.Form):
 class register_step2_newsmaker_form(forms.ModelForm):
 	class Meta:
 		model=MyUser
-		fields=['address','website','phone','skype_id','twitter_id','facebook_id','bio','size','industry','source', 'related_url']
+		fields=['address','website','phone','skype_id','twitter_id','facebook_id','bio','size','category','source', 'related_url']
 
 class register_step2_mediaoutlet_form(forms.ModelForm):
 	class Meta:
