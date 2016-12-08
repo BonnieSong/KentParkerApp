@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 {% extends "kentparker/base.html"%}
 {% load static %}
 
@@ -31,9 +29,9 @@
                 });
             var marker = new google.maps.Marker({
                 position: results[0].geometry.location,
-                map: map, 
+                map: map,
                 title:address
-            }); 
+            });
             google.maps.event.addListener(marker, 'click', function() {
                 infowindow.open(map,marker);
             });
@@ -93,7 +91,7 @@
                    {% endfor %}
                 </ul>
             </div>
-            
+
             <!--/Slider-->
         </div>
     </div>
