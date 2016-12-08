@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Kent-Parker</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static "/css/main.css" %}">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+{% extends "kentparker/base.html"%}
+{% load static %}
+
+
+
+{% block content %}
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
 <script type="text/javascript">
   var geocoder;
@@ -56,140 +50,69 @@
         }
       });
     }
-  }
-</script>
-</head>
-<body>
+  }  
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">KENT PARKER</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
-        <li><a href="{% url "contacts" %}">Contacts</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-      </ul>
+</script>
+<div class="row">
+
+  <div class="col s3">
+
+    <div class="card">
+      <div class="card-image">
+        {% if request.user.picture %}
+        <img src="{% url "get_photo" request.user %}" width="200px" class="circle responsive-img">
+        {% else %}
+        <img src="{% static "img/profile.png" %}" width="200px" class="circle responsive-img">
+        {% endif %}
+      </div>
+      <div class="card-content blue-grey-text">
+        {{request.user.first_name}}
+        {{request.user.last_name}}
+      </div>
+      <div class="card-action">
+        <a class="blue-grey-text" href="/">Journalists </a>
+      </div>
+      <div class="card-action blue-grey">
+        <a class="white-text" href="/">Published Articles</a>
+      </div>
     </div>
   </div>
-</nav>
-
-<div class="container">
-    <div class="row profile">
-		<div class="col-md-3">
-			<div class="profile-sidebar">
-				<!-- SIDEBAR USERPIC -->
-				<div class="profile-userpic">
-					{% if request.user.picture %}
-					<img src="{% url "get_photo" request.user %}" width="200px" class="img-responsive">
-					{% else %}
-					<img src="{% static "img/profile.png" %}" width="200px" class="img-responsive">
-					{% endif %}
-				</div>
-				<!-- END SIDEBAR USERPIC -->
-				<!-- SIDEBAR USER TITLE -->
-				<div class="profile-usertitle">
-					<div class="profile-usertitle-name">
-						{{request.user.first_name}}
-						{{request.user.last_name}}
-					</div>
-					<div class="profile-usertitle-job">
-						CMU
-					</div>
-				</div>
-				<!-- END SIDEBAR USER TITLE -->
-				<!-- SIDEBAR BUTTONS -->
-				<div class="profile-userbuttons">
-					<button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					  <button type="button" class="btn btn-warning btn-sm" aria-label="Left Align" style="padding: 2px 3px;">
-					  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-					</button>
-				</div>
-				<!-- END SIDEBAR BUTTONS -->
-				<!-- SIDEBAR MENU -->
-				<div class="profile-usermenu">
-					<ul class="nav">
-						<li class="active">
-							<a href="/">
-							<i class="glyphicon glyphicon-home"></i>
-							Journalists </a>
-						</li>
-						<li>
-							<a href="#">
-							<i class="glyphicon glyphicon-user"></i>
-							Published articles </a>
-						</li>
-					</ul>
-				</div>
-				<!-- END MENU -->
-			</div>
-		</div>
-		<div class="col-md-9" data-spy="scroll" >
-            <div class="profile-content">
-			   	<div class="panel panel-primary">
-      				<div class="panel-heading">Articles</div>
-      				<div class="panel-body">
-      					<div class="container">
-    <div id="main_area">
-        <!-- Slider -->
-        <div class="row">
-            <div class="col-sm-7" id="slider-thumbs">
-                <!-- Bottom switcher of slider -->
-                <ul class="hide-bullets">
-					{%for article in articles%}
-						<div class="well well-lg">
-							<p>{{article.title}}</p>
-							<p>{{article.content}}</p>
-							<p>{{article.pub_time}}</p>
-							<p>{{article.id}}</p>
-							<p>Author:
-								{%for eachauthor in article.author.all%}
-									{{eachauthor.first_name}} {{eachauthor.last_name}} <a href="profile/{{eachauthor}}">@{{eachauthor}}</a>
-								{%endfor%}
-							</p>
-							Newsmakers:
-							{% for eachnewsmaker in article.newsmaker.all %}
-							<a href="profile/{{eachnewsmaker}}">@{{eachnewsmaker}}</a>
-							{%endfor%}
-						</div>
-					{% endfor %}
-
-
-                </ul>
+<div class="col s9">
+  {%if not articles%}
+        <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">No Articles</span>
+              <p>You don't have any articles!</p>
             </div>
-
-            <!--/Slider-->
         </div>
+     {%endif%}
 
-    </div>
+      {%for article in articles%}
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">{{article.title}}</span>
+          <p>{{article.content}}</p>
+          <br>
+          {% for tag in article.tags.all %}
+            <div class="chip">{{tag}}</div>
+          {%endfor%}
+        </div>
+        <div class="card-action">
+          Author:
+                {%for eachauthor in article.author.all%}
+                  {{eachauthor.first_name}} {{eachauthor.last_name}} <a href="profile/{{eachauthor}}">@{{eachauthor}}</a>
+                {%endfor%}
+          Newsmakers:
+              {% for eachnewsmaker in article.newsmaker.all %}
+              <a href="profile/{{eachnewsmaker}}">@{{eachnewsmaker}}</a>
+              {%endfor%}      
+                  <a>{{article.pub_time}}</a>
+         </div>
+              
+      </div>
+    {% endfor %}
+  </div>
 </div>
-      				</div>
-   				 </div>
-            </div>
-		</div>
-	</div>
-</div>
-<center>
-</center>
-<br>
-<br>
 
-</body>
-</html>
+{% endblock %}
 
