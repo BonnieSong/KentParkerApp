@@ -63,7 +63,8 @@
               <p>{{article.content}}</p>
             </div>
             <div class="card-action">
-              <a href="{% url "profile" article.author %}">{{article.author.first_name}} {{article.author.last_name}}</a>
+              <a href="{% url "article_detail" article.id %}">Detail</a>
+              <a>{{article.pub_time}}</a>
             </div>
         </div>
 		  {% endfor %}
