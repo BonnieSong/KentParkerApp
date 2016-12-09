@@ -40,7 +40,6 @@
       <ul class="right hide-on-med-and-down">
         <li><a href="{% url "contacts" %}">Contacts</a></li>
         <li><a href="{% url "messages" '' %}">Messages</a></li>
-        <li><a href="#">Notifications</a></li>
          <!-- Dropdown Trigger -->
          <li><a class="dropdown-button" href="#!" data-activates="dropdown1">{{request.user}}<i class="material-icons right">arrow_drop_down</i></a></li>
       </ul>
@@ -52,17 +51,6 @@
 
 
 <main>
-<!-- for notifications start -->
-    <form action="#" method="post">
-      <input type="hidden" id="timestamp" value="{{timestamp|date:"c"}}">
-      <input type="hidden" id="username" value="{{request.user.username}}">
-      {% csrf_token %}
-    </form>
-
-    <div id="notifications">
-
-    </div>
-<!-- for notifications end -->
 
 {%block profile_page%}
 {%endblock%}
