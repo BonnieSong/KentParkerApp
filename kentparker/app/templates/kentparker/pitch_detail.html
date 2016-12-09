@@ -67,7 +67,6 @@
       <div class="card-action">
         <form action="{% url 'bookmark_pitch' cur_pitch.id %}" method="post">
             <button type="submit"  class='btn'>Bookmark</button>
-            <button type="submit"  class='btn'>Unbookmark</button>
             {% csrf_token %}
         </form>
       </div>
@@ -83,7 +82,7 @@
       {% endif %}
 
       <div class="card-action">
-        <p>Pitch Responsiveness: {{cur_pitch.rating_responsiveness}}</p>
+        <p>Newsmaker Responsiveness: {{cur_pitch.rating_responsiveness}}</p>
         <p>News Worthiness: {{cur_pitch.rating_worthiness}}</p>
       </div>
 
@@ -91,10 +90,10 @@
       {%if can_rate%}
       <div class="card-action">
          <form action="{% url "rate_pitch" cur_pitch.id request.user.username %}" method="post">
-             <p class="range-field"><a>Responsiveness</a>
+             <p class="range-field"><a>Responsiveness (0 -> 100)</a>
              <input type="range" name="rating_responsiveness" min="0" max="100" />
              </p>
-             <p class="range-field"><a>Worthiness</a>
+             <p class="range-field"><a>Worthiness (0 -> 100)</a>
              <input type="range" name="rating_worthiness" min="0" max="100" />
              </p>
              <button type="submit"  class='btn'>Rate</button>

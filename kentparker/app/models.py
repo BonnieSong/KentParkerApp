@@ -32,6 +32,7 @@ class MyUser(AbstractUser):
 	size=models.CharField(max_length=20,blank=True)
 	related_url = models.URLField(blank=True)
 	message_people=models.ManyToManyField('self',blank=True,related_name='message_people')
+	media_contact = models.CharField(max_length=50, null=True, blank=True)
 
 
 	def __str__(self):
