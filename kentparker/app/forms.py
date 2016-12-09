@@ -34,15 +34,15 @@ class EditProfileModelForm(forms.ModelForm):
 	class Meta:
 		model=MyUser
 		fields=['first_name','last_name','bio','picture']
-		widgets={	'first_name':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
-					'last_name':forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
-					'picture':forms.FileInput(attrs={'class':'form-control'}),
-					'bio':forms.Textarea(attrs={'class':'form-control','placeholder':'Bio'})}
+		widgets={	'first_name':forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'First Name'}),
+					'last_name':forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'Last Name'}),
+					'picture':forms.FileInput(attrs={'class':'input-field'}),
+					'bio':forms.Textarea(attrs={'class':'materialize-textarea','placeholder':'Bio'})}
 
 class ChangePasswordModelForm(forms.ModelForm):
-	old_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Old Password'}))
-	new_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'New Password'}))
-	confirm=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm Password'}))
+	old_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'input-field','placeholder':'Old Password'}))
+	new_password=forms.CharField(widget=forms.PasswordInput(attrs={'class':'input-field','placeholder':'New Password'}))
+	confirm=forms.CharField(widget=forms.PasswordInput(attrs={'class':'input-field','placeholder':'Confirm Password'}))
 	class Meta:
 		model=MyUser
 		fields=['old_password','new_password','confirm']
